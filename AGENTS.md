@@ -6,6 +6,22 @@
 2. Durable project knowledge under `.wiki/`
 3. `README.md` for operator entry points
 
+## Runtime environment
+
+- The sole runtime environment for this project is the project-local
+  `/home/build/work/deepseek-v4-flash-0731-dual-5090/.venv`.
+- Manage it with `uv` from the project root: use `uv sync`, `uv run`, and
+  `uv pip --python .venv/bin/python`.
+- Install all missing runtime or test dependencies into this `.venv`; never
+  redirect them to `/home/build/torch/.venv`, a user-global Python, or the
+  system Python.
+- `/home/build/torch/.venv` is only the build project's environment. Its local
+  Torch wheel may be consumed by this project, but packages must be installed
+  into this project's `.venv`.
+- The current Torch dependency is the locally built wheel referenced in
+  `pyproject.toml` and `uv.lock`; verify it with `uv run python` before runtime
+  tests.
+
 ## Mission
 
 Deploy and operate local llama.cpp CUDA serving for the locally copied
