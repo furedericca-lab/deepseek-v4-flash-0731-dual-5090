@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+import mmap
 import os
 import re
 import shutil
@@ -79,18 +80,47 @@ def plan_tid(plan: dict, layer: int) -> tuple[bytes, tuple[int, ...]]:
     return raw, tuple(item["shape"])
 
 
-def copy_bytes(item: Slice, out):
+BLOCK = 8 * 1024 * 1024
+
+
+def _direct_write(fd: int, data: bytes) -> None:
+    """Write bytes through O_DIRECT using a page-aligned anonymous buffer."""
+    offset = 0
+    while offset < len(data):
+        size = min(BLOCK, len(data) - offset)
+        aligned = mmap.mmap(-1, BLOCK)
+        try:
+            aligned[:size] = data[offset:offset + size]
+            view = memoryview(aligned)[:size]
+            written = os.write(fd, view)
+            if written != size:
+                raise OSError(f"short O_DIRECT write: {written}/{size}")
+            view.release()
+        finally:
+            aligned.close()
+        offset += size
+
+
+def copy_bytes(item: Slice, out_fd: int):
     row_bytes = item.ref.nbytes // item.ref.shape[0] if item.row_count is not None else item.ref.nbytes
     start = item.ref.start + item.row_start * row_bytes if item.row_count is not None else item.ref.start
     remaining = item.nbytes
-    with item.ref.path.open("rb") as f:
-        f.seek(start)
+    fd = os.open(item.ref.path, os.O_RDONLY)
+    try:
+        position = start
         while remaining:
-            block = f.read(min(8 * 1024 * 1024, remaining))
+            block = os.pread(fd, min(BLOCK, remaining), position)
             if not block:
                 raise ValueError("short source payload")
-            out.write(block)
+            _direct_write(out_fd, block)
+            position += len(block)
             remaining -= len(block)
+            try:
+                os.posix_fadvise(fd, position - len(block), len(block), os.POSIX_FADV_DONTNEED)
+            except AttributeError:
+                pass
+    finally:
+        os.close(fd)
 
 
 def build(source: Path, output: Path, plan_path: Path, max_shard: int = SHARD_BYTES):
@@ -146,23 +176,39 @@ def build(source: Path, output: Path, plan_path: Path, max_shard: int = SHARD_BY
         payload_path = output / (filename + ".payload")
         offsets = {}
         cursor = 0
-        with payload_path.open("wb") as payload:
+        # Keep the temporary payload bounded and discard source pages after
+        # each chunk. O_DIRECT is intentionally opt-in because safetensors
+        # tensor lengths are not block-aligned; unaligned direct writes would
+        # require padding gaps in every data offset.
+        payload_fd = os.open(payload_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
+        try:
             for name, source_item, dtype, shape in items:
                 offsets[name] = {"dtype": dtype, "shape": list(shape), "data_offsets": [cursor, cursor + (len(source_item) if isinstance(source_item, bytes) else source_item.nbytes)]}
                 if isinstance(source_item, bytes):
-                    payload.write(source_item)
+                    _direct_write(payload_fd, source_item)
                 else:
-                    copy_bytes(source_item, payload)
+                    copy_bytes(source_item, payload_fd)
                 cursor = offsets[name]["data_offsets"][1]
+        finally:
+            os.close(payload_fd)
         header = {"__metadata__": {"format": "pt"}}
         header.update(offsets)
         encoded = json.dumps(header, separators=(",", ":")).encode()
         final = output / filename
-        with final.open("wb") as out, payload_path.open("rb") as payload:
-            out.write(struct.pack("<Q", len(encoded)))
-            out.write(encoded)
-            shutil.copyfileobj(payload, out, 8 * 1024 * 1024)
-        payload_path.unlink()
+        try:
+            with final.open("wb") as out, payload_path.open("rb") as payload:
+                out.write(struct.pack("<Q", len(encoded)))
+                out.write(encoded)
+                shutil.copyfileobj(payload, out, BLOCK)
+                out.flush()
+                os.fsync(out.fileno())
+            payload_path.unlink()
+        except Exception:
+            # Leave the completed payload for an explicit resume/inspection;
+            # never publish a shard whose header and payload are incomplete.
+            if final.exists():
+                final.unlink()
+            raise
         for name in offsets:
             weight_map[name] = filename
 
