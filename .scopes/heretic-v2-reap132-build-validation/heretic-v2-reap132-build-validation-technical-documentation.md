@@ -75,6 +75,9 @@ The fixed source index contains 72,317 tensors. Routed experts use six entries
 per expert (`w1/w2/w3.weight` plus `w1/w2/w3.scale`). Shared experts use the
 same weight/scale pattern. HERETIC v2 modifies backbone
 `layers.10..42.attn.wo_b.{weight,scale}` while MTP/DSpark remains stock.
+The streamer preserves all 4,705 model-ignored MTP tensors through a
+checkpoint-native passthrough path rather than loading them into the model or
+dropping them from output.
 
 ## Interfaces and Contracts
 

@@ -71,8 +71,10 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   - T006 passed focused tests and the full vendor suite
   - T007 captured the pre-prune RAM/swap/GPU/disk/process baseline
   - T002 froze root build commit
-    `67b1a3710074ed5d740cba6a6a67b65914848b71` and vendor build commit
-    `41e62ee165ba754c8966c04ae67da7d64c321bfd`
+    `41888983bf304b234d6414ce74abf117322d8b5c` and vendor build commit
+    `0645265700b0c8325c2ac141b02873f3cd0ab474`
+  - pre-start review found and fixed silent omission of 4,705 model-ignored MTP
+    tensors; checkpoint-native passthrough preserves 10,862,838,300 source bytes
 - Evidence commands/results:
   - `sha256sum squanchyzx-puwaer-reap132-mask.json` ->
     `b43a1078f905157cbdbe976530d96b6c41730ccd3ef6feac4d598a15a9d84b04`
@@ -83,7 +85,8 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
     `verify_checkpoint_source()` -> PASS
   - `scripts/checkpoint_content_manifest.py ... --artifact-role source` and
     `--check` -> 97 files, stable manifest SHA above
-  - focused tests -> `68 passed`; full vendor tests -> `214 passed, 5 skipped`
+  - focused manifest/provenance tests -> `68 passed`; final full vendor tests ->
+    `216 passed, 5 skipped`
   - baseline -> 46 GiB RAM, 47 GiB swap, 714 GiB NVMe free, dual RTX 5090
     visible, native output absent, no model/wiki/doctor scan active
 - Issues/blockers:

@@ -18,9 +18,9 @@ description: Implementation research notes for heretic-v2-reap132-build-validati
 - Extractor evidence: 43 layers, 132 sorted survivor IDs per layer, three
   `[129280, 6]` `int64` `tid2eid` tables, and 43/43 byte-exact router matches.
 - Executable root build commit:
-  `67b1a3710074ed5d740cba6a6a67b65914848b71`.
+  `41888983bf304b234d6414ce74abf117322d8b5c`.
 - Executable vendor build commit:
-  `41e62ee165ba754c8966c04ae67da7d64c321bfd`.
+  `0645265700b0c8325c2ac141b02873f3cd0ab474`.
 - The fixed source now exists at
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8/`.
   Official `hf` CLI confirmation exited zero at the fixed revision. All 96
@@ -30,6 +30,10 @@ description: Implementation research notes for heretic-v2-reap132-build-validati
   content manifest SHA256 is
   `815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`.
 - `/data/linux-fast` is ext4 with 714 GiB available at the pre-prune baseline.
+- Pre-prune code review found 4,705 model-ignored MTP tensors totaling
+  10,862,838,300 bytes. Streaming now passes them through under their original
+  checkpoint names, ordered by source shard, with the existing 4 GB writer
+  flush bound.
 
 ## Gap Analysis
 
