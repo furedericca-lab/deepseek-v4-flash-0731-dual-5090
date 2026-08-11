@@ -70,32 +70,33 @@ class HFRangeSafetensors:
     MAX_RANGE_BYTES = 256 * 1024 * 1024
 
     def __init__(self, repo: str, revision: str = "main", token: Optional[str] = None,
-                 timeout: int = 60, retries: int = 4):
+                 retries: int = 4):
         self.repo = repo
-        self.revision = revision
-        self.timeout = timeout
         self.retries = retries
-        self.fs = HfFileSystem(token=token)
         self.api = HfApi(token=token)
+        # Resolve the requested ref before reading any bytes. Every subsequent
+        # read uses this immutable commit so a moving branch cannot mix files.
+        self.requested_revision = revision
+        self.revision = self._resolve_sha(revision)
+        if not self.revision:
+            raise HFError(
+                f"could not resolve an immutable Hugging Face revision for {repo}@{revision}"
+            )
+        self.fs = HfFileSystem(token=token)
         self._header_cache: Dict[str, Tuple[int, Dict[str, TensorInfo]]] = {}
         self._index = self._get_json("model.safetensors.index.json")
         self.weight_map: Dict[str, str] = self._index["weight_map"]
         self.config = self._get_json("config.json")
-        self.resolved_sha = self._resolve_sha()
-        if not self.resolved_sha:
-            raise HFError(
-                f"could not resolve an immutable Hugging Face revision for {repo}@{revision}; "
-                "pass a commit SHA as the revision or fix API access"
-            )
+        self.resolved_sha = self.revision
         self.bytes_downloaded = 0
         self.range_requests = 0
 
     def _url(self, filename: str) -> str:
         return f"{self.repo}/{filename}"
 
-    def _resolve_sha(self) -> Optional[str]:
+    def _resolve_sha(self, revision: str) -> Optional[str]:
         try:
-            return self.api.model_info(self.repo, revision=self.revision).sha
+            return self.api.model_info(self.repo, revision=revision).sha
         except Exception:
             return None
 
@@ -109,7 +110,7 @@ class HFRangeSafetensors:
                 last = e
                 if i + 1 < self.retries:
                     time.sleep(1.5 * (i + 1))
-        raise HFError(f"failed to fetch {url}: {last}")
+        raise HFError(f"failed to fetch {self.repo}/{filename}@{self.revision}: {last}")
 
     def _range(self, filename: str, start: int, end: int) -> bytes:
         if end < start:
@@ -313,15 +314,14 @@ def main() -> int:
                     help="Hugging Face branch or immutable commit SHA")
     ap.add_argument("-o", "--output", default=DEFAULT_OUTPUT)
     ap.add_argument("--token", default=os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN"))
-    ap.add_argument("--timeout", type=int, default=60)
     ap.add_argument("--no-tid2eid", action="store_true",
                     help="omit final hash-routing tables; smaller JSON but not a complete reproduction artifact")
     args = ap.parse_args()
 
     print(f"[1/4] Reading indexes/configs: {args.base}")
-    base = HFRangeSafetensors(args.base, args.base_revision, args.token, timeout=args.timeout)
+    base = HFRangeSafetensors(args.base, args.base_revision, args.token)
     print(f"[1/4] Reading indexes/configs: {args.pruned}")
-    pruned = HFRangeSafetensors(args.pruned, args.pruned_revision, args.token, timeout=args.timeout)
+    pruned = HFRangeSafetensors(args.pruned, args.pruned_revision, args.token)
 
     base_e = cfg_int(base.config, "n_routed_experts", 256)
     pruned_e = cfg_int(pruned.config, "n_routed_experts", 132)
