@@ -78,6 +78,9 @@ same weight/scale pattern. HERETIC v2 modifies backbone
 The streamer preserves all 4,705 model-ignored MTP tensors through a
 checkpoint-native passthrough path rather than loading them into the model or
 dropping them from output.
+All source safetensors reads use the `pread` backend. The 96 fixed-revision
+repository files and both local provenance manifests are read-only after source
+verification, so compression cannot share or modify mmap-backed source storage.
 
 ## Interfaces and Contracts
 
@@ -100,16 +103,21 @@ dropping them from output.
 3. Generate source provenance and content manifests.
 4. Capture RAM/swap, GPU, disk, and process baselines; ensure wiki/doctor scans
    are not reading model files.
-5. Run a real quantized Layer 0 naming preflight after `apply_keep()`; require
+5. Compare the local snapshot directly with fixed-revision Hugging Face
+   metadata, require 50/50 LFS SHA256 and 46/46 Git blob matches, then make the
+   snapshot read-only.
+6. Run a real quantized Layer 0 naming preflight through `pread` after
+   `apply_keep()`; require
    792 expert tensors, 396 weights, 396 scales, zero unknown source names, and
    zero survivor provenance mismatches.
-6. Run plan streaming, logging command, source/plan hashes, environment,
+7. Recheck the full source content manifest after preflight.
+8. Run plan streaming, logging command, source/plan hashes, environment,
    start/end time, exit status, and peak memory.
-7. Require writer hard-fail behavior for duplicate or source-unknown names, then
+9. Require writer hard-fail behavior for duplicate or source-unknown names, then
    require 40,325 indexed tensors and 792 expert tensors in every layer.
-8. Treat output as quarantined until post-prune verifier passes.
-9. Run native smoke only after structural PASS.
-10. Convert to GGUF only after native smoke PASS.
+10. Treat output as quarantined until post-prune verifier passes.
+11. Run native smoke only after structural PASS.
+12. Convert to GGUF only after native smoke PASS.
 
 ## Observability and Error Handling
 

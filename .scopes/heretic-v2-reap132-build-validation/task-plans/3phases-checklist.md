@@ -105,6 +105,13 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
     distinct scale keys; 41 attention KV norm names were also malformed
   - fixed quantized expert scale and KV norm reverse naming in vendor commit
     `5439fba8071467d8b2bb113046cd4e488ac14f5f`
+  - a live comparison against the fixed Hugging Face revision then proved that
+    source shards 2, 41, 43, 44, and 46 had drifted after the previously correct
+    content manifest was generated; all five were replaced from the official
+    logged-in `hf` CLI and the repair directory was deleted
+  - changed every streaming safetensors read to the `pread` backend in vendor
+    commit `7fae3000e321fde32a4a010171b9480e22148ba0`, preventing model tensors from
+    sharing an mmap-backed source storage
   - made duplicate tensor names and source-index unknown names fatal writer errors
   - added full fused FP4 weight/scale, two-layer collision, KV norm, duplicate,
     and unknown-name regressions
@@ -113,13 +120,21 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   - expected fixed inventory -> 40,325 total and 792 expert tensors per layer
   - focused naming/streaming tests -> `23 passed`
   - full vendor suite -> `222 passed, 5 skipped`
+  - fixed-revision live comparison after repair -> 96/96 paths and sizes,
+    50/50 LFS SHA256, 46/46 Git blob SHA1, and 96/96 remote files read-only
   - real source Layer 0 after `apply_keep()` -> 821 converted tensors, 792
     expert tensors, 396 weights, 396 scales, zero unknown names, zero byte/dtype/
     shape provenance mismatches
+  - full 97-file source manifest check after the pread Layer 0 run -> PASS at
+    `815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`
+  - repeated shard reads around `sync` were stable and kernel logs contained no
+    NVMe I/O, media, data-integrity, or EXT4 errors; full SMART data remains
+    unavailable without separately authorized read-only sudo
 - Resolution:
   - user explicitly authorized deleting the unusable first model output to avoid
     operator confusion; timestamped run logs and Wiki evidence remain
-  - rerun only from the frozen plan and the new committed naming implementation
+  - rerun only from the frozen plan, read-only source snapshot, and committed
+    pread/naming implementation
 - Checkpoint confirmed: the failed artifact is not T008 completion; Layer 0
   preflight passes and a clean full rerun is authorized
 
