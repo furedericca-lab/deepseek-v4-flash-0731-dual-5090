@@ -123,5 +123,5 @@ layer results exist, and `failures` is empty.
 - Further IQ3/Q2 quantization begins only in a new scope or explicit extension
   after the golden GGUF baseline passes.
 - Deterministic pruning must execute root build commit
-  `67b1a37b2c26a6cbfe14468a3e826e2d169cced1` with vendor build commit
-  `41e62ee537b646734b21f0d6813b4d8dc8a73275`.
+  `67b1a3710074ed5d740cba6a6a67b65914848b71` with vendor build commit
+  `41e62ee165ba754c8966c04ae67da7d64c321bfd`.

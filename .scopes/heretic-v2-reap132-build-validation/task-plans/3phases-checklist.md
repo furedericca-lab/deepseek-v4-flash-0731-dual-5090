@@ -71,8 +71,8 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   - T006 passed focused tests and the full vendor suite
   - T007 captured the pre-prune RAM/swap/GPU/disk/process baseline
   - T002 froze root build commit
-    `67b1a37b2c26a6cbfe14468a3e826e2d169cced1` and vendor build commit
-    `41e62ee537b646734b21f0d6813b4d8dc8a73275`
+    `67b1a3710074ed5d740cba6a6a67b65914848b71` and vendor build commit
+    `41e62ee165ba754c8966c04ae67da7d64c321bfd`
 - Evidence commands/results:
   - `sha256sum squanchyzx-puwaer-reap132-mask.json` ->
     `b43a1078f905157cbdbe976530d96b6c41730ccd3ef6feac4d598a15a9d84b04`
