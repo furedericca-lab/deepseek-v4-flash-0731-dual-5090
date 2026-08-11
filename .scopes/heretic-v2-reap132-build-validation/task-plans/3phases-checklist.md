@@ -193,6 +193,9 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   - exact frozen survivor/router/three-table `tid2eid` provenance
   - all 66 HERETIC v2 `attn.wo_b.{weight,scale}` tensors source-identical
   - MTP/DSpark tensors -> 0; unknown/unclassified tensors -> 0
+- Executable identities:
+  - root build -> `8071c7c64101f16ea0959881b86d180862bd514b`
+  - vendor build -> `56137d189fd36c1c8881ca99233614b177442425`
 - Checkpoint confirmed: the earlier 40,325 gate remains historical evidence for
   the rejected MTP-preserving build and is superseded for the release artifact
 

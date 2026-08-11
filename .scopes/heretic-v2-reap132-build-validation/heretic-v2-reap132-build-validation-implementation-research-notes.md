@@ -18,9 +18,9 @@ description: Implementation research notes for heretic-v2-reap132-build-validati
 - Extractor evidence: 43 layers, 132 sorted survivor IDs per layer, three
   `[129280, 6]` `int64` `tid2eid` tables, and 43/43 byte-exact router matches.
 - Executable root build commit:
-  `41888983bf304b234d6414ce74abf117322d8b5c`.
+  `8071c7c64101f16ea0959881b86d180862bd514b`.
 - Executable vendor build commit:
-  `0645265700b0c8325c2ac141b02873f3cd0ab474`.
+  `56137d189fd36c1c8881ca99233614b177442425`.
 - The fixed source now exists at
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8/`.
   Official `hf` CLI confirmation exited zero at the fixed revision. All 96
