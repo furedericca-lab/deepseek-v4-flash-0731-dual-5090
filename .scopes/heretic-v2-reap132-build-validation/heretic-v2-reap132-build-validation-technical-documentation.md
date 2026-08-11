@@ -10,10 +10,10 @@ description: Canonical technical architecture for heretic-v2-reap132-build-valid
 frozen plan JSON + verified HERETIC v2 source + committed build code
                               |
                               v
-             moe-compress --plan --streaming
+        moe-compress --plan --streaming --drop-mtp
                               |
                               v
-             native HERETIC-v2-REAP132 checkpoint
+          native HERETIC-v2-REAP132-noMTP checkpoint
                               |
               +---------------+----------------+
               |                                |
@@ -66,19 +66,19 @@ frozen plan JSON + verified HERETIC v2 source + committed build code
 | `vendor/moe-expert-compress` | Apply existing plan layer-by-layer and write native checkpoint |
 | planned `scripts/verify_reap132_checkpoint.py` | Compare source/output/plan tensors and emit verification JSON |
 | `scripts/checkpoint_content_manifest.py` | Hash all checkpoint files and canonical manifest payload |
+| `scripts/derive_reap132_inventory.py` | Derive source/expert/MTP/output tensor counts from source index and frozen plan |
 | `tools/verify_hf_checkpoint_sha256.py` | Compare every local repository file against an immutable HF revision and emit mismatch evidence |
 | `/data/linux-fast/models/...HERETIC-Abliterated-FP8/` | Read-only source snapshot after verification |
-| `/data/linux-fast/models/...HERETIC-v2-REAP132/` | Native output, manifests, verifier report, smoke evidence |
+| `/data/linux-fast/models/...HERETIC-v2-REAP132-noMTP/` | Native output, manifests, verifier report, smoke evidence |
 | pinned llama.cpp converter | Convert only the verified native checkpoint |
 | llama-server | Local dual-5090 GGUF runtime validation |
 
 The fixed source index contains 72,317 tensors. Routed experts use six entries
 per expert (`w1/w2/w3.weight` plus `w1/w2/w3.scale`). Shared experts use the
 same weight/scale pattern. HERETIC v2 modifies backbone
-`layers.10..42.attn.wo_b.{weight,scale}` while MTP/DSpark remains stock.
-The streamer preserves all 4,705 model-ignored MTP tensors through a
-checkpoint-native passthrough path rather than loading them into the model or
-dropping them from output.
+`layers.10..42.attn.wo_b.{weight,scale}`. The generic streamer can preserve
+model-ignored tensors, but this build uses `--drop-mtp` to omit all 4,705
+MTP/DSpark tensors and 10,862,838,300 source bytes without reading their payloads.
 All source safetensors reads use the `pread` backend. The 96 fixed-revision
 repository files and both local provenance manifests are read-only after source
 verification, so compression cannot share or modify mmap-backed source storage.
@@ -88,7 +88,7 @@ verification, so compression cannot share or modify mmap-backed source storage.
 - Source directory:
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8/`.
 - Native output directory:
-  `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132/`.
+  `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/`.
 - Frozen plan full SHA:
   `b43a1078f905157cbdbe976530d96b6c41730ccd3ef6feac4d598a15a9d84b04`.
 - Post-prune report: `post-prune-verification.json` in the output directory.
@@ -113,10 +113,11 @@ verification, so compression cannot share or modify mmap-backed source storage.
    792 expert tensors, 396 weights, 396 scales, zero unknown source names, and
    zero survivor provenance mismatches.
 7. Recheck the full source content manifest after preflight.
-8. Run plan streaming, logging command, source/plan hashes, environment,
+8. Run plan streaming with `--drop-mtp`, logging command, source/plan hashes, environment,
    start/end time, exit status, and peak memory.
 9. Require writer hard-fail behavior for duplicate or source-unknown names, then
-   require 40,325 indexed tensors and 792 expert tensors in every layer.
+   dynamically derive the noMTP inventory, currently 35,620 indexed tensors,
+   and require 792 expert tensors in every layer and zero MTP/DSpark tensors.
 10. Treat output as quarantined until post-prune verifier passes.
 11. Run native smoke only after structural PASS.
 12. Convert to GGUF only after native smoke PASS.
@@ -151,7 +152,9 @@ verification, so compression cannot share or modify mmap-backed source storage.
   `uv run pytest vendor/moe-expert-compress/tests -q`.
 - New script unit tests use tiny safetensors fixtures covering reordered experts,
   altered packed weights, altered scales, router mismatches, bad `tid2eid`,
-  changed shared/HERETIC/MTP tensors, dangling IDs, and manifest drift.
+  changed shared/HERETIC tensors, retained MTP tensors, dangling IDs, and manifest drift.
+- Inventory tests prove the expected output count is derived from source and plan
+  classification rather than accepted as an isolated constant.
 - Source/output verification operates sequentially by tensor/shard and does not
   hold either checkpoint in RAM.
 - Native smoke covers chat, reasoning, coding, tool call, and longer context.

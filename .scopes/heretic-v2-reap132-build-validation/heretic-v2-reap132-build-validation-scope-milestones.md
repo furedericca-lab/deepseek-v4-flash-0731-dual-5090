@@ -8,7 +8,7 @@ description: Scope boundaries and milestones for heretic-v2-reap132-build-valida
 
 - Freeze the exact plan, source repos/commits, build-code commit, and provenance.
 - Complete and validate the squanchyzx HERETIC v2 source snapshot on NVMe.
-- Produce `HERETIC-v2-REAP132` through deterministic plan application.
+- Produce `HERETIC-v2-REAP132-noMTP` through deterministic plan application.
 - Implement and run byte-exact post-prune verification.
 - Create source/output content manifests with distinct hashes from the plan hash.
 - Run native HF smoke tests before conversion.
@@ -54,9 +54,9 @@ description: Scope boundaries and milestones for heretic-v2-reap132-build-valida
 
 ### M2 - Native deterministic REAP132 output
 
-- `--plan --streaming` completes without calibration/saliency.
+- `--plan --streaming --drop-mtp` completes without calibration/saliency.
 - Output is written under
-  `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132/`.
+  `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/`.
 - Exit: native checkpoint, logs, and run metadata exist with no write errors.
 
 ### M3 - Post-prune byte-exact verification
@@ -64,7 +64,7 @@ description: Scope boundaries and milestones for heretic-v2-reap132-build-valida
 - `post-prune-verification.json` reports every required PASS category.
 - Output content manifest and manifest SHA are generated.
 - Exit: 43/43 expert mappings, router, FP4 weights/scales, shared experts,
-  HERETIC overlay, MTP, and `tid2eid` are proven.
+  HERETIC overlay, zero MTP/DSpark tensors, and `tid2eid` are proven.
 
 ### M4 - Native HF smoke
 
@@ -110,7 +110,7 @@ description: Scope boundaries and milestones for heretic-v2-reap132-build-valida
 - Escalate for data deletion, permission semantics, production access model, or public API compatibility decisions outside the stated boundaries.
 - Escalate when user-specified boundaries cannot be satisfied together.
 - Escalate if the source revision or frozen plan hash changes.
-- Escalate if any retained FP4 weight/scale, shared expert, HERETIC overlay, MTP,
-  or `tid2eid` byte comparison fails.
+- Escalate if any retained FP4 weight/scale, shared expert, HERETIC overlay, or
+  `tid2eid` byte comparison fails, or if any MTP/DSpark tensor remains.
 - Escalate before deleting/replacing a completed source or output checkpoint.
 - Escalate if the converter cannot preserve MXFP4 experts without requantization.

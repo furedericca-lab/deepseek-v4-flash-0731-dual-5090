@@ -30,10 +30,10 @@ description: Implementation research notes for heretic-v2-reap132-build-validati
   content manifest SHA256 is
   `815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`.
 - `/data/linux-fast` is ext4 with 714 GiB available at the pre-prune baseline.
-- Pre-prune code review found 4,705 model-ignored MTP tensors totaling
-  10,862,838,300 bytes. Streaming now passes them through under their original
-  checkpoint names, ordered by source shard, with the existing 4 GB writer
-  flush bound.
+- Pre-prune code review found 4,705 model-ignored MTP/DSpark tensors totaling
+  10,862,838,300 bytes. The writer retains generic ignored-tensor passthrough,
+  but this build selects `--drop-mtp` because the dual-5090 llama.cpp/Hermes
+  target does not use speculative decoding.
 
 ## Gap Analysis
 
@@ -58,7 +58,7 @@ description: Implementation research notes for heretic-v2-reap132-build-validati
    - Easy to prototype but can hide checkpoint conversion and dtype details.
 4. Post-prune verifier based directly on safetensors indexes and tensor bytes.
    - Selected. It can prove packed FP4 weights/scales, router rows, shared
-     experts, HERETIC overlay, MTP, and `tid2eid` without loading the full model.
+     experts, HERETIC overlay, MTP absence, and `tid2eid` without loading the full model.
 5. Whole-file hashes only.
    - Necessary for artifact identity but insufficient for semantic mapping.
 
@@ -72,6 +72,7 @@ description: Implementation research notes for heretic-v2-reap132-build-validati
 | Native smoke before GGUF | 5 | 4 | Failure-isolation requirement | Native runtime resource uncertainty | 5 | 3 | 3 | Failures are reversible but can consume significant runtime | Accepted |
 | MXFP4-preserving GGUF first | 5 | 4 | User instruction and source dtype evidence | Converter support must be confirmed | 5 | 3 | 3 | Conversion is reproducible after native acceptance | Accepted with Phase 3 evidence gate |
 | Defer IQ3/Q2 | 5 | 5 | User instruction | None | 5 | 5 | 3 | A later scope can add quantization after the golden gate | Accepted |
+| Drop all MTP/DSpark tensors | 5 | 5 | User instruction plus 4,705-tensor/10.86-GB source audit | Generic writer can preserve them, but runtime does not consume them | 5 | 5 | 3 | Explicit policy removes unused weight while keeping source/plan provenance unchanged | Accepted |
 
 ## Selected Design
 
@@ -79,15 +80,15 @@ Phase 1 freezes the plan/source identities, completes and manifests the fixed
 source snapshot, captures a clean memory/process baseline, then executes only:
 
 ```text
-moe-compress compress --plan <frozen-plan> --streaming
+moe-compress compress --plan <frozen-plan> --streaming --drop-mtp
 ```
 
 Phase 2 implements a direct-safetensors verifier. For every layer and selected
 old expert ID, output expert `new_id` must equal source expert `old_id` for all
 `w1/w2/w3.weight` and `.scale` tensors. Router rows must follow the same map;
-shared experts and all non-pruned tensors must be byte-identical; layers 10-42
-HERETIC `attn.wo_b` tensors must remain source-identical; all MTP/DSpark tensors
-must remain source-identical; hash-layer `tid2eid` must equal the frozen plan.
+shared experts and all retained non-pruned tensors must be byte-identical;
+layers 10-42 HERETIC `attn.wo_b` tensors must remain source-identical; all
+MTP/DSpark tensors must be absent; hash-layer `tid2eid` must equal the frozen plan.
 
 Phase 3 converts only the verified native output, creates a golden GGUF content
 identity, validates it with llama.cpp on both RTX 5090s, and runs the controlled
@@ -103,7 +104,7 @@ puwaer-versus-HERETIC A/B.
 - Post-prune verifier output must report:
   `43/43 layers PASS`, `router PASS`, `experts PASS`, `scales PASS`,
   `tid2eid PASS`, `shared_experts PASS`, `HERETIC overlay PASS`, and
-  `MTP/DSpark PASS`.
+  `MTP/DSpark absent PASS`.
 - Output config must declare 132 routed experts and preserve all unrelated
   architecture/tokenizer fields.
 - Native smoke set: chat, reasoning, coding, tool call, and a longer-context
@@ -117,8 +118,8 @@ puwaer-versus-HERETIC A/B.
 
 - Assumption: source and output use the upstream per-expert tensor names found in
   the fixed source index, including `w1/w2/w3.weight` and `.scale`.
-- Assumption: MTP tensors remain present in output even though runtime serving may
-  not use them; missing MTP is a verification failure unless explicitly approved.
+- Decision: all 4,705 MTP/DSpark tensors are intentionally absent. Any retained
+  MTP tensor is a verification failure for the noMTP artifact.
 - Risk: output naming conversion may be semantically correct but differ from the
   source namespace. The verifier must normalize only through documented mapping,
   never by skipping unknown tensors.

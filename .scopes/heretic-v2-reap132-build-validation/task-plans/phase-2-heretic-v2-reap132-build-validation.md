@@ -34,13 +34,13 @@ Tasks:
 - [ ] T021 [Backend] Implement direct-safetensors post-prune verifier
   - DoD: `scripts/verify_reap132_checkpoint.py` consumes source/output/plan/manifests and emits the contracted JSON without full-model loading.
 - [ ] T022 [QA] Add adversarial verifier fixtures
-  - DoD: Tests fail on expert reorder, packed-weight mutation, scale mutation, router mismatch, shared expert drift, overlay drift, MTP drift, bad `tid2eid`, dangling ID, missing tensor, and manifest drift.
+  - DoD: Tests fail on expert reorder, packed-weight mutation, scale mutation, router mismatch, shared expert drift, overlay drift, retained MTP, bad `tid2eid`, dangling ID, missing tensor, and manifest drift.
 - [ ] T023 [QA] Verify all 43 expert mappings
   - DoD: For every layer and new expert ID, all source old-ID `w1/w2/w3.weight` and `.scale` bytes equal the output new-ID tensors; report says `43/43 layers PASS`.
 - [ ] T024 [QA] Verify router and hash routing
   - DoD: All router rows follow the plan, three `tid2eid` tables equal plan blobs, and no routing ID is outside `0..131`.
 - [ ] T025 [QA] Verify preserved non-expert tensors
-  - DoD: Shared experts, layers 10-42 HERETIC `attn.wo_b`, and all MTP/DSpark tensors are source-identical; unknown/missing tensors are zero.
+  - DoD: Shared experts and layers 10-42 HERETIC `attn.wo_b` are source-identical; all 4,705 source MTP/DSpark tensors are absent; unknown/unclassified tensors are zero.
 - [ ] T026 [Backend] Generate the output content manifest
   - DoD: Every native output file is hashed under `checkpoint-content-manifest-v1`, its manifest SHA is stable across two runs, and differs conceptually from the plan logical SHA.
 - [ ] T027 [QA] Freeze the post-prune report

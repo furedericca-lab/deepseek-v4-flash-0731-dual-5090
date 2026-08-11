@@ -64,7 +64,7 @@ outside those directories is an error, not an excluded artifact.
     "shared_experts": "PASS",
     "tid2eid": "PASS",
     "heretic_overlay": "PASS",
-    "mtp_dspark": "PASS",
+    "mtp_dspark_absent": "PASS",
     "dangling_expert_ids": "PASS"
   },
   "layer_results": [],
@@ -94,7 +94,8 @@ layer results exist, and `failures` is empty.
 | Missing or partial shard | Stop and preserve download state for resume |
 | Calibration/saliency path invoked | Mark build invalid and stop |
 | Unknown output tensor name | Verification failure; do not ignore |
-| Weight/scale/router/shared/overlay/MTP mismatch | Verification failure; quarantine output |
+| Weight/scale/router/shared/overlay mismatch | Verification failure; quarantine output |
+| Any MTP/DSpark tensor remains in output | Verification failure; quarantine output |
 | `tid2eid` mismatch, duplicate, or ID >=132 | Verification failure |
 | Native smoke NaN/routing/repetition failure | Block GGUF conversion |
 | GGUF expert type is not intended MXFP4 representation | Do not freeze as golden baseline |
@@ -110,7 +111,10 @@ layer results exist, and `failures` is empty.
 - Shared expert tensors are source-identical.
 - Backbone layers 10-42 `attn.wo_b.weight` and `.scale` are source-identical,
   preserving the HERETIC v2 overlay.
-- All MTP/DSpark tensors are source-identical.
+- All 4,705 source MTP/DSpark tensors are absent from output.
+- Expected tensor count is derived from source classification and the frozen
+  plan. For the current identities it is `40,325 - 4,705 = 35,620`; the verifier
+  must not rely only on the hard-coded result.
 - Hash layers 0-2 `tid2eid` are byte-identical to the frozen plan blobs.
 - No router or routing tensor may contain an expert ID outside `0..131`.
 - Plan, source, native output, and GGUF identities are reported separately.
@@ -119,6 +123,11 @@ layer results exist, and `failures` is empty.
 
 - The plan JSON is not rewritten, normalized, or regenerated in this scope.
 - Fresh REAP calibration is explicitly rejected.
+- Structural deletion stops at routed expert REAP132 plus MTP/DSpark removal.
+  Shared experts, router, `tid2eid`, Lightning Indexer, CSA/HCA, mHC, attention,
+  embeddings, LM head, norm, RoPE, and sink tensors remain part of the model.
+- Further capacity reduction uses runtime placement or a separately approved
+  mixed-quantization design, not additional module deletion in this scope.
 - Native checkpoint verification cannot be replaced by GGUF runtime success.
 - Further IQ3/Q2 quantization begins only in a new scope or explicit extension
   after the golden GGUF baseline passes.

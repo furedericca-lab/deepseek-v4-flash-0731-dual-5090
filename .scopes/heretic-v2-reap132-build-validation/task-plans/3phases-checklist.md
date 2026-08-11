@@ -172,6 +172,30 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
 - Checkpoint confirmed: source is repaired, remotely verified, and read-only;
   deterministic pruning is blocked pending root-cause isolation
 
+### 2026-08-11 noMTP build-policy decision
+
+- Phase: 1-2 contract update
+- Decision:
+  - keep squanchyzx HERETIC v2 as the immutable source and apply the frozen
+    puwaer REAP132 plan exactly
+  - retain the generic ignored-tensor passthrough capability, but select the
+    explicit project policy `--drop-mtp`
+  - write the new artifact only as
+    `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/`
+- Derived inventory gate:
+  - old MTP-preserving structural count -> 40,325
+  - classified source MTP/DSpark tensors -> 4,705 totaling 10,862,838,300 bytes
+  - current noMTP structural count -> 35,620
+  - derive the count from source/plan classification during verification rather
+    than accepting the hard-coded number alone
+- Required verification:
+  - 43/43 layers, 792 expert tensors per layer, 396 weights and 396 scales
+  - exact frozen survivor/router/three-table `tid2eid` provenance
+  - all 66 HERETIC v2 `attn.wo_b.{weight,scale}` tensors source-identical
+  - MTP/DSpark tensors -> 0; unknown/unclassified tensors -> 0
+- Checkpoint confirmed: the earlier 40,325 gate remains historical evidence for
+  the rejected MTP-preserving build and is superseded for the release artifact
+
 ## Final Release Gate
 - Scope constraints preserved.
 - Quality/security gates passed.
