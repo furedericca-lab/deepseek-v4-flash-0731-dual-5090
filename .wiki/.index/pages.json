@@ -1,0 +1,239 @@
+[
+  {
+    "anchor_count": 3,
+    "code_anchors": [
+      {
+        "file": "vendor/moe-expert-compress/src/moe_compress/streaming/naming.py",
+        "id": "checkpoint-name-reversal",
+        "kind": "function",
+        "page": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+        "role": "defines",
+        "symbol": "to_checkpoint_names",
+        "target": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#checkpoint-name-reversal"
+      },
+      {
+        "file": "vendor/moe-expert-compress/src/moe_compress/streaming/naming.py",
+        "id": "source-namespace-gate",
+        "kind": "function",
+        "page": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+        "role": "defines",
+        "symbol": "verify_against_source",
+        "target": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#source-namespace-gate"
+      },
+      {
+        "file": "vendor/moe-expert-compress/src/moe_compress/streaming/writer.py",
+        "id": "writer-source-cross-check",
+        "kind": "method",
+        "page": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+        "role": "defines",
+        "symbol": "StreamingCheckpointWriter.finalize",
+        "target": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#writer-source-cross-check"
+      }
+    ],
+    "excerpt": "# HERETIC v2 streaming writer namespace corruption ## Symptom The first deterministic REAP132 streaming run exited `0`, did not trigger the memory guard, wrote 18 shards, and produced a stable content manifest. It was still structurally invalid. `StreamingCheckpointWriter.finalize()` reported 437 names absent from the source index: - 396 names such as `.experts.0.w1.weight`, with no layer or FFN prefix; - 41 names such as `layers.42.attn.norm.weight`, where the source namespace is `layers.42....",
+    "path": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+    "related_files": [
+      {
+        "path": "vendor/moe-expert-compress/src/moe_compress/streaming/naming.py",
+        "role": "owner"
+      },
+      {
+        "path": "vendor/moe-expert-compress/src/moe_compress/streaming/writer.py",
+        "role": "caller"
+      },
+      {
+        "path": "vendor/moe-expert-compress/tests/test_naming.py",
+        "role": "test"
+      },
+      {
+        "path": "squanchyzx-puwaer-reap132-mask.json",
+        "role": "config"
+      },
+      {
+        "path": "tools/verify_hf_checkpoint_sha256.py",
+        "role": "verification"
+      },
+      {
+        "path": "tests/test_verify_hf_checkpoint_sha256.py",
+        "role": "test"
+      }
+    ],
+    "scope": "heretic-v2-reap132-build-validation",
+    "search_text": "HERETIC v2 streaming writer namespace corruption\ndebugging\ncurrent\nheretic-v2-reap132-build-validation\n{\"title\": \"HERETIC v2 streaming writer namespace corruption\", \"type\": \"debugging\", \"status\": \"current\", \"scope\": \"heretic-v2-reap132-build-validation\", \"related_scopes\": [\"deepseek-v4-flash-0731-dual-5090\"], \"related_files\": [{\"path\": \"vendor/moe-expert-compress/src/moe_compress/streaming/naming.py\", \"role\": \"owner\"}, {\"path\": \"vendor/moe-expert-compress/src/moe_compress/streaming/writer.py\", \"role\": \"caller\"}, {\"path\": \"vendor/moe-expert-compress/tests/test_naming.py\", \"role\": \"test\"}, {\"path\": \"squanchyzx-puwaer-reap132-mask.json\", \"role\": \"config\"}, {\"path\": \"tools/verify_hf_checkpoint_sha256.py\", \"role\": \"verification\"}, {\"path\": \"tests/test_verify_hf_checkpoint_sha256.py\", \"role\": \"test\"}], \"code_anchors\": [{\"id\": \"checkpoint-name-reversal\", \"kind\": \"function\", \"file\": \"vendor/moe-expert-compress/src/moe_compress/streaming/naming.py\", \"symbol\": \"to_checkpoint_names\", \"role\": \"defines\"}, {\"id\": \"source-namespace-gate\", \"kind\": \"function\", \"file\": \"vendor/moe-expert-compress/src/moe_compress/streaming/naming.py\", \"symbol\": \"verify_against_source\", \"role\": \"defines\"}, {\"id\": \"writer-source-cross-check\", \"kind\": \"method\", \"file\": \"vendor/moe-expert-compress/src/moe_compress/streaming/writer.py\", \"symbol\": \"StreamingCheckpointWriter.finalize\", \"role\": \"defines\"}], \"source_docs\": [\".scopes/heretic-v2-reap132-build-validation/task-plans/3phases-checklist.md\"], \"tags\": [\"deepseek-v4\", \"fp4\", \"safetensors\", \"streaming\", \"namespace\"], \"last_checked\": \"2026-08-11\", \"updated\": \"2026-08-11T12:16:32Z\"}\nvendor/moe-expert-compress/src/moe_compress/streaming/naming.py owner vendor/moe-expert-compress/src/moe_compress/streaming/writer.py caller vendor/moe-expert-compress/tests/test_naming.py test squanchyzx-puwaer-reap132-mask.json config tools/verify_hf_checkpoint_sha256.py verification tests/test_verify_hf_checkpoint_sha256.py test\ncheckpoint-name-reversal function vendor/moe-expert-compress/src/moe_compress/streaming/naming.py to_checkpoint_names defines source-namespace-gate function vendor/moe-expert-compress/src/moe_compress/streaming/naming.py verify_against_source defines writer-source-cross-check method vendor/moe-expert-compress/src/moe_compress/streaming/writer.py StreamingCheckpointWriter.finalize defines\n\n# HERETIC v2 streaming writer namespace corruption\n\n## Symptom\n\nThe first deterministic REAP132 streaming run exited `0`, did not trigger the\nmemory guard, wrote 18 shards, and produced a stable content manifest. It was\nstill structurally invalid. `StreamingCheckpointWriter.finalize()` reported 437\nnames absent from the source index:\n\n- 396 names such as `.experts.0.w1.weight`, with no layer or FFN prefix;\n- 41 names such as `layers.42.attn.norm.weight`, where the source namespace is\n  `layers.42.attn.kv_norm.weight`.\n\nThe output index contained 23,693 tensors, of which 23,256 existed in the\nsource namespace and 437 did not. The source index contains 72,317 tensors.\nEvery output layer had only 396 correctly named expert tensors, corresponding\nto 132 experts times the three packed weights. The matching 396 scale tensors\nper layer were not correctly preserved.\n\n## Proven impact\n\nThe 396 top-level expert names are the E8M0 scale payloads, not legitimate\nexpert-renumbering names. Their shapes identify them as scales, for example:\n\n```text\n.experts.0.w1.weight                  [2048, 128] F8_E8M0\nlayers.42.ffn.experts.0.w1.weight     [2048, 2048] I8\nsource layers.42.ffn.experts.0.w1.scale [2048, 128] F8_E8M0\n```\n\nBecause all 43 layers emitted the same 396 malformed top-level names, later\nlayers overwrote earlier entries in the writer dictionaries. The checkpoint is\nshort by 16,632 distinct per-layer scale keys: `43 * 396 - 396`. The expected\npost-prune index size is therefore 40,325, not 23,693. The 41 bad attention norm\nnames are namespace errors without an additional count loss.\n\nThis output cannot load correctly in a serving engine and cannot be repaired by\nclassifying the 437 names as expected remaps. It must remain quarantined and\nmust not enter native smoke, GGUF conversion, or deployment.\n\n## Root cause boundary\n\nThe failure occurs in `to_checkpoint_names()` when it reverses the installed\nTransformers DeepSeek-V4 conversion mapping for a complete real quantized layer.\nAfter pruning, the fused routed-expert state includes both\n`gate_up_proj`/`down_proj` and their `_scale_inv` tensors. Reversing the full\nstate produces correct per-layer packed-weight names but malformed scale names.\nThe generic reverse `.norm.` mapping also turns the attention KV norm into\n`attn.norm` instead of the checkpoint-native `attn.kv_norm` spelling.\n\nThe existing naming tests did not catch this because their tiny DeepSeek-V4\nfixture is unquantized. Testing single synthetic names also passes; the defect\nappears on the complete fused weight-plus-scale state of a real FP4 layer.\n\n## Detection procedure\n\nDo not use process exit or a content manifest as a semantic checkpoint gate.\nThe content manifest correctly hashes whatever files exist, including an\ninvalid namespace. Before accepting any future streaming output:\n\n1. Compare every output index key against the source index. Unknown names must\n   be a hard failure, not a warning.\n2. Require 792 expert tensors per layer: 132 experts times `w1/w2/w3` times\n   `weight/scale`.\n3. Require 40,325 total tensors for this frozen source, plan, and MTP-preserving\n   build unless a documented source or plan identity changes.\n4. Open representative safetensors headers and verify scale shapes and dtypes,\n   not only key counts.\n5. Run the direct-safetensors verifier before native loading or GGUF conversion.\n\n## Required fix and regression gate\n\nThe naming layer must explicitly preserve the decoder-layer prefix and map the\nreal quantized expert scale payloads to\n`layers.L.ffn.experts.E.w{1,2,3}.scale`. It must also restore\n`layers.L.attn.kv_norm.weight`. Add a regression fixture built from the same\nfused packed-weight and E8M0 scale state shape the writer receives after\n`apply_keep()`.\n\nThe writer source cross-check must reject any unknown output name before an\nartifact is reported as successfully compressed. A one-layer real-checkpoint\npreflight must produce zero unknown names before the full 43-layer rerun.\n\nAfter the fix, preserve the failed output and logs as evidence, create a fresh\noutput directory, rerun deterministic pruning with the frozen plan, and require:\n\n```text\nunknown source names: 0\nexpert tensors per layer: 792\ntotal indexed tensors: 40325\nunclassified tensors: 0\n```\n\nOnly the subsequent byte-exact verifier can establish final correctness.\n\n## Source snapshot mutation discovered during repair\n\nThe namespace investigation also invalidated the assumption that the source\ndirectory had remained immutable. The canonical 97-file content manifest had\nrecorded the correct fixed-revision bytes, but a later live comparison against\nHugging Face found same-size SHA drift in shards 2, 41, 43, 44, and 46. Shard 2\nappeared only after an explicit `sync`, consistent with a delayed dirty-page\nwriteback from the old mmap loading path.\n\nAll five shards were downloaded again with the logged-in official `hf` CLI at\nrevision `e7efd043c5e072da4d40f0f98ade554c5713bad9`. After replacement, a fresh\nremote comparison proved:\n\n```text\npaths and sizes: 96/96\nLFS SHA256: 50/50\nGit blob SHA1: 46/46\nwritable remote files: 0\nmismatches: 0\n```\n\nThe old streaming loader used safetensors mmap-backed slices. Vendor commit\n`7fae3000e321fde32a4a010171b9480e22148ba0` changes the single-file index,\nper-layer load, and MTP passthrough paths to `backend=\"pread\"`, and regression\ntests require source safetensors hashes to remain unchanged. The 96 repository\nfiles plus `.checkpoint-source.json` and `checkpoint-content-manifest.json` are\nnow read-only.\n\nA real Layer 0 preflight through pread passed 792/792 expert tensors, zero\nunknown names, and zero byte/dtype/shape provenance mismatches. A subsequent\nfull manifest check remained stable at\n`815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`.\n\nRepeated reads of a bad shard were stable around `sync`, and the kernel log had\nno NVMe I/O, media, data-integrity, or EXT4 errors. A subsequent authorized SMART\nread reported `PASSED`, zero critical warnings, zero media/data-integrity errors,\nand zero error-log entries. The SSD has historical unsafe-shutdown and elevated\ntemperature counters, but there is no current evidence of media failure.\n\n## Follow-up full-run source gate\n\nThe next deterministic run wrote 18 output shards but exited `139` after the\nsave message; the memory guard did not trigger. The output is not releasable\nbecause the process did not exit cleanly, and its 90 GiB directory was deleted\nunder the standing unusable-artifact cleanup authorization. A complete post-run comparison against\nthe fixed Hugging Face revision then found five same-size SHA256 mismatches:\n\n```text\nmodel-00005-of-00048.safetensors\nmodel-00040-of-00048.safetensors\nmodel-00042-of-00048.safetensors\nmodel-00047-of-00048.safetensors\nmodel-00048-of-00048.safetensors\n```\n\nTheir recorded mtimes predate the 19:34 run, so the evidence does not establish\nthat the `pread` rerun created the drift. It does establish that mode `0444` and\na prior manifest result are not substitutes for a fresh remote hash gate at the\nmoment a source artifact is consumed.\n\nThe five files were downloaded to an isolated repair directory with the logged-in\nofficial `hf` CLI at revision\n`e7efd043c5e072da4d40f0f98ade554c5713bad9`. Each replacement matched its remote\nLFS SHA256 before atomic replacement. A complete second pass then proved:\n\n```text\nremote files: 96\npaths: 96/96\nLFS SHA256: 50/50\nGit files by downloaded remote SHA256: 46/46\nmismatches: 0\nwritable remote files: 0\ncontent manifest: 97 files PASS\nmanifest SHA256: 815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98\n```\n\n`tools/verify_hf_checkpoint_sha256.py` now implements this gate. It continues\nafter individual failures, records every file result, emits a `mismatches`\ncollection plus missing/extra path collections, and exits nonzero only after the\ncomplete comparison. LFS objects use the revision metadata SHA256; ordinary Git\nfiles are downloaded at the fixed revision and hashed remotely and locally.\n\nThe historical 40,325 tensor count in this page describes the rejected\nMTP-preserving policy. The release policy now deliberately drops all 4,705\n`mtp.*` tensors, so `scripts/derive_reap132_inventory.py` derives a 35,620-tensor\nnoMTP target. The naming fix remains required independently of this policy.\n\n## 2026-08-11 page-cache BAD_PAGE incident\n\nAfter the noMTP build, a full buffered SHA/manifest pass twice triggered Linux\n`7.0.0-28-generic` reports from `kswapd0` and `page_cache_ra_order`:\n`Bad page state`, `corrupted mapping in tail page`, and\n`compound_head not consistent`. One shard temporarily hashed differently through\nthe normal page cache while the same bytes read with `O_DIRECT` matched the\nremote SHA256. NVMe SMART remained clean (zero media/data-integrity errors).\n\nThe issue recurred after reboot while zram held only tens of KiB, so zram is not\nthe leading cause. It is currently an unresolved kernel/RAM/EXPO stability\nissue triggered by large sequential page-cache pressure. BIOS is now `1.S2` with\nEXPO1 and DDR5-6000 configured. A complete 96-file remote SHA pass and source\nmanifest check passed in that boot, but the full tensor verifier was stopped when\nthe kernel emitted another `BAD_PAGE`; no post-prune PASS report may be frozen\nfrom that run.\n\n`verify_reap132_checkpoint.py` uses chunked reads with\n`POSIX_FADV_DONTNEED` to bound page-cache growth. Reboot into the alternate\n`6.17.0-23-generic` kernel, or disable EXPO and repeat the stress pass, before\naccepting the verifier report as final evidence.\n\n## 2026-08-12 5800 MT/s follow-up\n\nAfter reducing DDR5 from 6000 to 5800 MT/s, a clean 6.17 boot (`tainted=4096`)\ncompleted a full direct-safetensors read without reproducing `BAD_PAGE`,\n`compound_head`, MCE, or I/O errors. This materially improves the host\nstability signal, but does not validate the checkpoint built while the system\nwas still at 6000 MT/s.\n\nThe verifier initially reported 49 failures. Reclassifying `gate.bias` as a\nrouter tensor removed 41 false positives. Eight expert byte mismatches remained\nstable on repeat reads, plus one stable `layers.3.attn.wo_a.weight` mismatch;\nthese are treated as invalid-artifact evidence. The old read-only `noMTP` and\n`rerun-6.17` model directories were deleted after quarantine; logs and reports\nremain under `.artifacts/`.\n\nA new deterministic rebuild is running under 5800 MT/s in the isolated\n`DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-rerun-5800` directory. It must pass\nthe manifest and byte verifier before any smoke or GGUF work.\n\nThe 5800 MT/s rebuild completed and its 20-file manifest passed twice, but the\nfirst full verifier attempt triggered a `kswapd0` general-protection Oops at\n`23:59:42` on 6.17. The kernel taint changed to include `DIE`; verification was\nstopped and no post-prune PASS report exists. This confirms that 5800 improves\nthe threshold but does not establish host stability. The new output remains\nread-only and quarantined.\n\n## 2026-08-12 5600 MT/s final A/B result\n\nWith `7.0.0-28-generic` and DDR5-5600, a fresh rebuild completed, its manifest\npassed twice, and the complete verifier finished without any kernel error\n(`tainted=4096`). The verifier still reported five expert weight byte\nmismatches. The mismatch set differs from the previous 5800-built artifact,\nwhile router, scales, shared experts, tid2eid, HERETIC overlay, MTP absence,\nand dangling-ID checks all pass.\n\nBecause the mismatches move to different experts on each rebuild despite a\nfixed source and fixed plan, the remaining defect is a non-deterministic FP4\nexpert-weight mutation in the CUDA/streaming writer path (or its tensor\nconversion), not an explained plan remap. Do not keep rebuilding or promote an\nartifact until the writer preserves the raw packed weight bytes or fails hard\non any mutation.\n",
+    "status": "current",
+    "title": "HERETIC v2 streaming writer namespace corruption",
+    "type": "debugging"
+  },
+  {
+    "anchor_count": 0,
+    "code_anchors": [],
+    "excerpt": "# Dual 5090 Q2_K full-GPU with RAM F16 KV Accepted architecture: DeepSeek-V4-Flash-0731 REAP-150B Q2_K on 2x RTX 5090 with -ngl all, -sm layer, -ts 1,1, --no-kv-offload, -ctk/-ctv f16, start -c 65536 -np 1 -b 1024 -ub 256. Runtime model path preferred on /data/linux-fast (NVMe ext4); Toshiba NTFS path is source only. Residual risk: host currently has only ~46 GiB RAM versus 128-256 GiB comfort band.",
+    "path": ".wiki/decisions/dual-5090-q2-k-full-gpu-with-ram-f16-kv.md",
+    "related_files": [],
+    "scope": "deepseek-v4-flash-0731-dual-5090",
+    "search_text": "Dual 5090 Q2_K full-GPU with RAM F16 KV\ndecision\naccepted\ndeepseek-v4-flash-0731-dual-5090\n{\"title\": \"Dual 5090 Q2_K full-GPU with RAM F16 KV\", \"type\": \"decision\", \"status\": \"accepted\", \"scope\": \"deepseek-v4-flash-0731-dual-5090\", \"related_scopes\": [], \"related_files\": [], \"source_docs\": [], \"tags\": [\"deployment\", \"llama-cpp\", \"dual-5090\"], \"last_checked\": \"2026-08-11\", \"updated\": \"2026-08-10T18:26:38Z\", \"decision_date\": \"2026-08-11\"}\n\n\n\n# Dual 5090 Q2_K full-GPU with RAM F16 KV\n\nAccepted architecture: DeepSeek-V4-Flash-0731 REAP-150B Q2_K on 2x RTX 5090 with -ngl all, -sm layer, -ts 1,1, --no-kv-offload, -ctk/-ctv f16, start -c 65536 -np 1 -b 1024 -ub 256. Runtime model path preferred on /data/linux-fast (NVMe ext4); Toshiba NTFS path is source only. Residual risk: host currently has only ~46 GiB RAM versus 128-256 GiB comfort band.\n",
+    "status": "accepted",
+    "title": "Dual 5090 Q2_K full-GPU with RAM F16 KV",
+    "type": "decision"
+  },
+  {
+    "anchor_count": 0,
+    "code_anchors": [],
+    "excerpt": "# First-boot llama-server recipe First-boot recipe after model is on NVMe and llama-server is built: llama-server -m /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf -ngl all -sm layer -ts 1,1 --no-kv-offload -ctk f16 -ctv f16 -c 65536 -np 1 -b 1024 -ub 256 -fa on --reasoning-format deepseek --host 127.0.0.1 --port 8000. OOM ladder: reduce batch first, then context to 32768, only then consider limited CPU offload. Context climb only after 64K is stable...",
+    "path": ".wiki/how-to/first-boot-llama-server-recipe.md",
+    "related_files": [],
+    "scope": "deepseek-v4-flash-0731-dual-5090",
+    "search_text": "First-boot llama-server recipe\nhow-to\ncurrent\ndeepseek-v4-flash-0731-dual-5090\n{\"title\": \"First-boot llama-server recipe\", \"type\": \"how-to\", \"status\": \"current\", \"scope\": \"deepseek-v4-flash-0731-dual-5090\", \"related_scopes\": [], \"related_files\": [], \"source_docs\": [], \"tags\": [\"launch\", \"llama-server\"], \"last_checked\": \"2026-08-11\", \"updated\": \"2026-08-10T18:26:39Z\"}\n\n\n\n# First-boot llama-server recipe\n\nFirst-boot recipe after model is on NVMe and llama-server is built: llama-server -m /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf -ngl all -sm layer -ts 1,1 --no-kv-offload -ctk f16 -ctv f16 -c 65536 -np 1 -b 1024 -ub 256 -fa on --reasoning-format deepseek --host 127.0.0.1 --port 8000. OOM ladder: reduce batch first, then context to 32768, only then consider limited CPU offload. Context climb only after 64K is stable: 64K -> 96K -> 128K -> 192K.\n",
+    "status": "current",
+    "title": "First-boot llama-server recipe",
+    "type": "how-to"
+  },
+  {
+    "anchor_count": 0,
+    "code_anchors": [],
+    "excerpt": "# HERETIC v2 REAP132 build and validation The current execution scope is `.scopes/heretic-v2-reap132-build-validation/`. It turns the frozen mapped plan into a native checkpoint, proves the output byte-by-byte, runs native HF smoke, then creates and validates one MXFP4-preserving golden GGUF before any IQ3/Q2 work. The immutable build input is `squanchyzx-puwaer-reap132-mask.json`. Its full file SHA256 is `b43a1078f905157cbdbe976530d96b6c41730ccd3ef6feac4d598a15a9d84b04`; its logical SHA256 i...",
+    "path": ".wiki/implementation/heretic-v2-reap132-build-validation.md",
+    "related_files": [
+      {
+        "path": ".scopes/heretic-v2-reap132-build-validation",
+        "role": "related"
+      },
+      {
+        "path": "squanchyzx-puwaer-reap132-mask.json",
+        "role": "related"
+      },
+      {
+        "path": "scripts/checkpoint_content_manifest.py",
+        "role": "related"
+      },
+      {
+        "path": "scripts/derive_reap132_inventory.py",
+        "role": "related"
+      },
+      {
+        "path": "scripts/write_checkpoint_source_manifest.py",
+        "role": "related"
+      },
+      {
+        "path": "scripts/verify_reap132_checkpoint.py",
+        "role": "related"
+      },
+      {
+        "path": "tests/test_checkpoint_content_manifest.py",
+        "role": "related"
+      },
+      {
+        "path": "tests/test_verify_reap132_checkpoint.py",
+        "role": "related"
+      },
+      {
+        "path": "tools/verify_hf_checkpoint_sha256.py",
+        "role": "related"
+      },
+      {
+        "path": "tests/test_verify_hf_checkpoint_sha256.py",
+        "role": "related"
+      },
+      {
+        "path": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+        "role": "related"
+      },
+      {
+        "path": "scripts/extract_puwaer_reap132_mask.py",
+        "role": "related"
+      },
+      {
+        "path": "vendor/moe-expert-compress",
+        "role": "related"
+      },
+      {
+        "path": "README.md",
+        "role": "related"
+      },
+      {
+        "path": "AGENTS.md",
+        "role": "related"
+      }
+    ],
+    "scope": "heretic-v2-reap132-build-validation",
+    "search_text": "HERETIC v2 REAP132 build and validation\nimplementation\ncurrent\nheretic-v2-reap132-build-validation\n{\"title\": \"HERETIC v2 REAP132 build and validation\", \"type\": \"implementation\", \"status\": \"current\", \"scope\": \"heretic-v2-reap132-build-validation\", \"related_scopes\": [\"deepseek-v4-flash-0731-dual-5090\"], \"related_files\": [\".scopes/heretic-v2-reap132-build-validation\", \"squanchyzx-puwaer-reap132-mask.json\", \"scripts/checkpoint_content_manifest.py\", \"scripts/derive_reap132_inventory.py\", \"scripts/write_checkpoint_source_manifest.py\", \"scripts/verify_reap132_checkpoint.py\", \"tests/test_checkpoint_content_manifest.py\", \"tests/test_verify_reap132_checkpoint.py\", \"tools/verify_hf_checkpoint_sha256.py\", \"tests/test_verify_hf_checkpoint_sha256.py\", \".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md\", \"scripts/extract_puwaer_reap132_mask.py\", \"vendor/moe-expert-compress\", \"README.md\", \"AGENTS.md\"], \"source_docs\": [\".scopes/heretic-v2-reap132-build-validation/heretic-v2-reap132-build-validation-technical-documentation.md\"], \"tags\": [\"reap132\", \"heretic-v2\", \"checkpoint-verification\", \"gguf\"], \"last_checked\": \"2026-08-11\", \"updated\": \"2026-08-11T12:16:32Z\"}\n.scopes/heretic-v2-reap132-build-validation related squanchyzx-puwaer-reap132-mask.json related scripts/checkpoint_content_manifest.py related scripts/derive_reap132_inventory.py related scripts/write_checkpoint_source_manifest.py related scripts/verify_reap132_checkpoint.py related tests/test_checkpoint_content_manifest.py related tests/test_verify_reap132_checkpoint.py related tools/verify_hf_checkpoint_sha256.py related tests/test_verify_hf_checkpoint_sha256.py related .wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md related scripts/extract_puwaer_reap132_mask.py related vendor/moe-expert-compress related README.md related AGENTS.md related\n\n\n# HERETIC v2 REAP132 build and validation\n\nThe current execution scope is `.scopes/heretic-v2-reap132-build-validation/`. It turns the frozen mapped plan into a native checkpoint, proves the output byte-by-byte, runs native HF smoke, then creates and validates one MXFP4-preserving golden GGUF before any IQ3/Q2 work.\n\nThe immutable build input is `squanchyzx-puwaer-reap132-mask.json`. Its full file SHA256 is `b43a1078f905157cbdbe976530d96b6c41730ccd3ef6feac4d598a15a9d84b04`; its logical SHA256 is `082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17`. The base is squanchyzx HERETIC v2 commit `e7efd043c5e072da4d40f0f98ade554c5713bad9`; the mapped target is puwaer REAP-150B commit `868fa38e2f2964699ad065dc8d9382c136cc60b8`. The extractor proved 43/43 exact router mappings and three exact `[129280, 6]` `tid2eid` tables. The plan must not be regenerated or edited.\n\nPhase 1 freezes the build-code commit, verifies the user-started fixed-revision download, creates source provenance/content manifests, captures clean host baselines, and runs deterministic `--plan --streaming` pruning without calibration or saliency. The native output remains quarantined after writing.\n\nPhase 2 implements direct-safetensors verification. For every layer, output expert `new_id` must equal source expert `kept_experts[new_id]` for `w1/w2/w3.weight` and `.scale`; router rows and three `tid2eid` tables must match; shared experts and layers 10-42 HERETIC `attn.wo_b` must remain source-identical; all MTP/DSpark tensors must be absent. The required report is `post-prune-verification.json`, followed by chat, reasoning, coding, tool-call, and longer-context native smoke.\n\nThe verifier implementation is `scripts/verify_reap132_checkpoint.py`. It parses\nsafetensors headers directly, honors index-selected overlay shards, compares\ntensor payloads in bounded chunks, and emits the contracted report without full\nmodel loading. Its fixture suite covers expert/scale mutation, router reorder,\ntid2eid dangling IDs, retained MTP, and all 43 layer classifications.\n\nPhase 3 pins the llama.cpp converter, produces one MXFP4-preserving golden GGUF, validates it on both RTX 5090s through localhost llama-server, and runs a controlled puwaer-versus-HERETIC A/B with identical survivor set, prompts, flags, and scoring. Further IQ3/Q2 quantization is deferred.\n\nThe source snapshot is verified at `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8/`. The logged-in official `hf` CLI fixed-revision command exits zero; all 96 remote files match through 50 LFS SHA256 checks and 46 byte comparisons. `.checkpoint-source.json` passes, and the 97-entry source content manifest is stable at `815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`. The pre-prune baseline records 46 GiB RAM, 47 GiB swap, 714 GiB free NVMe space, two visible RTX 5090s, and no competing model/wiki scan. Pre-start review also proved that 4,705 model-ignored MTP tensors total 10,862,838,300 bytes and added checkpoint-native streaming passthrough so they are not dropped. Executable identities for that run were root build commit `41888983bf304b234d6414ce74abf117322d8b5c` and vendor build commit `0645265700b0c8325c2ac141b02873f3cd0ab474`.\n\nThe first deterministic pruning process completed without OOM, but its output was rejected and deleted under explicit user authorization. The output index had 23,693 tensors and 437 names absent from the source namespace. Of those, 396 were layerless expert scale payloads such as `.experts.0.w1.weight`; they collided across all 43 layers and caused 16,632 distinct scale keys to be lost. The other 41 were malformed attention KV norm names such as `layers.42.attn.norm.weight`. A successful content manifest does not override this semantic failure.\n\nRepair also found five source shards changed after the previously correct source manifest was created. They were replaced from the fixed Hugging Face revision, all 96 remote files passed, and all source artifacts were made read-only. Streaming now uses pread in vendor commit `7fae3000e321fde32a4a010171b9480e22148ba0`; a real quantized Layer 0 preflight and a subsequent full source manifest check passed.\n\nA later deterministic full run wrote 18 shards but exited `139`, so its 90 GiB output was rejected and deleted. A fresh fixed-revision comparison found five additional same-size shard SHA256 mismatches. Their mtimes predate that run, so the writer responsible is not yet proven. The five shards were independently redownloaded and verified before replacement. `tools/verify_hf_checkpoint_sha256.py` then proved 96/96 paths and SHA256 values against the immutable remote revision, and the 97-file content manifest again passed at `815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`; all 96 repository files and both local control manifests are `0444`. SMART reports no critical warnings, media errors, data-integrity errors, or error-log entries. See [HERETIC v2 streaming writer namespace corruption](../debugging/heretic-v2-streaming-writer-namespace-corruption.md) for the complete evidence and prevention gates. The next gate is to isolate the remaining source-mutation/exit-139 path before another full pruning run.\n\nThe release artifact policy is now `HERETIC-v2-REAP132-noMTP`. The generic writer\nstill supports ignored-tensor passthrough, but this build uses `--drop-mtp` and\ndoes not read or write the 4,705 MTP/DSpark tensors (10,862,838,300 source bytes).\n`scripts/derive_reap132_inventory.py` dynamically derives 35,620 output tensors:\n72,317 source tensors minus 31,992 removed routed-expert tensors minus 4,705 MTP\ntensors. Structural deletion stops here. Shared experts, router, all three\n`tid2eid` tables, Lightning Indexer, CSA/HCA, mHC, attention, embedding, LM head,\nnorm, RoPE, sink tensors, and the 66 HERETIC v2 attention tensors remain.\n",
+    "status": "current",
+    "title": "HERETIC v2 REAP132 build and validation",
+    "type": "implementation"
+  },
+  {
+    "anchor_count": 0,
+    "code_anchors": [],
+    "excerpt": "# Model placement and disk strategy # Model placement and disk strategy The former Q2_K and IQ3_XXS local copies were deleted after their observed SHA256 values disagreed with Hugging Face artifact metadata. They are historical diagnostics, not verification sources. The selected REAP base is HERETIC v2 at immutable revision `e7efd043c5e072da4d40f0f98ade554c5713bad9` from `squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8`. Download its Transformers snapshot to `/data/linux-fast/models...",
+    "path": ".wiki/implementation/model-placement-and-disk-strategy.md",
+    "related_files": [
+      {
+        "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731",
+        "role": "related"
+      },
+      {
+        "path": "scripts/write_checkpoint_source_manifest.py",
+        "role": "related"
+      }
+    ],
+    "scope": "deepseek-v4-flash-0731-dual-5090",
+    "search_text": "Model placement and disk strategy\nimplementation\ncurrent\ndeepseek-v4-flash-0731-dual-5090\n{\"title\": \"Model placement and disk strategy\", \"type\": \"implementation\", \"status\": \"current\", \"scope\": \"deepseek-v4-flash-0731-dual-5090\", \"related_scopes\": [], \"related_files\": [\"/data/linux-fast/models/DeepSeek-V4-Flash-0731\", \"scripts/write_checkpoint_source_manifest.py\"], \"source_docs\": [\"AGENTS.md\", \"docs/puwaer-reap132-mask-README.md\"], \"tags\": [\"storage\", \"model-path\", \"provenance\"], \"last_checked\": \"2026-08-11\", \"updated\": \"2026-08-11T07:17:23Z\"}\n/data/linux-fast/models/DeepSeek-V4-Flash-0731 related scripts/write_checkpoint_source_manifest.py related\n\n\n# Model placement and disk strategy\n\n# Model placement and disk strategy\n\nThe former Q2_K and IQ3_XXS local copies were deleted after their observed SHA256 values disagreed with Hugging Face artifact metadata. They are historical diagnostics, not verification sources.\n\nThe selected REAP base is HERETIC v2 at immutable revision `e7efd043c5e072da4d40f0f98ade554c5713bad9` from `squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8`. Download its Transformers snapshot to `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8/`. Generated GGUF/runtime candidates belong under `/data/linux-fast/models/DeepSeek-V4-Flash-0731/`. Do not store model binaries in the git project tree.\n\nUse the logged-in `hf` CLI with the immutable commit SHA and `--local-dir`. Verify the downloaded file list and hashes before compression. Create `.checkpoint-source.json` only through `scripts/write_checkpoint_source_manifest.py`, which checks local config/index bytes against the same remote commit.\n\nThe Toshiba NTFS mount is not an accepted fallback verification source. If NVMe space is insufficient, stop and resolve placement rather than silently serving or compressing an unverified copy.\n",
+    "status": "current",
+    "title": "Model placement and disk strategy",
+    "type": "implementation"
+  },
+  {
+    "anchor_count": 0,
+    "code_anchors": [],
+    "excerpt": "# REAP-132 plan and checkpoint provenance # REAP-132 plan and checkpoint provenance The active mapped reproduction artifact is `squanchyzx-puwaer-reap132-mask.json`. It uses immutable commit `e7efd043c5e072da4d40f0f98ade554c5713bad9` from `squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8` (HERETIC v2) as the 256-expert base and commit `868fa38e2f2964699ad065dc8d9382c136cc60b8` from puwaer REAP-150B as the 132-expert target. The logical SHA256 is `082e51d268052f8b26be63d7fe6edc7881c38...",
+    "path": ".wiki/implementation/reap132-plan-checkpoint-provenance.md",
+    "related_files": [
+      {
+        "path": "squanchyzx-puwaer-reap132-mask.json",
+        "role": "related"
+      },
+      {
+        "path": "scripts/extract_puwaer_reap132_mask.py",
+        "role": "related"
+      },
+      {
+        "path": "scripts/write_checkpoint_source_manifest.py",
+        "role": "related"
+      },
+      {
+        "path": "vendor/moe-expert-compress/src/moe_compress/checkpoint_source.py",
+        "role": "related"
+      },
+      {
+        "path": "vendor/moe-expert-compress/src/moe_compress/cli.py",
+        "role": "related"
+      },
+      {
+        "path": "docs/puwaer-reap132-mask-README.md",
+        "role": "related"
+      }
+    ],
+    "scope": "deepseek-v4-flash-0731-dual-5090",
+    "search_text": "REAP-132 plan and checkpoint provenance\nimplementation\ncurrent\ndeepseek-v4-flash-0731-dual-5090\n{\"title\": \"REAP-132 plan and checkpoint provenance\", \"type\": \"implementation\", \"status\": \"current\", \"scope\": \"deepseek-v4-flash-0731-dual-5090\", \"related_scopes\": [], \"related_files\": [\"squanchyzx-puwaer-reap132-mask.json\", \"scripts/extract_puwaer_reap132_mask.py\", \"scripts/write_checkpoint_source_manifest.py\", \"vendor/moe-expert-compress/src/moe_compress/checkpoint_source.py\", \"vendor/moe-expert-compress/src/moe_compress/cli.py\", \"docs/puwaer-reap132-mask-README.md\"], \"source_docs\": [\"docs/puwaer-reap132-mask-README.md\"], \"tags\": [\"reap\", \"provenance\", \"checkpoint\", \"squanchyzx-v2\"], \"last_checked\": \"2026-08-11\", \"updated\": \"2026-08-11T07:17:07Z\"}\nsquanchyzx-puwaer-reap132-mask.json related scripts/extract_puwaer_reap132_mask.py related scripts/write_checkpoint_source_manifest.py related vendor/moe-expert-compress/src/moe_compress/checkpoint_source.py related vendor/moe-expert-compress/src/moe_compress/cli.py related docs/puwaer-reap132-mask-README.md related\n\n\n# REAP-132 plan and checkpoint provenance\n\n# REAP-132 plan and checkpoint provenance\n\nThe active mapped reproduction artifact is `squanchyzx-puwaer-reap132-mask.json`. It uses immutable commit `e7efd043c5e072da4d40f0f98ade554c5713bad9` from `squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8` (HERETIC v2) as the 256-expert base and commit `868fa38e2f2964699ad065dc8d9382c136cc60b8` from puwaer REAP-150B as the 132-expert target. The logical SHA256 is `082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17`.\n\nAll 43 router mappings were recovered byte-exact. The artifact contains 132 sorted survivor IDs per layer and three byte-exact `[129280, 6]` `int64` `tid2eid` tables. Independent validation confirmed zlib/base64 decoding, blob SHA256, byte length, shape, dtype, expert range, and distinct IDs in every row. The survivor maps and routing blobs are byte-identical to the prior puwaer plan; only base provenance and the logical hash differ.\n\nThis is a mapped puwaer survivor plan, not a fresh REAP saliency calibration on squanchyzx v2 hidden states. It is intended to preserve the same expert set for an abliterated-versus-puwaer A/B.\n\nExact-plan compression accepts only a local checkpoint directory with `.checkpoint-source.json`. The manifest repo and revision must match `base_repo` and `base_revision_sha` in the plan. Before model loading, `moe-compress` recomputes SHA256 for local `config.json` and `model.safetensors.index.json`. Generate the manifest through `scripts/write_checkpoint_source_manifest.py` after downloading the fixed v2 revision with the logged-in `hf` CLI.\n\nValidated 2026-08-11 with the full vendor suite: `214 passed, 5 skipped`.\n",
+    "status": "current",
+    "title": "REAP-132 plan and checkpoint provenance",
+    "type": "implementation"
+  },
+  {
+    "anchor_count": 0,
+    "code_anchors": [],
+    "excerpt": "# DeepSeek V4 first-boot and agent stability risks For this DeepSeek-V4-Flash-0731 deployment, the first boot should keep the frozen baseline: full GPU weights, layer split -ts 1,1, --no-kv-offload, F16/F16 KV, -c 65536, -np 1, -b 1024, -ub 256, mmap default, and no mlock. Community measurements suggest F16 KV is modest at 64K, so the first suspected limit is the roughly 5.9 GiB GPU headroom for per-device compute/graph and temporary buffers, not KV alone. Record nvidia-smi for both GPUs, hos...",
+    "path": ".wiki/reflections/deepseek-v4-first-boot-agent-risks.md",
+    "related_files": [
+      {
+        "path": "scripts/llama-server-first-boot.sh",
+        "role": "related"
+      }
+    ],
+    "scope": "deepseek-v4-flash-0731-dual-5090",
+    "search_text": "DeepSeek V4 first-boot and agent stability risks\nreflection\ncurrent\ndeepseek-v4-flash-0731-dual-5090\n{\"title\": \"DeepSeek V4 first-boot and agent stability risks\", \"type\": \"reflection\", \"status\": \"current\", \"scope\": \"deepseek-v4-flash-0731-dual-5090\", \"related_scopes\": [\"deepseek-v4-flash-0731-dual-5090\"], \"related_files\": [\"scripts/llama-server-first-boot.sh\"], \"source_docs\": [], \"tags\": [\"deepseek-v4\", \"llama.cpp\", \"agent-stability\"], \"last_checked\": \"2026-08-11\", \"updated\": \"2026-08-10T19:07:12Z\"}\nscripts/llama-server-first-boot.sh related\n\n\n# DeepSeek V4 first-boot and agent stability risks\n\nFor this DeepSeek-V4-Flash-0731 deployment, the first boot should keep the frozen baseline: full GPU weights, layer split -ts 1,1, --no-kv-offload, F16/F16 KV, -c 65536, -np 1, -b 1024, -ub 256, mmap default, and no mlock. Community measurements suggest F16 KV is modest at 64K, so the first suspected limit is the roughly 5.9 GiB GPU headroom for per-device compute/graph and temporary buffers, not KV alone. Record nvidia-smi for both GPUs, host RSS, free RAM, prompt and generation throughput, and logs confirming the CUDA Lightning Indexer path. Do not change to quantized KV. After 64K is proven, test 128K then 256K with evidence. Hermes acceptance must include 20-50 multi-turn tool-call rounds, checking SWA/KV rollback reuse failures, premature context-exceeded errors, repeated prefill, special-token leakage, repeated tool calls, and runaway output. reasoning-format deepseek parses reasoning output but does not imply reasoning_effort high/max control. This note is a hypothesis and test checklist, not proof of local stability.\n",
+    "status": "current",
+    "title": "DeepSeek V4 first-boot and agent stability risks",
+    "type": "reflection"
+  }
+]

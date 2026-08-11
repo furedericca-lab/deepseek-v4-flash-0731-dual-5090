@@ -1,0 +1,26 @@
+{
+  ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md": {
+    "code_refs": [],
+    "wiki_refs": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ]
+  },
+  ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#checkpoint-name-reversal": {
+    "code_refs": [
+      "vendor/moe-expert-compress/src/moe_compress/streaming/naming.py"
+    ],
+    "wiki_refs": []
+  },
+  ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#source-namespace-gate": {
+    "code_refs": [
+      "vendor/moe-expert-compress/src/moe_compress/streaming/naming.py"
+    ],
+    "wiki_refs": []
+  },
+  ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#writer-source-cross-check": {
+    "code_refs": [
+      "vendor/moe-expert-compress/src/moe_compress/streaming/writer.py"
+    ],
+    "wiki_refs": []
+  }
+}

@@ -80,12 +80,34 @@ on dual RTX 5090 with:
   external files and record a clean RAM/Swap baseline.
 - Use `ok-skill` / `repo-task-driven` / `wiki-note` for durable scope and knowledge updates.
 
+- Native REAP verification is currently quarantined by a host stability issue.
+  On `7.0.0-28-generic`, large sequential safetensors reads have reproduced
+  kernel `BAD_PAGE`/`compound_head not consistent` reports from `kswapd0` even
+  with zram nearly unused. Before accepting a post-prune report, check
+  `cat /proc/sys/kernel/tainted` and `journalctl -k -b` for these signatures;
+  do not run native smoke or GGUF conversion after a bad-page event. The
+  alternate installed kernel is `6.17.0-23-generic`.
+- Keep `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/`
+  read-only and quarantined until `scripts/verify_reap132_checkpoint.py`
+  produces a PASS report. The verifier uses bounded reads with
+  `POSIX_FADV_DONTNEED` to avoid filling page cache, but this is not a
+  substitute for resolving host memory/kernel instability. A fresh rerun under
+  `6.17.0-23-generic` reproduced `BAD_PAGE` / `compound_head not consistent`
+  in `kswapd0` during verification, so changing kernels alone is not yet a
+  sufficient stability gate.
+- The 7.0/5600 rebuild completed with a clean kernel and manifest, but direct
+  verification found five varying FP4 expert-weight byte mutations across
+  rebuilds. Treat this as a writer defect: do not promote any artifact until
+  routed FP4 weights are copied and sliced directly from CPU safetensors bytes,
+  without a CUDA round-trip or fused Transformers reverse conversion.
+
 ## Validation matrix
 
 | Change class | Commands |
 |---|---|
 | docs/scope only | `python3 $HOME/.codex/skills/ok-skill repo-task-driven check --scope deepseek-v4-flash-0731-dual-5090 --decision --json` |
 | wiki updates | `python3 $HOME/.codex/skills/ok-skill wiki-note rebuild --json && python3 $HOME/.codex/skills/ok-skill wiki-note lint --json && python3 $HOME/.codex/skills/ok-skill wiki-note doctor --json` |
+| native REAP verification | `uv run pytest tests -q`; verify clean kernel boot before full tensor pass |
 | runtime bring-up | `nvidia-smi`, `llama-server --list-devices`, first-boot launch, `/v1/models`, one completion |
 
 ## Forbidden shortcuts

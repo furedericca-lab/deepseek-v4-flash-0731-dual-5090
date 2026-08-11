@@ -31,7 +31,7 @@ Goal: Prove the native output preserves every selected expert and HERETIC v2 ove
 Definition of Done: `post-prune-verification.json` contains all PASS categories, the output content manifest is frozen, and all five native smoke classes pass without NaN, routing faults, or obvious degeneration.
 
 Tasks:
-- [ ] T021 [Backend] Implement direct-safetensors post-prune verifier
+- [x] T021 [Backend] Implement direct-safetensors post-prune verifier
   - DoD: `scripts/verify_reap132_checkpoint.py` consumes source/output/plan/manifests and emits the contracted JSON without full-model loading.
 - [ ] T022 [QA] Add adversarial verifier fixtures
   - DoD: Tests fail on expert reorder, packed-weight mutation, scale mutation, router mismatch, shared expert drift, overlay drift, retained MTP, bad `tid2eid`, dangling ID, missing tensor, and manifest drift.
@@ -41,7 +41,7 @@ Tasks:
   - DoD: All router rows follow the plan, three `tid2eid` tables equal plan blobs, and no routing ID is outside `0..131`.
 - [ ] T025 [QA] Verify preserved non-expert tensors
   - DoD: Shared experts and layers 10-42 HERETIC `attn.wo_b` are source-identical; all 4,705 source MTP/DSpark tensors are absent; unknown/unclassified tensors are zero.
-- [ ] T026 [Backend] Generate the output content manifest
+- [x] T026 [Backend] Generate the output content manifest
   - DoD: Every native output file is hashed under `checkpoint-content-manifest-v1`, its manifest SHA is stable across two runs, and differs conceptually from the plan logical SHA.
 - [ ] T027 [QA] Freeze the post-prune report
   - DoD: `post-prune-verification.json` references exact plan/source/output hashes, has all contracted PASS fields, 43 layer results, and no failures.

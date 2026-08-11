@@ -1,0 +1,241 @@
+{
+  ".scopes/heretic-v2-reap132-build-validation": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "/data/linux-fast/models/DeepSeek-V4-Flash-0731": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/model-placement-and-disk-strategy.md"
+    ],
+    "symbols": {}
+  },
+  "AGENTS.md": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "README.md": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "docs/puwaer-reap132-mask-README.md": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/reap132-plan-checkpoint-provenance.md"
+    ],
+    "symbols": {}
+  },
+  "scripts/checkpoint_content_manifest.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "scripts/derive_reap132_inventory.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "scripts/extract_puwaer_reap132_mask.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md",
+      ".wiki/implementation/reap132-plan-checkpoint-provenance.md"
+    ],
+    "symbols": {}
+  },
+  "scripts/llama-server-first-boot.sh": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/reflections/deepseek-v4-first-boot-agent-risks.md"
+    ],
+    "symbols": {}
+  },
+  "scripts/verify_reap132_checkpoint.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "scripts/write_checkpoint_source_manifest.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md",
+      ".wiki/implementation/model-placement-and-disk-strategy.md",
+      ".wiki/implementation/reap132-plan-checkpoint-provenance.md"
+    ],
+    "symbols": {}
+  },
+  "squanchyzx-puwaer-reap132-mask.json": {
+    "anchors": [],
+    "definition_pages": [
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md"
+    ],
+    "pages": [
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md",
+      ".wiki/implementation/reap132-plan-checkpoint-provenance.md"
+    ],
+    "symbols": {}
+  },
+  "tests/test_checkpoint_content_manifest.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "tests/test_verify_hf_checkpoint_sha256.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "tests/test_verify_reap132_checkpoint.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "tools/verify_hf_checkpoint_sha256.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "vendor/moe-expert-compress": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  "vendor/moe-expert-compress/src/moe_compress/checkpoint_source.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/reap132-plan-checkpoint-provenance.md"
+    ],
+    "symbols": {}
+  },
+  "vendor/moe-expert-compress/src/moe_compress/cli.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/reap132-plan-checkpoint-provenance.md"
+    ],
+    "symbols": {}
+  },
+  "vendor/moe-expert-compress/src/moe_compress/streaming/naming.py": {
+    "anchors": [
+      {
+        "file": "vendor/moe-expert-compress/src/moe_compress/streaming/naming.py",
+        "id": "checkpoint-name-reversal",
+        "kind": "function",
+        "page": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+        "role": "defines",
+        "symbol": "to_checkpoint_names",
+        "target": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#checkpoint-name-reversal"
+      },
+      {
+        "file": "vendor/moe-expert-compress/src/moe_compress/streaming/naming.py",
+        "id": "source-namespace-gate",
+        "kind": "function",
+        "page": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+        "role": "defines",
+        "symbol": "verify_against_source",
+        "target": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#source-namespace-gate"
+      }
+    ],
+    "definition_pages": [
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#checkpoint-name-reversal",
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#source-namespace-gate"
+    ],
+    "pages": [
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md"
+    ],
+    "symbols": {
+      "to_checkpoint_names": [
+        ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#checkpoint-name-reversal"
+      ],
+      "verify_against_source": [
+        ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#source-namespace-gate"
+      ]
+    }
+  },
+  "vendor/moe-expert-compress/src/moe_compress/streaming/writer.py": {
+    "anchors": [
+      {
+        "file": "vendor/moe-expert-compress/src/moe_compress/streaming/writer.py",
+        "id": "writer-source-cross-check",
+        "kind": "method",
+        "page": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+        "role": "defines",
+        "symbol": "StreamingCheckpointWriter.finalize",
+        "target": ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#writer-source-cross-check"
+      }
+    ],
+    "definition_pages": [
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#writer-source-cross-check"
+    ],
+    "pages": [
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md"
+    ],
+    "symbols": {
+      "StreamingCheckpointWriter.finalize": [
+        ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md#writer-source-cross-check"
+      ]
+    }
+  },
+  "vendor/moe-expert-compress/tests/test_naming.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md"
+    ],
+    "symbols": {}
+  }
+}

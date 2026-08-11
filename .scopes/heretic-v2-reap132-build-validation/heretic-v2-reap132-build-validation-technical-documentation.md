@@ -43,6 +43,8 @@ frozen plan JSON + verified HERETIC v2 source + committed build code
 - Runtime data stays on `/data/linux-fast` ext4. Git stores only code/docs and
   small sanitized summaries.
 - Pruning uses the project `.venv` and layer streaming due host RAM limits.
+- Full native verification is also host-gated: a `BAD_PAGE`/folio corruption
+  event in the active kernel invalidates the run even when SHA256 results pass.
 - First server bind remains `127.0.0.1`; single slot and existing OOM order apply.
 - IQ3/Q2 and fresh calibration are non-goals for this scope.
 
@@ -92,6 +94,9 @@ verification, so compression cannot share or modify mmap-backed source storage.
 - Frozen plan full SHA:
   `b43a1078f905157cbdbe976530d96b6c41730ccd3ef6feac4d598a15a9d84b04`.
 - Post-prune report: `post-prune-verification.json` in the output directory.
+- Verifier implementation: `scripts/verify_reap132_checkpoint.py`; its report is
+  written to `logs/` until the host stability gate is clean, then frozen beside
+  the output manifest.
 - Content manifest: `checkpoint-content-manifest.json` in each checkpoint root;
   its canonical payload excludes its own `manifest_sha256` field.
 - Exact JSON contracts are defined in
@@ -119,6 +124,8 @@ verification, so compression cannot share or modify mmap-backed source storage.
    dynamically derive the noMTP inventory, currently 35,620 indexed tensors,
    and require 792 expert tensors in every layer and zero MTP/DSpark tensors.
 10. Treat output as quarantined until post-prune verifier passes.
+    Abort and quarantine the report if `journalctl -k -b` records `BAD_PAGE`,
+    `corrupted mapping`, or `compound_head not consistent` during the pass.
 11. Run native smoke only after structural PASS.
 12. Convert to GGUF only after native smoke PASS.
 
@@ -162,3 +169,14 @@ verification, so compression cannot share or modify mmap-backed source storage.
   API smoke on both RTX 5090s.
 - A/B uses identical prompts, generation settings, and evaluator logic, with
   artifact hashes embedded in the result record.
+
+## Current Writer Blocker
+
+The 7.0/5600 rebuild is host-stable but still fails five byte-exact FP4 expert
+checks. The failing expert IDs change between fixed-source/fixed-plan rebuilds;
+scales, routers, shared experts, HERETIC overlay, and MTP policy pass. The
+streaming writer currently moves fused FP4 tensors through CUDA and then uses
+Transformers `revert_weight_conversion()` before CPU serialization. That
+round-trip is not a valid raw-byte preservation path. The corrective design is
+CPU safetensors slicing by frozen survivor IDs followed by direct packed-byte
+serialization, with a hard failure on any unexpected mutation.

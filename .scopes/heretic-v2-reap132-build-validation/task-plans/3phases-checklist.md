@@ -17,8 +17,8 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
 ## Global Status Board
 | Phase | Status | Completion | Health | Blockers |
 |---|---|---|---|---|
-| Phase 1 | In progress | 85% | Green | Naming fix passed Layer 0 preflight; deterministic rerun is next |
-| Phase 2 | Not started | 0% | Unknown | Phase 1 native output does not exist |
+| Phase 1 | In progress | 90% | Blocked | noMTP build and structural gate pass; host kernel emits BAD_PAGE during full reads |
+| Phase 2 | In progress | 25% | Blocked | verifier and output manifest are implemented, but full report cannot be trusted after BAD_PAGE |
 | Phase 3 | Not started | 0% | Unknown | Phase 2 native verification/smoke not complete |
 
 ## Phase Entry Links
@@ -198,6 +198,75 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   - vendor build -> `56137d189fd36c1c8881ca99233614b177442425`
 - Checkpoint confirmed: the earlier 40,325 gate remains historical evidence for
   the rejected MTP-preserving build and is superseded for the release artifact
+
+### 2026-08-11 noMTP artifact and host-stability record
+
+- Phase: 1-2
+- Completed work:
+  - deterministic `--plan --streaming --drop-mtp` completed with exit 0,
+    memory guard clear, 15 shards, 35,620 indexed tensors, and zero MTP tensors
+  - post-build fixed-revision source comparison passed `96/96`; source manifest
+    passed at `815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`
+  - output content manifest passed twice: 20 files at
+    `1e1cad5a73adb26215a94a323de66e38b34b406eea0d8f519cbe7250da9a2846`
+  - implemented `scripts/verify_reap132_checkpoint.py` and adversarial fixture
+    tests; project tests pass `18 passed`
+  - output directory was made read-only and remains quarantined
+- Issues/blockers:
+  - full direct tensor verification was interrupted after the host emitted
+    `BAD_PAGE` and `compound_head not consistent` from `kswapd0` at 22:56:30
+  - zram was effectively unused; current evidence points to unresolved
+    kernel/RAM/EXPO stability under page-cache pressure, not model semantics
+  - no `post-prune-verification.json` PASS report exists; native smoke and GGUF
+    remain blocked
+- Next gate:
+  - boot `6.17.0-23-generic` or disable EXPO, confirm a clean `journalctl -k -b`,
+    then rerun the cache-bounded verifier
+
+### 2026-08-11 6.17 rerun result
+
+- A fresh deterministic `--plan --streaming --drop-mtp` rebuild was completed
+  under `6.17.0-23-generic` in the isolated directory
+  `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-rerun-6.17/`.
+- Structural output gate passed: 15 shards, 35,620 indexed tensors, and zero
+  MTP/DSpark tensors. The output manifest passed twice with manifest SHA256
+  `18de33ba67182a9a8d34b242a22d4681bc5659d5ccf8d0a72a60ea0020000456`.
+- The output was made read-only before verification.
+- During the cache-bounded direct verifier, the 6.17 boot reproduced
+  `BUG: Bad page state` / `compound_head not consistent` in `kswapd0` at
+  `23:30:01`; verification was stopped immediately and no PASS report exists.
+- `cat /proc/sys/kernel/tainted` changed from `4096` to `4128` after this event.
+  Native smoke, GGUF conversion, and deployment remain blocked. The new rerun
+  is quarantined separately from the earlier failed artifact.
+
+### 2026-08-12 5800 MT/s verification result
+
+- After changing memory to 5800 MT/s, a clean `6.17.0-23-generic` boot started
+  with `tainted=4096` and no kernel memory errors.
+- The complete verifier finished without another `BAD_PAGE`, `compound_head`,
+  MCE, or I/O error; this is evidence that 5800 MT/s materially improves the
+  host stability gate compared with 6000 MT/s.
+- The checkpoint is still not releasable: the verifier report contains 49
+  semantic failures. Router rows, scales, shared experts, tid2eid, HERETIC
+  overlay, MTP absence, and dangling IDs pass, but expert byte provenance has
+  8 mismatches and the current report flags 41 untouched/router-related names.
+- No native smoke or GGUF work is authorized until the verifier contract is
+  corrected for the expected router bias/overlay namespace and the remaining
+  expert mismatches are independently explained or eliminated.
+
+### 2026-08-12 5600 MT/s writer diagnosis
+
+- A fresh rebuild and full verifier under `7.0.0-28-generic` with DDR5-5600
+  completed without kernel errors (`tainted=4096`).
+- Manifest passed twice; structural counts remained 15 shards and 35,620
+  tensors with MTP/DSpark absent.
+- Five FP4 expert weight byte mismatches remained. Their expert IDs differ from
+  the previous rebuilds, while scales and all non-expert gates/overlays pass.
+- Root-cause gate: the streaming writer materializes fused FP4 tensors on CUDA,
+  then converts them back through `revert_weight_conversion()` and CPU writes.
+  This path is not byte-exact for packed FP4 storage. The next implementation
+  must read source safetensors bytes on CPU and slice survivors directly,
+  bypassing GPU round-trip and fused reverse conversion.
 
 ## Final Release Gate
 - Scope constraints preserved.
