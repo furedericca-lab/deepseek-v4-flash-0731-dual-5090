@@ -43,8 +43,7 @@ description: Scope boundaries and milestones for heretic-v2-reap132-build-valida
 - New phased scope passes placeholder and decision checks.
 - Plan full SHA, logical SHA, repo/commit pair, 43/43 mapping, and three routing
   blobs are recorded.
-- Exit: frozen plan record is complete except for the explicitly blocked build
-  code commit, which must be resolved before pruning.
+- Exit: frozen plan record and executable root/vendor build commits are complete.
 
 ### M1 - Verified source snapshot
 

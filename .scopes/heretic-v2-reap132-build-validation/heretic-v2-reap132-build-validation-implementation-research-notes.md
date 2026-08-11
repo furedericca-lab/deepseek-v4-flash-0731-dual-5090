@@ -17,9 +17,10 @@ description: Implementation research notes for heretic-v2-reap132-build-validati
   `868fa38e2f2964699ad065dc8d9382c136cc60b8`.
 - Extractor evidence: 43 layers, 132 sorted survivor IDs per layer, three
   `[129280, 6]` `int64` `tid2eid` tables, and 43/43 byte-exact router matches.
-- Vendor baseline: submodule HEAD
-  `1a7945cf5afae68cb5abaf5784388bcac3dc0954`, plus current uncommitted
-  provenance and validation changes.
+- Executable root build commit:
+  `67b1a37b2c26a6cbfe14468a3e826e2d169cced1`.
+- Executable vendor build commit:
+  `41e62ee537b646734b21f0d6813b4d8dc8a73275`.
 - The fixed source now exists at
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8/`.
   Official `hf` CLI confirmation exited zero at the fixed revision. All 96
@@ -34,7 +35,7 @@ description: Implementation research notes for heretic-v2-reap132-build-validati
 
 | Gap | Current evidence | Required closure |
 |---|---|---|
-| Frozen source-code identity | Worktree contains uncommitted extractor/compressor changes | Record a commit containing the exact build code before pruning |
+| Frozen source-code identity | Root and vendor build commits contain the exact extractor, provenance gate, manifest tool, plan-mode validation, and tests | Closed; execute only these committed identities |
 | Complete source checkpoint | Official fixed-revision confirmation, remote comparison, provenance, and content manifest pass | Closed; preserve source read-only for pruning |
 | Native REAP132 output | No output checkpoint exists | Run deterministic `--plan --streaming` without calibration |
 | Byte-exact output proof | Only plan provenance is proven | Implement `post-prune-verification.json` generator and tests |

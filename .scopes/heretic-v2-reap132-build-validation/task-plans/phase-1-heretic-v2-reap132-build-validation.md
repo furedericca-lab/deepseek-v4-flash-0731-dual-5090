@@ -34,7 +34,7 @@ Definition of Done: The frozen plan and build code are immutable, source provena
 Tasks:
 - [x] T001 [QA] Freeze and recheck the plan identity
   - DoD: Full SHA `b43a1078...84b04`, logical SHA `082e51d2...f7b17`, both repo/commit pairs, 43 layer maps, and three hash tables match the contract without rewriting the JSON.
-- [ ] T002 [Config] Record the executable build-code commit
+- [x] T002 [Config] Record the executable build-code commit
   - DoD: Root and vendor commit SHAs containing the exact extractor, provenance gate, plan-mode validation, and tests are recorded; executed worktrees are clean or their deliberate diff is fully captured.
 - [x] T003 [Infra] Complete and inventory the fixed source download
   - DoD: The user-started `hf download` exits zero, no transfer process remains, all indexed shards exist under the NVMe source directory, and no partial/temp file is treated as complete.

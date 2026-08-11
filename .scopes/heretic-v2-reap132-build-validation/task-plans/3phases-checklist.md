@@ -17,7 +17,7 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
 ## Global Status Board
 | Phase | Status | Completion | Health | Blockers |
 |---|---|---|---|---|
-| Phase 1 | In progress | 70% | Amber | Build-code commit identity not yet frozen; pruning remains closed |
+| Phase 1 | In progress | 80% | Green | None; deterministic pruning is the next gate |
 | Phase 2 | Not started | 0% | Unknown | Phase 1 native output does not exist |
 | Phase 3 | Not started | 0% | Unknown | Phase 2 native verification/smoke not complete |
 
@@ -70,6 +70,9 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
     `815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`
   - T006 passed focused tests and the full vendor suite
   - T007 captured the pre-prune RAM/swap/GPU/disk/process baseline
+  - T002 froze root build commit
+    `67b1a37b2c26a6cbfe14468a3e826e2d169cced1` and vendor build commit
+    `41e62ee537b646734b21f0d6813b4d8dc8a73275`
 - Evidence commands/results:
   - `sha256sum squanchyzx-puwaer-reap132-mask.json` ->
     `b43a1078f905157cbdbe976530d96b6c41730ccd3ef6feac4d598a15a9d84b04`
@@ -84,10 +87,10 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   - baseline -> 46 GiB RAM, 47 GiB swap, 714 GiB NVMe free, dual RTX 5090
     visible, native output absent, no model/wiki/doctor scan active
 - Issues/blockers:
-  - T002 remains open because root and vendor build-code changes are uncommitted
-  - deterministic pruning must not start until the exact executable build code
-    has a truthful commit identity
-- Checkpoint confirmed: verified source snapshot is ready; build commit gate remains closed
+  - no Phase 1 entry blocker remains
+  - legacy `puwaer-reap132-mask.json` was deleted; the only executable plan is
+    committed `squanchyzx-puwaer-reap132-mask.json`
+- Checkpoint confirmed: verified source snapshot and executable build identities are frozen; T008 deterministic pruning is authorized to start
 
 ## Final Release Gate
 - Scope constraints preserved.
