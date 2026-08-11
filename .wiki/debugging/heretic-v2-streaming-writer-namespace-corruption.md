@@ -301,3 +301,11 @@ This disproves a CUDA-only explanation: the Transformers fused expert
 merge/split/reverse conversion itself is not a byte-exact representation for
 these packed FP4 tensors. The fix must bypass that conversion and slice the
 source safetensors payloads directly on CPU by expert ID.
+
+The first independent raw-payload builder attempt copied about 53 GB before
+the host reproduced a kernel Oops during ext4 buffered output and page
+migration (`anon_vma_interval_tree_iter_first` -> `rmap_walk_anon` ->
+`migrate_pages` -> `ext4_buffered_write_iter`). The raw output has no index and
+is incomplete; it is quarantined. This is a separate host-stability blocker
+from the FP4 conversion defect and must be resolved before trusting a large
+raw rewrite.
