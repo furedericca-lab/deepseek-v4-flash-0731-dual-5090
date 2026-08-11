@@ -40,15 +40,20 @@ class Slice:
     ref: Ref
     row_start: int = 0
     row_count: int | None = None
+    row_indices: tuple[int, ...] | None = None
 
     @property
     def nbytes(self):
+        if self.row_indices is not None:
+            return self.ref.nbytes // self.ref.shape[0] * len(self.row_indices)
         if self.row_count is None:
             return self.ref.nbytes
         return self.ref.nbytes // self.ref.shape[0] * self.row_count
 
     @property
     def shape(self):
+        if self.row_indices is not None:
+            return (len(self.row_indices), *self.ref.shape[1:])
         return self.ref.shape if self.row_count is None else (self.row_count, *self.ref.shape[1:])
 
 
@@ -83,8 +88,8 @@ def plan_tid(plan: dict, layer: int) -> tuple[bytes, tuple[int, ...]]:
 BLOCK = 8 * 1024 * 1024
 
 
-def _direct_write(fd: int, data: bytes) -> None:
-    """Write bytes through O_DIRECT using a page-aligned anonymous buffer."""
+def _chunk_write(fd: int, data: bytes) -> None:
+    """Write bounded chunks and avoid retaining completed source pages."""
     offset = 0
     while offset < len(data):
         size = min(BLOCK, len(data) - offset)
@@ -102,6 +107,24 @@ def _direct_write(fd: int, data: bytes) -> None:
 
 
 def copy_bytes(item: Slice, out_fd: int):
+    if item.row_indices is not None:
+        row_bytes = item.ref.nbytes // item.ref.shape[0]
+        fd = os.open(item.ref.path, os.O_RDONLY)
+        try:
+            for row in item.row_indices:
+                if row < 0 or row >= item.ref.shape[0]:
+                    raise ValueError(f"row index out of range: {row}")
+                block = os.pread(fd, row_bytes, item.ref.start + row * row_bytes)
+                if len(block) != row_bytes:
+                    raise ValueError("short source row payload")
+                _chunk_write(out_fd, block)
+                try:
+                    os.posix_fadvise(fd, item.ref.start + row * row_bytes, row_bytes, os.POSIX_FADV_DONTNEED)
+                except AttributeError:
+                    pass
+        finally:
+            os.close(fd)
+        return
     row_bytes = item.ref.nbytes // item.ref.shape[0] if item.row_count is not None else item.ref.nbytes
     start = item.ref.start + item.row_start * row_bytes if item.row_count is not None else item.ref.start
     remaining = item.nbytes
@@ -112,7 +135,7 @@ def copy_bytes(item: Slice, out_fd: int):
             block = os.pread(fd, min(BLOCK, remaining), position)
             if not block:
                 raise ValueError("short source payload")
-            _direct_write(out_fd, block)
+            _chunk_write(out_fd, block)
             position += len(block)
             remaining -= len(block)
             try:
@@ -142,7 +165,7 @@ def build(source: Path, output: Path, plan_path: Path, max_shard: int = SHARD_BY
             layer, kind = int(router.group(1)), router.group(2)
             keep = plan["layers"][str(layer)]["kept_experts"]
             if kind == "weight" or kind == "bias":
-                output_items[name] = (name, Slice(ref, 0, len(keep)), ref.dtype, (len(keep), *ref.shape[1:]))
+                output_items[name] = (name, Slice(ref, row_indices=tuple(keep)), ref.dtype, (len(keep), *ref.shape[1:]))
             continue
         if name.endswith("tid2eid") and name.startswith("layers."):
             layer = int(name.split(".")[1])
@@ -161,7 +184,7 @@ def build(source: Path, output: Path, plan_path: Path, max_shard: int = SHARD_BY
                     if old not in source_refs:
                         raise ValueError(f"missing source expert: {old}")
                     ref = source_refs[old]
-                    output_items[new] = (old, Slice(ref), ref.dtype, ref.shape)
+                    output_items[new] = (new, Slice(ref), ref.dtype, ref.shape)
 
     output.mkdir(parents=True, exist_ok=False)
     shard_no = 0
@@ -185,7 +208,7 @@ def build(source: Path, output: Path, plan_path: Path, max_shard: int = SHARD_BY
             for name, source_item, dtype, shape in items:
                 offsets[name] = {"dtype": dtype, "shape": list(shape), "data_offsets": [cursor, cursor + (len(source_item) if isinstance(source_item, bytes) else source_item.nbytes)]}
                 if isinstance(source_item, bytes):
-                    _direct_write(payload_fd, source_item)
+                    _chunk_write(payload_fd, source_item)
                 else:
                     copy_bytes(source_item, payload_fd)
                 cursor = offsets[name]["data_offsets"][1]
@@ -196,12 +219,27 @@ def build(source: Path, output: Path, plan_path: Path, max_shard: int = SHARD_BY
         encoded = json.dumps(header, separators=(",", ":")).encode()
         final = output / filename
         try:
-            with final.open("wb") as out, payload_path.open("rb") as payload:
-                out.write(struct.pack("<Q", len(encoded)))
-                out.write(encoded)
-                shutil.copyfileobj(payload, out, BLOCK)
-                out.flush()
-                os.fsync(out.fileno())
+            out_fd = os.open(final, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
+            payload_in = os.open(payload_path, os.O_RDONLY)
+            try:
+                prefix = struct.pack("<Q", len(encoded)) + encoded
+                _chunk_write(out_fd, prefix)
+                position = 0
+                while True:
+                    block = os.pread(payload_in, BLOCK, position)
+                    if not block:
+                        break
+                    _chunk_write(out_fd, block)
+                    position += len(block)
+                    try:
+                        os.posix_fadvise(payload_in, position - len(block), len(block), os.POSIX_FADV_DONTNEED)
+                        os.posix_fadvise(out_fd, position, len(block), os.POSIX_FADV_DONTNEED)
+                    except AttributeError:
+                        pass
+                os.fsync(out_fd)
+            finally:
+                os.close(payload_in)
+                os.close(out_fd)
             payload_path.unlink()
         except Exception:
             # Leave the completed payload for an explicit resume/inspection;

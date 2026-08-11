@@ -309,3 +309,98 @@ migration (`anon_vma_interval_tree_iter_first` -> `rmap_walk_anon` ->
 is incomplete; it is quarantined. This is a separate host-stability blocker
 from the FP4 conversion defect and must be resolved before trusting a large
 raw rewrite.
+
+## 2026-08-12 I/O verification gate
+
+The raw builder's bounded writer is deliberately a chunked buffered write with
+`POSIX_FADV_DONTNEED`; its helper is not an `O_DIRECT` writer because
+safetensors payload offsets and lengths are not generally 4096-byte aligned.
+The helper was renamed from `_direct_write` to `_chunk_write` so this distinction
+is explicit.  Do not cite the builder as evidence that direct I/O was used.
+
+`tools/verify_io_paths.py` provides the independent read-path check.  For each
+regular file it computes SHA256 through an unbuffered sequential read and an
+`O_DIRECT` read using aligned 4 MiB buffers; only a final unaligned tail falls
+back to buffered I/O.  A file is accepted only when both digests match.  The
+tool reports every missing, error, and mismatch path before returning nonzero.
+
+The required evidence order for a future build is:
+
+1. clean kernel boot and no `BAD_PAGE`, MCE, AER, or NVMe errors;
+2. fixture and Layer 0 raw-builder preflight (`792/792`, zero mutation);
+3. buffered/direct SHA256 agreement for every completed shard after `fsync`;
+4. full direct provenance verifier and two byte-identical deterministic builds.
+
+An I/O-path mismatch is an artifact/host failure, not a reason to trust the
+ordinary page-cache hash or continue to native smoke/GGUF.
+
+## 2026-08-12 current run blocked before preflight
+
+The requested validation was not started because the first host gate already
+failed on the active `7.0.0-28-generic` boot: `/proc/sys/kernel/tainted` is
+`4256`, and `journalctl -k -b` contains fresh `BUG: Bad page state` entries,
+`kswapd0` failures, and a kernel Oops involving `nvme_irq`.  The fixed source
+directory remains read-only on ext4.  No Layer 0 or full-model read was started
+under this tainted boot; otherwise its hashes would not be admissible evidence.
+
+After a clean reboot, the Layer 0 preflight passed at `792/792`.  The first raw
+Build A exposed two builder defects through the independent verifier: expert
+headers used the old source name instead of the remapped output name, and router
+tensors copied the first 132 contiguous rows instead of gathering the frozen
+`kept_experts` rows.  The namespace bug was fixed and reduced the verifier from
+33,871 failures to 86; 83 of the remaining failures were the router gather bug.
+Both defects are now fixed in the builder.
+
+The same second verifier run reported three expert-weight mismatches, but the
+kernel simultaneously emitted fresh `BAD_PAGE` / `compound_head not consistent`
+events and taint changed to `4128`.  Those three mismatches are not admissible
+builder evidence.  Build B and further full-model reads remain blocked until a
+new clean boot; the current Build A is quarantined and must not be deployed.
+
+As a diagnostic on the already-tainted boot, MGLRU was changed from `0x0007`
+to `0x0000`.  All 22 approximately 4 GB shards then passed buffered versus
+`O_DIRECT` SHA256 comparison, representing roughly 170 GB of aggregate reads,
+with no new `BAD_PAGE`, `compound_head`, Oops, MCE, AER, or I/O-error message.
+This strongly identifies MGLRU/folio eviction as the path that exposes the bad
+folio state, but does not prove that MGLRU created that state.  It is not formal
+artifact evidence because the boot was already tainted `4128`.  The formal
+rerun still requires a clean reboot followed by MGLRU disablement before any
+large model read.
+
+The observed `dead000000000400` mapping must not be interpreted as direct
+use-after-free evidence.  Linux defines the tail-page mapping sentinel as
+`TAIL_MAPPING = (void *)0x400 + POISON_POINTER_DELTA`; on this architecture that
+can render exactly as `dead000000000400`.  For a valid tail page that value is
+expected, while `free_tail_page_prepare()` reports corruption when the page and
+folio relationship or required tail metadata do not agree.
+
+The current causal hypotheses therefore remain separate:
+
+1. MGLRU eviction incorrectly handles the folio lifecycle;
+2. page cache, ext4 large-folio, split/free/refcount, or another MM path corrupts
+   the metadata before MGLRU later discovers it;
+3. RAM/IMC or DMA corrupts metadata and reclaim merely detects it.
+
+The first two are now the leading software class.  Linux 6.16 and later include
+ext4 regular-file large-folio support, matching this workload's large buffered
+ext4 reads and writes.  Upstream MM/hugetlb fixes and syzbot reports have also
+demonstrated that software-only folio/tail-page bugs can produce the same
+`page does not match folio` and `corrupted mapping in tail page` symptom family.
+These precedents support the software hypothesis but are not proof that this
+host has the same upstream bug.
+
+A stronger upstream precedent is a syzbot/KASAN reproducer from the Linux 6.18
+development cycle running in a virtual Google Compute Engine environment.  Its
+failure passed through `kswapd0` -> `evict_folios` -> `shrink_folio_list` ->
+`filemap_release_folio` / `try_to_free_buffers` before `BAD_PAGE` and a general
+protection fault.  Earlier syzbot work also reproduced the
+`drop_buffers` / `try_to_free_buffers` / `shrink_folio_list` / `evict_folios`
+family.  This proves that Linux MM/filesystem folio lifecycle defects can create
+this class of failure without unstable physical DDR5.
+
+It still does not prove bug identity on this host: the local stack reaches
+`free_unref_folios` and `free_tail_page_prepare`, and no matching reproducer or
+kernel bisect has been completed.  The evidence now makes a post-6.15 MM/ext4
+large-folio reclaim regression the leading hypothesis.  The highest-value
+control is Ubuntu's 6.8 GA kernel, which predates ext4 regular-file large-folio
+enablement, tested first with MGLRU enabled and then disabled only if needed.

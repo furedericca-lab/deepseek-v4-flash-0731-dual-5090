@@ -87,6 +87,15 @@ on dual RTX 5090 with:
   `cat /proc/sys/kernel/tainted` and `journalctl -k -b` for these signatures;
   do not run native smoke or GGUF conversion after a bad-page event. The
   alternate installed kernel is `6.17.0-23-generic`.
+- Before every large checkpoint build, manifest pass, or full tensor verifier,
+  temporarily disable MGLRU for the current boot with
+  `echo 0 | sudo tee /sys/kernel/mm/lru_gen/enabled`, then require
+  `/sys/kernel/mm/lru_gen/enabled` to read `0x0000`. This setting is normally
+  reset by reboot, so repeat the gate after every reboot; do not assume a prior
+  disablement remains active. Also require the current boot to contain no
+  `BAD_PAGE`, `compound_head`, corrupted-tail-page, or kernel Oops event. If one
+  occurs, stop all artifact validation and reboot before rebuilding; disabling
+  MGLRU after the event does not make that boot admissible evidence.
 - Keep `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/`
   read-only and quarantined until `scripts/verify_reap132_checkpoint.py`
   produces a PASS report. The verifier uses bounded reads with
