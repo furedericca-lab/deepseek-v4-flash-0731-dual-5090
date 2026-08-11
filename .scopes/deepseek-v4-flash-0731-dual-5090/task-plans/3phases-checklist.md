@@ -17,7 +17,7 @@ description: Execution and verification checklist for deepseek-v4-flash-0731-dua
 ## Global Status Board
 | Phase | Status | Completion | Health | Blockers |
 |---|---|---|---|---|
-| Phase 1 | In progress | 40% | Red | Copied GGUF SHA256 differs from expected digest; runtime remains blocked |
+| Phase 1 | In progress | 40% | Red | Verified fixed-revision checkpoint/artifact download remains pending |
 | Phase 2 | Complete | 100% | Yellow | 64K booted; long-agent stability and high swap use remain risks |
 | Phase 3 | Not started | 0% | Unknown | 0 |
 
@@ -81,6 +81,37 @@ description: Execution and verification checklist for deepseek-v4-flash-0731-dua
 - Residual risks:
   - 64K startup is proven, but high swap use needs operational follow-up.
   - Multi-turn tool-call, rollback/reuse, template leakage, and 128K/256K context tests remain for Phase 3.
+
+### 2026-08-11 REAP-132 reproduction batch
+- Phase: 1
+- Completed tasks:
+  - generated `squanchyzx-puwaer-reap132-mask.json` from immutable Hugging Face commits
+  - recovered 43 layers with 132 survivor IDs per layer
+  - embedded and independently validated three byte-exact `tid2eid` tables
+  - replaced user-declared source provenance with `.checkpoint-source.json`
+    verification of repo, revision, config SHA256, and index SHA256
+  - added strict rejection tests for wrong revision, missing/duplicate `tid2eid`,
+    and wrong geometry
+- Artifact identity:
+  - base repo: `squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8`
+  - base commit: `e7efd043c5e072da4d40f0f98ade554c5713bad9` (v2)
+  - pruned commit: `868fa38e2f2964699ad065dc8d9382c136cc60b8`
+  - plan logical SHA256:
+    `082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17`
+  - extractor range transfer: 113.50 MiB
+- Evidence commands:
+  - `uv run python scripts/extract_puwaer_plan.py`
+  - independent Python validation of logical SHA, layer geometry, zlib/base64,
+    blob SHA256, dtype, shape, expert ranges, and per-row duplicate IDs
+  - `uv run pytest vendor/moe-expert-compress/tests -q`
+- Evidence result: `214 passed, 5 skipped in 7.72s`.
+- Mapping result: all 43 router mappings and all three `tid2eid` blobs are
+  byte-identical to the prior puwaer survivor plan; only base provenance and
+  logical SHA changed.
+- Remaining:
+  - download the base snapshot at the recorded commit to NVMe
+  - write/verify `.checkpoint-source.json`
+  - run `--plan --streaming` only after the checkpoint manifest gate passes
 
 ## Final Release Gate
 - Scope constraints preserved.

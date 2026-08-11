@@ -54,9 +54,21 @@ llama-server \
 
 ## Active scope
 
-Deployment planning and execution are tracked in:
+Current HERETIC v2 REAP132 build and validation work is tracked in:
+
+`.scopes/heretic-v2-reap132-build-validation/`
+
+The original dual-5090 deployment scope remains active for serving operations:
 
 `.scopes/deepseek-v4-flash-0731-dual-5090/`
+
+## REAP-132 reproduction
+
+The exact squanchyzx v2 + puwaer plan is stored at
+`squanchyzx-puwaer-reap132-mask.json`. Its current logical SHA256 is
+`082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17`.
+See `docs/puwaer-reap132-mask-README.md` for extraction, checkpoint manifest,
+and streaming compression commands.
 
 Durable notes live in:
 

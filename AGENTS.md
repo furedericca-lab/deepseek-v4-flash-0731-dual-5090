@@ -2,9 +2,11 @@
 
 ## Source of truth
 
-1. Active scope docs under `.scopes/deepseek-v4-flash-0731-dual-5090/`
-2. Durable project knowledge under `.wiki/`
-3. `README.md` for operator entry points
+1. Current build/verification scope under
+   `.scopes/heretic-v2-reap132-build-validation/`
+2. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
+3. Durable project knowledge under `.wiki/`
+4. `README.md` for operator entry points
 
 ## Runtime environment
 

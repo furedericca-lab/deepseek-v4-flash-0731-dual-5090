@@ -10,7 +10,7 @@ HfFileSystem seek/read operations, recovers new_expert_id -> original_expert_id
 for all 43 layers, and embeds the final hash-routing tid2eid tables for layers
 0..2.
 
-Default output: puwaer-reap132-mask.json
+Default output: squanchyzx-puwaer-reap132-mask.json
 
 Requirements:
     uv sync
@@ -45,10 +45,11 @@ try:
 except ImportError as exc:  # pragma: no cover - exercised by CLI users
     raise SystemExit("Install dependencies with: uv sync") from exc
 
-DEFAULT_BASE = "deepseek-ai/DeepSeek-V4-Flash-0731"
+DEFAULT_BASE = "squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8"
 DEFAULT_PRUNED = "puwaer/DeepSeek-V4-Flash-0731-reap-150b"
-DEFAULT_REVISION = "main"
-DEFAULT_OUTPUT = "puwaer-reap132-mask.json"
+DEFAULT_BASE_REVISION = "e7efd043c5e072da4d40f0f98ade554c5713bad9"
+DEFAULT_PRUNED_REVISION = "868fa38e2f2964699ad065dc8d9382c136cc60b8"
+DEFAULT_OUTPUT = "squanchyzx-puwaer-reap132-mask.json"
 
 
 class RangeNotSupported(RuntimeError):
@@ -262,9 +263,25 @@ def unique_scalar_map(base_info: TensorInfo, base_raw: bytes,
 
 
 def compressed_blob(info: TensorInfo, raw: bytes) -> dict:
+    dtype_names = {
+        "BOOL": "bool",
+        "U8": "uint8",
+        "I8": "int8",
+        "I16": "int16",
+        "I32": "int32",
+        "I64": "int64",
+        "F16": "float16",
+        "BF16": "bfloat16",
+        "F32": "float32",
+        "F64": "float64",
+    }
+    try:
+        dtype = dtype_names[info.dtype]
+    except KeyError as exc:
+        raise ValueError(f"unsupported plan tensor dtype: {info.dtype}") from exc
     packed = zlib.compress(raw, level=9)
     return {
-        "dtype": info.dtype,
+        "dtype": dtype,
         "shape": list(info.shape),
         "encoding": "zlib+base64",
         "raw_nbytes": len(raw),
@@ -308,9 +325,9 @@ def main() -> int:
     )
     ap.add_argument("--base", default=DEFAULT_BASE, help=f"base HF repo (default: {DEFAULT_BASE})")
     ap.add_argument("--pruned", default=DEFAULT_PRUNED, help=f"pruned HF repo (default: {DEFAULT_PRUNED})")
-    ap.add_argument("--base-revision", default=DEFAULT_REVISION,
+    ap.add_argument("--base-revision", default=DEFAULT_BASE_REVISION,
                     help="Hugging Face branch or immutable commit SHA")
-    ap.add_argument("--pruned-revision", default=DEFAULT_REVISION,
+    ap.add_argument("--pruned-revision", default=DEFAULT_PRUNED_REVISION,
                     help="Hugging Face branch or immutable commit SHA")
     ap.add_argument("-o", "--output", default=DEFAULT_OUTPUT)
     ap.add_argument("--token", default=os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN"))

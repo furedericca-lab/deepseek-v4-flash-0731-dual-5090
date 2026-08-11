@@ -42,7 +42,7 @@ Deployment identity:
 | quant | Q2_K |
 | gguf_size | 58.11 GiB / 62394667168 bytes |
 | sha256 | 2e8ab70acda6d9ce4813a8b580d402c30d837d7bd8bf6119d6e84de38aa42d48 |
-| source_path | /data/toshiba-1tb/model/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf |
+| source_path | fixed-revision Hugging Face download; former local copies deleted |
 | runtime_path | /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf |
 | gpus | 2× RTX 5090 32GB |
 | split_mode | layer |

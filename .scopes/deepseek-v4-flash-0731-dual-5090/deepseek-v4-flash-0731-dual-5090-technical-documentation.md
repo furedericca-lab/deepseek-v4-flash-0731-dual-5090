@@ -25,7 +25,7 @@ llama-server :8000  (OpenAI-compatible)
 ```text
 /home/build/work/deepseek-v4-flash-0731-dual-5090/   # project docs, scripts, scopes, wiki
 /data/linux-fast/models/DeepSeek-V4-Flash-0731/      # preferred runtime model store (NVMe ext4)
-/data/toshiba-1tb/model/                             # current download/source path (NTFS/FUSE)
+/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8/ # REAP base
 /opt/llama.cpp/ or ./vendor/llama.cpp/               # source build location (to be chosen in phase 2)
 ```
 
@@ -35,9 +35,10 @@ llama-server :8000  (OpenAI-compatible)
 /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf
 ```
 
-Why not keep runtime load on Toshiba:
+Why runtime artifacts stay on NVMe:
 
-- mount type is `fuseblk`/NTFS
+- the former Toshiba copies were deleted after their hashes disagreed with
+  Hugging Face metadata
 - 62GB GGUF benefits from native ext4 + NVMe mmap/read performance
 - project docs stay on system disk; model bulk stays on data disks
 
@@ -89,6 +90,25 @@ Non-goals:
   - quant `Q2_K`
   - sha256 `2e8ab70acda6d9ce4813a8b580d402c30d837d7bd8bf6119d6e84de38aa42d48`
 
+### REAP-132 reproduction provenance
+
+- Exact plan: `squanchyzx-puwaer-reap132-mask.json`
+- Base repo: `squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8`
+- Base commit: `e7efd043c5e072da4d40f0f98ade554c5713bad9` (v2)
+- Pruned commit: `868fa38e2f2964699ad065dc8d9382c136cc60b8`
+- Logical SHA256:
+  `082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17`
+- The plan contains 43 layers with 132 survivor IDs each and three byte-exact
+  `[129280, 6]` `int64` `tid2eid` tables.
+- Exact-plan compression requires a local checkpoint root containing
+  `.checkpoint-source.json`. The manifest repo/revision must match the plan,
+  and local `config.json` plus `model.safetensors.index.json` must match the
+  SHA256 values recorded in the manifest before model loading begins.
+- `--source-revision` is only an optional compatibility assertion; it is not
+  accepted as provenance by itself.
+- This plan maps puwaer's published survivor set onto squanchyzx v2. It does
+  not represent a fresh saliency calibration on the abliterated hidden states.
+
 ## Security and Reliability
 
 - Default bind: `127.0.0.1` until explicit LAN exposure is approved.
@@ -113,3 +133,10 @@ Runtime validation (implementation phases):
 5. one short completion
 6. memory snapshot from `nvidia-smi`
 7. optional longer-context probe
+
+REAP plan validation:
+
+- `uv run pytest vendor/moe-expert-compress/tests -q`
+- `uv run python scripts/extract_puwaer_plan.py`
+- independently decompress and validate all `tid2eid` hashes, shapes, ranges,
+  and per-row distinctness

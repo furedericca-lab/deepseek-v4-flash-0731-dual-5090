@@ -1,8 +1,11 @@
 # puwaer REAP-132 plan extractor
 
-目标：从以下两个公开 Hugging Face checkpoint **精确提取** puwaer REAP-132 决策快照，并生成可交给 `moe-compress --plan` 使用的 JSON。提取结果会记录 Hugging Face resolved commit；无法解析不可变 revision 时脚本会失败，不会生成未锁定来源的 plan。
+目标：以 squanchyzx HERETIC v2 为母本，从以下两个公开 Hugging Face checkpoint
+**精确映射** puwaer REAP-132 决策快照，并生成可交给 `moe-compress --plan` 使用的
+JSON。默认 revision 已固定为 immutable commit；无法读取对应版本时脚本会失败。
 
-- Base: `deepseek-ai/DeepSeek-V4-Flash-0731` (256 routed experts/layer)
+- Base: `squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8`
+  (`e7efd043c5e072da4d40f0f98ade554c5713bad9`, v2, 256 routed experts/layer)
 - Pruned: `puwaer/DeepSeek-V4-Flash-0731-reap-150b` (132 routed experts/layer)
 
 ## 安装
@@ -18,7 +21,7 @@ uv sync
 ## 生成 plan
 
 ```bash
-uv run python scripts/extract_puwaer_plan.py -o puwaer-reap132-mask.json
+uv run python scripts/extract_puwaer_plan.py
 ```
 
 需要固定远端版本时，显式传入 commit SHA：
@@ -27,14 +30,14 @@ uv run python scripts/extract_puwaer_plan.py -o puwaer-reap132-mask.json
 uv run python scripts/extract_puwaer_plan.py \
   --base-revision <base-commit-sha> \
   --pruned-revision <puwaer-commit-sha> \
-  -o puwaer-reap132-mask.json
+  -o squanchyzx-puwaer-reap132-mask.json
 ```
 
 如果 Hugging Face 要求 token：
 
 ```bash
 export HF_TOKEN='hf_...'
-uv run python scripts/extract_puwaer_plan.py -o puwaer-reap132-mask.json
+uv run python scripts/extract_puwaer_plan.py
 ```
 
 ## Plan 格式
@@ -74,6 +77,10 @@ uv run python scripts/extract_puwaer_plan.py -o puwaer-reap132-mask.json
 比较 `gate.bias`，有歧义时回退到完整 `gate.weight` 行。前三层的最终
 `tid2eid` 直接从 puwaer checkpoint 提取并压缩保存，不重新推算 replacement。
 
+该 artifact 复用 puwaer 已发布的 survivor 集合。43 层 router row 均已证明能从
+squanchyzx v2 checkpoint byte-exact 映射到 puwaer REAP-150B；它不是在
+squanchyzx v2 hidden states 上重新运行 calibration 得到的新 saliency 排名。
+
 ## 下载原始 checkpoint
 
 `--streaming` 的 `LayerStreamer` 需要本地 Transformers checkpoint 目录，不能把
@@ -81,9 +88,33 @@ Hugging Face repo ID 当作 `--model` 传入。先固定 commit SHA 下载完整
 NVMe（实际裁剪本来就需要完整原始权重）：
 
 ```bash
-uv run hf download deepseek-ai/DeepSeek-V4-Flash-0731 \
-  --revision <base_revision_sha> \
-  --local-dir /data/linux-fast/models/DeepSeek-V4-Flash-0731-base
+uv run hf download squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8 \
+  --revision e7efd043c5e072da4d40f0f98ade554c5713bad9 \
+  --local-dir /data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8
+```
+
+下载完成后，为 checkpoint 写入 provenance manifest。脚本会先从固定 commit
+读取远端 `config.json` 和 `model.safetensors.index.json`，只有本地 SHA256 与远端
+完全一致时才会写文件：
+
+```bash
+uv run python scripts/write_checkpoint_source_manifest.py \
+  /data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8 \
+  --repo squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8 \
+  --revision e7efd043c5e072da4d40f0f98ade554c5713bad9
+```
+
+生成的 `.checkpoint-source.json` 格式如下：
+
+```json
+{
+  "repo": "squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8",
+  "revision": "<base_revision_sha>",
+  "config_file": "config.json",
+  "config_sha256": "...",
+  "index_file": "model.safetensors.index.json",
+  "index_sha256": "..."
+}
 ```
 
 ## 应用 plan
@@ -93,12 +124,17 @@ uv run hf download deepseek-ai/DeepSeek-V4-Flash-0731 \
 
 ```bash
 uv run moe-compress compress \
-  --model /data/linux-fast/models/DeepSeek-V4-Flash-0731-base \
-  --plan puwaer-reap132-mask.json \
-  --source-revision <base_revision_sha> \
+  --model /data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8 \
+  --plan squanchyzx-puwaer-reap132-mask.json \
   --streaming \
   --save-path output/DeepSeek-V4-Flash-0731-reap132
 ```
+
+对 `puwaer-reap-mask-v1`，`moe-compress` 会自动读取 checkpoint 根目录的
+`.checkpoint-source.json`，要求其中的 repo/revision 与 plan 一致，并在加载模型前
+重新计算 config/index SHA256。缺 manifest、revision 不符或元数据被替换都会拒绝。
+`--source-revision` 仍可作为额外的兼容性断言，但不再作为 provenance 证据，也不必
+出现在正常命令中。
 
 模型 surgery 由 `DeepseekV4Adapter.apply_keep()` 负责，包括 FP4 expert tensors、
 router rows 和 hash-layer `tid2eid`。
