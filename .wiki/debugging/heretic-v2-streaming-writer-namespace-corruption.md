@@ -291,3 +291,13 @@ expert-weight mutation in the CUDA/streaming writer path (or its tensor
 conversion), not an explained plan remap. Do not keep rebuilding or promote an
 artifact until the writer preserves the raw packed weight bytes or fails hard
 on any mutation.
+
+## 2026-08-12 CPU-only control
+
+For a direct control, the same frozen source and plan were rebuilt with
+`--streaming --device cpu`, avoiding CUDA entirely. The manifest passed twice,
+and the host stayed clean, but nine packed expert-weight mismatches remained.
+This disproves a CUDA-only explanation: the Transformers fused expert
+merge/split/reverse conversion itself is not a byte-exact representation for
+these packed FP4 tensors. The fix must bypass that conversion and slice the
+source safetensors payloads directly on CPU by expert ID.
