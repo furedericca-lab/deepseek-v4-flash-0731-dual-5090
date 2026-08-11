@@ -18,7 +18,8 @@ description: Task list for heretic-v2-reap132-build-validation phase 1.
 - Use squanchyzx HERETIC v2 commit `e7efd043...3bad9` only.
 - Use deterministic `--plan --streaming`; calibration and saliency are forbidden.
 - Source/output live on `/data/linux-fast`; project Python runs only in `.venv`.
-- Do not start pruning before the build code has a truthful commit identity.
+- Do not start pruning before the build code has a truthful commit identity and
+  a real quantized Layer 0 naming preflight passes.
 
 ## Format
 - [ID] [P?] [Component] Description
@@ -29,7 +30,7 @@ description: Task list for heretic-v2-reap132-build-validation phase 1.
 ## Phase 1: Freeze, Source Verification, and Deterministic Prune
 Goal: Freeze every build input, verify the complete source snapshot, and produce the native HERETIC-v2-REAP132 checkpoint exactly once.
 
-Definition of Done: The frozen plan and build code are immutable, source provenance/content manifests pass, and `--plan --streaming` finishes without calibration to a complete native output.
+Definition of Done: The frozen plan and build code are immutable, source provenance/content manifests pass, and `--plan --streaming` finishes without calibration to a complete native output whose writer reports zero duplicate/unknown names, 792 expert tensors per layer, and 40,325 indexed tensors.
 
 Tasks:
 - [x] T001 [QA] Freeze and recheck the plan identity
@@ -47,11 +48,12 @@ Tasks:
 - [x] T007 [Infra] Capture clean runtime baselines
   - DoD: `free -h`, `nvidia-smi`, `df -hT`, swap, and relevant process snapshots are logged, and no wiki/doctor scan is reading model files.
 - [ ] T008 [Backend] Execute deterministic streaming pruning
-  - DoD: `uv run moe-compress compress --model <source> --plan squanchyzx-puwaer-reap132-mask.json --streaming --save-path <native-output>` exits zero with no calibration/saliency dataset access.
+  - DoD: `uv run moe-compress compress --model <source> --plan squanchyzx-puwaer-reap132-mask.json --streaming --save-path <native-output>` exits zero with no calibration/saliency dataset access, no duplicate/unknown checkpoint names, and the exact 40,325-tensor structural inventory.
 - [ ] T009 [QA] Quarantine and record the native output
   - DoD: Output index/config/shards exist, run command/timestamps/exit status/peak memory are recorded, and the artifact remains unapproved until Phase 2 passes.
 
-Checkpoint: A complete but quarantined native checkpoint exists; Phase 2 owns all semantic and byte-exact acceptance.
+Checkpoint: A structurally complete but quarantined native checkpoint exists;
+Phase 2 owns the full classification and byte-exact acceptance.
 
 ## Dependencies & Execution Order
 - Phase 1 blocks all others.

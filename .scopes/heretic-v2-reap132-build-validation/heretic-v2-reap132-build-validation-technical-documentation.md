@@ -100,17 +100,23 @@ dropping them from output.
 3. Generate source provenance and content manifests.
 4. Capture RAM/swap, GPU, disk, and process baselines; ensure wiki/doctor scans
    are not reading model files.
-5. Run plan streaming once, logging command, source/plan hashes, environment,
+5. Run a real quantized Layer 0 naming preflight after `apply_keep()`; require
+   792 expert tensors, 396 weights, 396 scales, zero unknown source names, and
+   zero survivor provenance mismatches.
+6. Run plan streaming, logging command, source/plan hashes, environment,
    start/end time, exit status, and peak memory.
-6. Treat output as quarantined until post-prune verifier passes.
-7. Run native smoke only after structural PASS.
-8. Convert to GGUF only after native smoke PASS.
+7. Require writer hard-fail behavior for duplicate or source-unknown names, then
+   require 40,325 indexed tensors and 792 expert tensors in every layer.
+8. Treat output as quarantined until post-prune verifier passes.
+9. Run native smoke only after structural PASS.
+10. Convert to GGUF only after native smoke PASS.
 
 ## Observability and Error Handling
 
 - Every long operation writes a timestamped log under repo-ignored `logs/`.
-- Partial output, nonzero exit, hash drift, unknown tensor names, missing shards,
-  or any verifier category failure blocks the next phase.
+- Partial output, nonzero exit, hash drift, duplicate or unknown tensor names,
+  a tensor-count mismatch, missing shards, or any verifier category failure
+  blocks the next phase.
 - Do not delete failed artifacts automatically. Record size/path and request
   approval before replacement when overwrite is irreversible.
 - Record `nvidia-smi`, `free -h`, `df -hT`, and relevant process snapshots around

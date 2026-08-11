@@ -17,7 +17,7 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
 ## Global Status Board
 | Phase | Status | Completion | Health | Blockers |
 |---|---|---|---|---|
-| Phase 1 | In progress | 80% | Green | None; deterministic pruning is the next gate |
+| Phase 1 | In progress | 85% | Green | Naming fix passed Layer 0 preflight; deterministic rerun is next |
 | Phase 2 | Not started | 0% | Unknown | Phase 1 native output does not exist |
 | Phase 3 | Not started | 0% | Unknown | Phase 2 native verification/smoke not complete |
 
@@ -94,6 +94,34 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   - legacy `puwaer-reap132-mask.json` was deleted; the only executable plan is
     committed `squanchyzx-puwaer-reap132-mask.json`
 - Checkpoint confirmed: verified source snapshot and executable build identities are frozen; T008 deterministic pruning is authorized to start
+
+### 2026-08-11 rejected first output and naming-fix record
+
+- Phase: 1
+- Completed work:
+  - the first streaming process exited zero without OOM, but its output was
+    rejected after the source-namespace cross-check found 437 unknown names
+  - 396 layerless E8M0 scale names collided across 43 layers, losing 16,632
+    distinct scale keys; 41 attention KV norm names were also malformed
+  - fixed quantized expert scale and KV norm reverse naming in vendor commit
+    `5439fba8071467d8b2bb113046cd4e488ac14f5f`
+  - made duplicate tensor names and source-index unknown names fatal writer errors
+  - added full fused FP4 weight/scale, two-layer collision, KV norm, duplicate,
+    and unknown-name regressions
+- Evidence commands/results:
+  - failed output index -> 23,693 total, 23,256 source-known, 437 unknown
+  - expected fixed inventory -> 40,325 total and 792 expert tensors per layer
+  - focused naming/streaming tests -> `23 passed`
+  - full vendor suite -> `222 passed, 5 skipped`
+  - real source Layer 0 after `apply_keep()` -> 821 converted tensors, 792
+    expert tensors, 396 weights, 396 scales, zero unknown names, zero byte/dtype/
+    shape provenance mismatches
+- Resolution:
+  - user explicitly authorized deleting the unusable first model output to avoid
+    operator confusion; timestamped run logs and Wiki evidence remain
+  - rerun only from the frozen plan and the new committed naming implementation
+- Checkpoint confirmed: the failed artifact is not T008 completion; Layer 0
+  preflight passes and a clean full rerun is authorized
 
 ## Final Release Gate
 - Scope constraints preserved.
