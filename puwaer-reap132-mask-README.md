@@ -14,14 +14,14 @@ uv sync
 ## 生成完整 mask
 
 ```bash
-uv run python scripts/extract_puwaer_reap132_mask.py -o puwaer-reap132-mask.json
+uv run python scripts/extract_puwaer_plan.py -o puwaer-reap132-mask.json
 ```
 
 如果 Hugging Face 要求 token：
 
 ```bash
 export HF_TOKEN='hf_...'
-uv run python scripts/extract_puwaer_reap132_mask.py -o puwaer-reap132-mask.json
+uv run python scripts/extract_puwaer_plan.py -o puwaer-reap132-mask.json
 ```
 
 ## 输出内容
