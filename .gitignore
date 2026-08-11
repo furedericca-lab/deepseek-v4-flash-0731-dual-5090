@@ -1,0 +1,8 @@
+# Local ignore rules
+.wiki/
+models/
+*.gguf
+vendor/llama.cpp/
+.cache/
+logs/
+tmp/

@@ -1,0 +1,3 @@
+[submodule "vendor/moe-expert-compress"]
+	path = vendor/moe-expert-compress
+	url = https://github.com/puwaer/moe-expert-compress.git
