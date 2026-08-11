@@ -128,8 +128,9 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   - full 97-file source manifest check after the pread Layer 0 run -> PASS at
     `815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`
   - repeated shard reads around `sync` were stable and kernel logs contained no
-    NVMe I/O, media, data-integrity, or EXT4 errors; full SMART data remains
-    unavailable without separately authorized read-only sudo
+    NVMe I/O, media, data-integrity, or EXT4 errors; a later authorized SMART
+    read passed with zero critical warnings, media/data-integrity errors, and
+    error-log entries
 - Resolution:
   - user explicitly authorized deleting the unusable first model output to avoid
     operator confusion; timestamped run logs and Wiki evidence remain
@@ -137,6 +138,39 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
     pread/naming implementation
 - Checkpoint confirmed: the failed artifact is not T008 completion; Layer 0
   preflight passes and a clean full rerun is authorized
+
+### 2026-08-11 rejected exit-139 rerun and source re-verification
+
+- Phase: 1
+- Completed work:
+  - the clean rerun wrote 18 shards but exited `139` after the save message;
+    memory guard remained clear, so T008/T009 are not complete
+  - a full fixed-revision comparison continued across all 96 files and found
+    five same-size LFS SHA256 mismatches in shards 5, 40, 42, 47, and 48
+  - downloaded those five files with the logged-in official `hf` CLI into an
+    isolated repair directory, verified 5/5 SHA256 values, atomically replaced
+    the bad files, and deleted the repair directory
+  - added `tools/verify_hf_checkpoint_sha256.py`; it compares every LFS file to
+    remote SHA256 metadata, downloads and hashes each fixed-revision Git file,
+    continues after mismatches, and emits complete mismatch/missing/extra sets
+  - deleted the 90 GiB exit-139 output under the standing authorization to
+    remove unusable model artifacts
+- Evidence commands/results:
+  - pre-repair comparison -> 91/96 matched; five exact mismatch records saved
+    under repo-ignored `logs/`
+  - post-repair tool comparison -> 96/96 matched, 50/50 LFS SHA256, 46/46 Git
+    files by downloaded remote SHA256, zero missing/extra paths
+  - all 96 repository files plus `.checkpoint-source.json` and
+    `checkpoint-content-manifest.json` -> mode `0444`
+  - source content manifest check -> 97 files PASS at
+    `815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98`
+  - verifier/manifest tests -> `11 passed`
+- Issues/blockers:
+  - shard mtimes predate the 19:34 rerun, so current evidence does not identify
+    which process caused the second drift; do not attribute it to `pread`
+  - isolate the remaining mutation path and exit `139` before another full run
+- Checkpoint confirmed: source is repaired, remotely verified, and read-only;
+  deterministic pruning is blocked pending root-cause isolation
 
 ## Final Release Gate
 - Scope constraints preserved.

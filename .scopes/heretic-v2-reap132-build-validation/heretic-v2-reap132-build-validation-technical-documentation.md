@@ -66,6 +66,7 @@ frozen plan JSON + verified HERETIC v2 source + committed build code
 | `vendor/moe-expert-compress` | Apply existing plan layer-by-layer and write native checkpoint |
 | planned `scripts/verify_reap132_checkpoint.py` | Compare source/output/plan tensors and emit verification JSON |
 | `scripts/checkpoint_content_manifest.py` | Hash all checkpoint files and canonical manifest payload |
+| `tools/verify_hf_checkpoint_sha256.py` | Compare every local repository file against an immutable HF revision and emit mismatch evidence |
 | `/data/linux-fast/models/...HERETIC-Abliterated-FP8/` | Read-only source snapshot after verification |
 | `/data/linux-fast/models/...HERETIC-v2-REAP132/` | Native output, manifests, verifier report, smoke evidence |
 | pinned llama.cpp converter | Convert only the verified native checkpoint |
@@ -103,9 +104,10 @@ verification, so compression cannot share or modify mmap-backed source storage.
 3. Generate source provenance and content manifests.
 4. Capture RAM/swap, GPU, disk, and process baselines; ensure wiki/doctor scans
    are not reading model files.
-5. Compare the local snapshot directly with fixed-revision Hugging Face
-   metadata, require 50/50 LFS SHA256 and 46/46 Git blob matches, then make the
-   snapshot read-only.
+5. Run `tools/verify_hf_checkpoint_sha256.py` against the fixed revision. Require
+   50/50 LFS SHA256 and 46/46 Git files by downloaded remote SHA256, zero
+   missing/extra paths, then make the snapshot read-only. The verifier must
+   continue after individual mismatches and report their complete collection.
 6. Run a real quantized Layer 0 naming preflight through `pread` after
    `apply_keep()`; require
    792 expert tensors, 396 weights, 396 scales, zero unknown source names, and
