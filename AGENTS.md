@@ -40,6 +40,14 @@ on dual RTX 5090 with:
 
 ## Hard rules
 
+- Hugging Face 模型下载统一使用已登录的 `hf` CLI，不使用临时脚本或其
+  他账号；模型 snapshot 默认落在 `/data/linux-fast/models/<model-name>/`。
+  对需要复现的 checkpoint，先用 `--revision <commit-sha>` 固定版本，再用
+  `--local-dir` 写入该 NVMe 目录。
+- 示例：`uv run hf download <repo> --revision <sha> --local-dir
+  /data/linux-fast/models/<name>`。下载完成后必须校验文件清单和 SHA256，
+  再用于压缩或服务。
+
 - Do not load the runtime model from `/data/toshiba-1tb` if the NVMe copy exists or can be created.
 - Preferred runtime directory:
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731/`

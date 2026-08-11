@@ -95,6 +95,7 @@ uv run hf download deepseek-ai/DeepSeek-V4-Flash-0731 \
 uv run moe-compress compress \
   --model /data/linux-fast/models/DeepSeek-V4-Flash-0731-base \
   --plan puwaer-reap132-mask.json \
+  --source-revision <base_revision_sha> \
   --streaming \
   --save-path output/DeepSeek-V4-Flash-0731-reap132
 ```
