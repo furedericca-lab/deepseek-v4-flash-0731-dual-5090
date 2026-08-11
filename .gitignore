@@ -2,6 +2,8 @@
 .wiki/
 models/
 *.gguf
+__pycache__/
+*.py[cod]
 vendor/llama.cpp/
 .cache/
 logs/

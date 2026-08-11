@@ -1,12 +1,17 @@
 [project]
 name = "deepseek-v4-flash-0731-dual-5090"
 version = "0.1.0"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "hf-xet>=1.1",
     "huggingface-hub>=0.32",
+    "moe-compress[fp8]",
     "torch",
 ]
 
 [tool.uv.sources]
+moe-compress = { path = "vendor/moe-expert-compress", editable = true }
 torch = { path = "../../torch/dist/torch-2.14.0a0.post20260719-cp313-cp313-linux_x86_64.whl" }
+
+[dependency-groups]
+dev = ["pytest>=8"]

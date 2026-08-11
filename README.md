@@ -1,20 +1,19 @@
 # DeepSeek-V4-Flash-0731 Dual 5090
 
-Local llama.cpp CUDA deployment project for:
-
-`DeepSeek-V4-Flash-0731 REAP-150B Q2_K`
+Local llama.cpp CUDA deployment project for DeepSeek-V4-Flash-0731 REAP-150B
+artifacts on 2x RTX 5090.
 
 on 2× RTX 5090 with layer split, full GPU weights, and F16 KV cache in system RAM.
 
-## Current recommendation
+## Model Artifacts
 
 | Item | Value |
 |---|---|
 | GPUs | 2× RTX 5090 32GB |
 | Model | DeepSeek-V4-Flash-0731 REAP-150B |
-| Quant | Q2_K |
-| Source model path | `/data/toshiba-1tb/model/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf` |
-| Runtime model path | `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf` |
+| Verified baseline | `Q2_K` |
+| Current candidate | `IQ3_XXS` |
+| Runtime directory | `/data/linux-fast/models/DeepSeek-V4-Flash-0731/` |
 | Split | `-sm layer -ts 1,1` |
 | Weights | `-ngl all` |
 | KV | `--no-kv-offload -ctk f16 -ctv f16` |
@@ -25,11 +24,12 @@ on 2× RTX 5090 with layer split, full GPU weights, and F16 KV cache in system R
 
 ## Why the model should move off Toshiba
 
-The current file lives on `/data/toshiba-1tb` (NTFS via FUSE). For a 58.11 GiB GGUF, the preferred runtime store is:
+For large GGUF files, the preferred runtime store is the NVMe ext4 mount:
 
 `/data/linux-fast/models/DeepSeek-V4-Flash-0731/`
 
-That mount is NVMe + ext4 with ~991 GiB free.
+Do not use a deleted Toshiba source copy as a verification source; compare local
+SHA256 with the Hugging Face metadata recorded in `AGENTS.md`.
 
 ## First-boot command
 

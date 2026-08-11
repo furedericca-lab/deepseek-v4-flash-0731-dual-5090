@@ -74,15 +74,26 @@ uv run python scripts/extract_puwaer_plan.py -o puwaer-reap132-mask.json
 比较 `gate.bias`，有歧义时回退到完整 `gate.weight` 行。前三层的最终
 `tid2eid` 直接从 puwaer checkpoint 提取并压缩保存，不重新推算 replacement。
 
+## 下载原始 checkpoint
+
+`--streaming` 的 `LayerStreamer` 需要本地 Transformers checkpoint 目录，不能把
+Hugging Face repo ID 当作 `--model` 传入。先固定 commit SHA 下载完整 snapshot 到
+NVMe（实际裁剪本来就需要完整原始权重）：
+
+```bash
+uv run hf download deepseek-ai/DeepSeek-V4-Flash-0731 \
+  --revision <base_revision_sha> \
+  --local-dir /data/linux-fast/models/DeepSeek-V4-Flash-0731-base
+```
+
 ## 应用 plan
 
 `--plan` 路径跳过 calibration 和 saliency 计算，复用现有 DeepSeek-V4 adapter、
 `apply_keep()` 和 streaming writer：
 
 ```bash
-PYTHONPATH=vendor/moe-expert-compress/src \
-uv run python -m moe_compress.cli compress \
-  --model deepseek-ai/DeepSeek-V4-Flash-0731 \
+uv run moe-compress compress \
+  --model /data/linux-fast/models/DeepSeek-V4-Flash-0731-base \
   --plan puwaer-reap132-mask.json \
   --streaming \
   --save-path output/DeepSeek-V4-Flash-0731-reap132
