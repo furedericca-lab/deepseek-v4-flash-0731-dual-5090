@@ -33,17 +33,17 @@ Definition of Done: `post-prune-verification.json` contains all PASS categories,
 Tasks:
 - [x] T021 [Backend] Implement direct-safetensors post-prune verifier
   - DoD: `scripts/verify_reap132_checkpoint.py` consumes source/output/plan/manifests and emits the contracted JSON without full-model loading.
-- [ ] T022 [QA] Add adversarial verifier fixtures
+- [x] T022 [QA] Add adversarial verifier fixtures
   - DoD: Tests fail on expert reorder, packed-weight mutation, scale mutation, router mismatch, shared expert drift, overlay drift, retained MTP, bad `tid2eid`, dangling ID, missing tensor, and manifest drift.
-- [ ] T023 [QA] Verify all 43 expert mappings
+- [x] T023 [QA] Verify all 43 expert mappings
   - DoD: For every layer and new expert ID, all source old-ID `w1/w2/w3.weight` and `.scale` bytes equal the output new-ID tensors; report says `43/43 layers PASS`.
-- [ ] T024 [QA] Verify router and hash routing
+- [x] T024 [QA] Verify router and hash routing
   - DoD: All router rows follow the plan, three `tid2eid` tables equal plan blobs, and no routing ID is outside `0..131`.
-- [ ] T025 [QA] Verify preserved non-expert tensors
+- [x] T025 [QA] Verify preserved non-expert tensors
   - DoD: Shared experts and layers 10-42 HERETIC `attn.wo_b` are source-identical; all 4,705 source MTP/DSpark tensors are absent; unknown/unclassified tensors are zero.
 - [x] T026 [Backend] Generate the output content manifest
   - DoD: Every native output file is hashed under `checkpoint-content-manifest-v1`, its manifest SHA is stable across two runs, and differs conceptually from the plan logical SHA.
-- [ ] T027 [QA] Freeze the post-prune report
+- [x] T027 [QA] Freeze the post-prune report
   - DoD: `post-prune-verification.json` references exact plan/source/output hashes, has all contracted PASS fields, 43 layer results, and no failures.
 - [ ] T028 [Infra] Run native HF smoke matrix
   - DoD: Local checkpoint passes chat, reasoning, coding, tool-call, and longer-context probes with recorded placement/settings/memory and no NaN, tokenizer/config, routing, or obvious repetition failure.

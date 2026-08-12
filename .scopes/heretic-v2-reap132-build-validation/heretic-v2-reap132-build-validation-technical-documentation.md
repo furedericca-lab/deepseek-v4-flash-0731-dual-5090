@@ -98,7 +98,10 @@ verification, so compression cannot share or modify mmap-backed source storage.
   written to `logs/` until the host stability gate is clean, then frozen beside
   the output manifest.
 - Content manifest: `checkpoint-content-manifest.json` in each checkpoint root;
-  its canonical payload excludes its own `manifest_sha256` field.
+  its canonical payload excludes its own `manifest_sha256` field. The derived
+  `post-prune-verification.json` report is sidecar evidence and is excluded from
+  the checkpoint artifact file set so writing the report cannot invalidate the
+  content manifest it references.
 - Exact JSON contracts are defined in
   `heretic-v2-reap132-build-validation-contracts.md`.
 
@@ -170,13 +173,22 @@ verification, so compression cannot share or modify mmap-backed source storage.
 - A/B uses identical prompts, generation settings, and evaluator logic, with
   artifact hashes embedded in the result record.
 
-## Current Writer Blocker
+## Current Native Gate
 
-The 7.0/5600 rebuild is host-stable but still fails five byte-exact FP4 expert
-checks. The failing expert IDs change between fixed-source/fixed-plan rebuilds;
-scales, routers, shared experts, HERETIC overlay, and MTP policy pass. The
-streaming writer currently moves fused FP4 tensors through CUDA and then uses
-Transformers `revert_weight_conversion()` before CPU serialization. That
-round-trip is not a valid raw-byte preservation path. The corrective design is
-CPU safetensors slicing by frozen survivor IDs followed by direct packed-byte
-serialization, with a hard failure on any unexpected mutation.
+The writer blocker is closed by the Transformers-free deterministic
+safetensors builder. Under a clean Linux 7.0 boot, Python 3.12 Build A and B
+produced byte-identical 27-file manifests at
+`9175b91519f0981ed22b3afb3b780c8ba2b2d1bce041277834c0bd057a9e6e5d`.
+The final 35,620-tensor, 22-shard noMTP artifact passed the independent verifier
+with zero failures and is read-only. The remaining Phase 2 gate is native HF
+smoke. Tokenizer/config and meta-device model construction pass, but standard HF
+loading and the vendor pread loader do not satisfy the required O_DIRECT bulk
+read boundary. Implement direct-I/O native loading and record the two-GPU/CPU
+placement budget before full weight materialization. GGUF conversion remains
+blocked until the smoke matrix passes.
+
+The direct loader and one-token 43-layer forward now pass. Multi-token native
+cross-device execution is not accepted: switching to GPU1 triggered NVIDIA
+`Xid 31` and an MMU virtual-read fault. Native correctness smoke therefore uses
+one GPU per process with per-layer streaming after a clean reboot. Dual-GPU
+execution remains in the llama.cpp runtime gate.

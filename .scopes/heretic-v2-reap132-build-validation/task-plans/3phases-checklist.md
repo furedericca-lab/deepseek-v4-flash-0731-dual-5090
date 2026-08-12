@@ -17,8 +17,8 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
 ## Global Status Board
 | Phase | Status | Completion | Health | Blockers |
 |---|---|---|---|---|
-| Phase 1 | In progress | 90% | Blocked | noMTP build and structural gate pass; host kernel emits BAD_PAGE during full reads |
-| Phase 2 | In progress | 25% | Blocked | verifier and output manifest are implemented, but full report cannot be trusted after BAD_PAGE |
+| Phase 1 | Complete | 100% | Healthy | None |
+| Phase 2 | In progress | 85% | Healthy | Native HF smoke matrix remains |
 | Phase 3 | Not started | 0% | Unknown | Phase 2 native verification/smoke not complete |
 
 ## Phase Entry Links
@@ -267,6 +267,71 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   This path is not byte-exact for packed FP4 storage. The next implementation
   must read source safetensors bytes on CPU and slice survivors directly,
   bypassing GPU round-trip and fused reverse conversion.
+
+### 2026-08-12 Python 3.12 deterministic raw-builder acceptance
+
+- A clean `7.0.0-28-generic` boot started with `tainted=4096`, no BAD_PAGE,
+  Oops, GPF, MCE, AER, or NVMe error, 42 GiB available RAM, and zero swap use.
+- System Python `3.12.3` with `-X faulthandler` passed the real Layer 0
+  preflight: 132 survivors, 396 weights, 396 scales, 792 total expert tensors,
+  and zero missing, duplicate, unknown, or mutated payloads.
+- The Transformers-free raw-safetensors builder completed Build A and Build B
+  independently. Both produced 35,620 tensors in 22 deterministic shards with
+  `num_nextn_predict_layers=0`, `n_routed_experts=132`, and zero MTP/DSpark
+  keys. Peak observed Python RSS stayed near 120 MiB; available RAM remained
+  near 42 GiB and swap remained unused.
+- Both 27-entry O_DIRECT content manifests are byte-identical, including every
+  per-file SHA256, at canonical manifest SHA256
+  `9175b91519f0981ed22b3afb3b780c8ba2b2d1bce041277834c0bd057a9e6e5d`.
+- The independent O_DIRECT verifier passed twice with zero failures for layers,
+  expert weights, expert scales, router rows, shared experts, three `tid2eid`
+  tables, all HERETIC overlay tensors, MTP/DSpark absence, and dangling IDs.
+  The final report SHA256 is
+  `a8d9fdb84ac2179b21f21d66f325d60f536b32eeb1d52ef91fbe4b9a187d4a00`.
+- `post-prune-verification.json` is derived sidecar evidence and is excluded
+  from the model content manifest. A regression proves that writing the report
+  does not invalidate `manifest --check`; the final 27-file check passed.
+- Build B was promoted atomically to
+  `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/`.
+  The duplicate Build A was deleted, and the final artifact has zero writable
+  files and zero writable directories.
+- The boot remained clean through two builds, three full verifier/manifest
+  scans, and cleanup. Phase 1 is complete; Phase 2 now blocks only on native HF
+  smoke. This successful 3.12 run is a production choice, not proof that the
+  earlier CPython 3.13 GPF was caused by CPython.
+- Native pre-load gates passed with the project Transformers 5.15 stack:
+  `AutoConfig` resolves `DeepseekV4Config`, the tokenizer loads locally with
+  129,280 entries, and a meta-device `DeepseekV4ForCausalLM` constructs all 43
+  layers with 132 routed experts and zero MTP modules without reading shard
+  payloads.
+- At that checkpoint, full native generation had not started because standard
+  HF `from_pretrained()` and the vendor `backend="pread"` path did not satisfy
+  the retained O_DIRECT constraint. The later runtime record below closes the
+  direct-loader gap and supersedes this historical blocker.
+
+### 2026-08-12 native O_DIRECT runtime bring-up
+
+- Added a true aligned O_DIRECT tensor materializer to `LayerStreamer` while
+  retaining the existing pread backend as its default. Tiny checkpoint direct
+  loading is tensor-identical to resident loading, and the real checkpoint
+  shared plus Layer 0 preflight materialized all expected FP8/MXFP4 tensors.
+- The first full single-token forward streamed all 43 layers across GPU0 then
+  GPU1, produced finite logits, and exited zero. Peak RSS was 6.436 GiB and peak
+  allocated VRAM was 4.061 GiB on GPU0 and 1.833 GiB on GPU1.
+- Transformers 5.15 required `kernels>=0.16,<0.17`; the project was updated to
+  `kernels 0.16.0` and the locally compiled, Torch-matched
+  `pytorch-triton 3.8.0+git694c0c3b.post20260719` wheel from `~/torch/dist`.
+  The finegrained FP8 kernel exposed all required symbols and a CUDA FP8 matmul
+  returned finite BF16 output.
+- A subsequent multi-token chat smoke failed after switching to GPU1 at Layer
+  23. The process reported CUDA illegal memory access, and the kernel recorded
+  NVIDIA `Xid 31` for PCI `02:00.0` (GPU1), an MMU virtual-read fault. The
+  remaining matrix was stopped and this boot is inadmissible for further GPU
+  validation.
+- This event does not invalidate the read-only checkpoint or its byte verifier;
+  it is a native multi-device runtime failure. After reboot, rerun the matrix
+  with single-GPU, per-layer O_DIRECT streaming on GPU0. Dual-GPU acceptance is
+  deferred to llama.cpp unless a separate native multi-device fix is proven.
 
 ## Final Release Gate
 - Scope constraints preserved.

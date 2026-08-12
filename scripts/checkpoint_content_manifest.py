@@ -14,6 +14,7 @@ from pathlib import Path
 
 SCHEMA = "checkpoint-content-manifest-v1"
 MANIFEST_NAME = "checkpoint-content-manifest.json"
+SIDECAR_EVIDENCE = frozenset({"post-prune-verification.json"})
 EXCLUDED_DIRECTORIES = frozenset({".cache", ".git", ".hfd", "__pycache__"})
 PARTIAL_SUFFIXES = (".aria2", ".incomplete", ".lock", ".part", ".tmp")
 BLOCK = 8 * 1024 * 1024
@@ -60,7 +61,7 @@ def artifact_files(checkpoint: Path) -> list[Path]:
             continue
         if path.is_symlink():
             raise ValueError(f"checkpoint contains unsupported symlink: {relative.as_posix()}")
-        if not path.is_file() or relative.as_posix() == MANIFEST_NAME:
+        if not path.is_file() or relative.as_posix() in {MANIFEST_NAME, *SIDECAR_EVIDENCE}:
             continue
         if path.name.endswith(PARTIAL_SUFFIXES):
             raise ValueError(f"checkpoint contains partial or temporary file: {relative.as_posix()}")

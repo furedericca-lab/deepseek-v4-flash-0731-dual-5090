@@ -64,7 +64,16 @@ def test_manifest_rejects_partial_files(tmp_path, suffix):
 def test_manifest_excludes_itself(tmp_path):
     (tmp_path / "config.json").write_text("{}\n")
     (tmp_path / MANIFEST_NAME).write_text(json.dumps({"stale": True}))
+    (tmp_path / "post-prune-verification.json").write_text(json.dumps({"failures": []}))
 
     manifest = build_manifest(tmp_path, "source")
 
     assert [entry["path"] for entry in manifest["files"]] == ["config.json"]
+
+
+def test_manifest_stays_valid_after_verification_sidecar_is_written(tmp_path):
+    (tmp_path / "model.safetensors").write_bytes(b"payload")
+    manifest = write_manifest(tmp_path, "native-reap132")
+    (tmp_path / "post-prune-verification.json").write_text(json.dumps({"failures": []}))
+
+    assert check_manifest(tmp_path, "native-reap132") == manifest

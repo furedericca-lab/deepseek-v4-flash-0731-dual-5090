@@ -29,7 +29,7 @@ tags:
   - checkpoint-verification
   - gguf
 last_checked: 2026-08-12
-updated: 2026-08-12T12:40:00+08:00
+updated: 2026-08-12T13:45:00+08:00
 ---
 
 # HERETIC v2 REAP132 build and validation
@@ -84,9 +84,32 @@ require `0`; tests pass 23/23.
 
 The first config-correct full rebuild ended in an unexplained CPython 3.13
 general-protection fault, exit 139, without a Python traceback or preceding
-BAD_PAGE. Its partial output was deleted. Bounded RAM, tuple, O_DIRECT, AER,
-SMART, NVMe, and machine-check diagnostics found no persistent error. There is
-currently no final native artifact directory. The next delivery gate is a clean
-reboot followed by a Python 3.12 `-X faulthandler` Build A, O_DIRECT manifest and
-verifier PASS, same-code Build B, per-file SHA equality, read-only promotion,
-and only then native HF smoke.
+BAD_PAGE. Its partial output was deleted. The clean-boot Python 3.12 A/B then
+completed successfully with `-X faulthandler`: both builds produced 35,620
+tensors in 22 shards, zero MTP/DSpark keys, and byte-identical 27-entry
+manifests. The canonical output manifest SHA256 is
+`9175b91519f0981ed22b3afb3b780c8ba2b2d1bce041277834c0bd057a9e6e5d`.
+The independent O_DIRECT verifier passed twice with zero failures; final report
+SHA256 is `a8d9fdb84ac2179b21f21d66f325d60f536b32eeb1d52ef91fbe4b9a187d4a00`.
+The accepted artifact is read-only at
+`/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/`, and
+the duplicate A build has been deleted. Python 3.12 is the production builder
+baseline, but one successful A/B does not prove CPython 3.13 caused the earlier
+GPF. Local tokenizer/config loading and meta-device model construction pass with
+Transformers 5.15: 43 layers, 132 routed experts, 129,280 tokenizer entries, and
+zero MTP modules. Full native weight loading has not started because standard HF
+loading is mmap/buffered, while the existing vendor `pread` backend is not
+`O_DIRECT`; either path would violate the production bulk-read constraint. The
+remaining Phase 2 work is an aligned direct-I/O native loader, an explicit
+dual-GPU/CPU placement budget, and the five-class generation smoke before GGUF.
+
+The aligned direct-I/O native loader is now implemented and proven against a
+tiny resident checkpoint plus the real shared/Layer 0 FP8 payloads. A full
+single-token 43-layer forward passed with finite logits and bounded memory. The
+runtime dependency is pinned to `kernels 0.16.0` and the locally compiled
+Torch-matched `pytorch-triton 3.8.0+git694c0c3b.post20260719` wheel. However, a
+multi-token run that switched from GPU0 to GPU1 triggered NVIDIA `Xid 31` on PCI
+`02:00.0` (GPU1), an MMU virtual-read fault at Layer 23. The remaining matrix was
+stopped and the current boot is not admissible for more GPU evidence. After
+reboot, native correctness smoke uses GPU0-only per-layer streaming; dual-GPU
+acceptance remains a llama.cpp Phase 3 gate unless separately fixed.

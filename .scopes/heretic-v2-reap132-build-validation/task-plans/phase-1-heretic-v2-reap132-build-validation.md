@@ -47,9 +47,9 @@ Tasks:
   - DoD: Full vendor tests pass; plan load, source manifest, source content manifest, free space, and output non-existence/overwrite policy pass.
 - [x] T007 [Infra] Capture clean runtime baselines
   - DoD: `free -h`, `nvidia-smi`, `df -hT`, swap, and relevant process snapshots are logged, and no wiki/doctor scan is reading model files.
-- [ ] T008 [Backend] Execute deterministic streaming pruning
+- [x] T008 [Backend] Execute deterministic streaming pruning
   - DoD: `uv run moe-compress compress --model <source> --plan squanchyzx-puwaer-reap132-mask.json --streaming --drop-mtp --save-path <native-output>` exits zero with no calibration/saliency dataset access, no duplicate/unknown checkpoint names, zero MTP/DSpark tensors, and the dynamically derived 35,620-tensor structural inventory.
-- [ ] T009 [QA] Quarantine and record the native output
+- [x] T009 [QA] Quarantine and record the native output
   - DoD: Output index/config/shards exist, run command/timestamps/exit status/peak memory are recorded, and the artifact remains unapproved until Phase 2 passes.
 
 Checkpoint: A structurally complete but quarantined native checkpoint exists;

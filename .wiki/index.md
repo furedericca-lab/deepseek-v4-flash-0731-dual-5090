@@ -3,8 +3,12 @@ title: Project Wiki Index
 type: wiki-index
 status: current
 generated_by: /home/build/.codex/skills/wiki-note/scripts/wiki_note.py
-updated: 2026-08-12T04:43:16Z
+updated: 2026-08-12T06:09:16Z
 ---
+
+
+
+
 
 
 
@@ -59,7 +63,7 @@ updated: 2026-08-12T04:43:16Z
 # Project Wiki Index
 
 <!-- BEGIN AUTO -->
-- Last rebuilt: 2026-08-12T04:43:16Z
+- Last rebuilt: 2026-08-12T06:09:16Z
 - Page count: 7
 
 ## By Type
@@ -78,7 +82,7 @@ updated: 2026-08-12T04:43:16Z
 
 ### implementation
 
-- [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | status: current | updated: 2026-08-12T12:40:00+08:00
+- [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | status: current | updated: 2026-08-12T13:45:00+08:00
 - [Model placement and disk strategy](implementation/model-placement-and-disk-strategy.md) | status: current | updated: 2026-08-11T07:17:23Z
 - [REAP-132 plan and checkpoint provenance](implementation/reap132-plan-checkpoint-provenance.md) | status: current | updated: 2026-08-11T07:17:07Z
 
@@ -106,7 +110,7 @@ updated: 2026-08-12T04:43:16Z
 
 ## Recently Updated
 
-- 2026-08-12T12:40:00+08:00 | [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md)
+- 2026-08-12T13:45:00+08:00 | [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md)
 - 2026-08-11T12:16:32Z | [HERETIC v2 streaming writer namespace corruption](debugging/heretic-v2-streaming-writer-namespace-corruption.md)
 - 2026-08-11T07:17:23Z | [Model placement and disk strategy](implementation/model-placement-and-disk-strategy.md)
 - 2026-08-11T07:17:07Z | [REAP-132 plan and checkpoint provenance](implementation/reap132-plan-checkpoint-provenance.md)

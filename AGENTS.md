@@ -80,7 +80,7 @@ on dual RTX 5090 with:
   external files and record a clean RAM/Swap baseline.
 - Use `ok-skill` / `repo-task-driven` / `wiki-note` for durable scope and knowledge updates.
 
-- Native REAP verification is currently quarantined by a host stability issue.
+- Historical native REAP attempts were quarantined by a host stability issue.
   On `7.0.0-28-generic`, large sequential safetensors reads have reproduced
   kernel `BAD_PAGE`/`compound_head not consistent` reports from `kswapd0` even
   with zram nearly unused. Before accepting a post-prune report, check
@@ -113,13 +113,16 @@ on dual RTX 5090 with:
 - Before every large checkpoint build, manifest pass, or full tensor verifier,
   require the current boot to contain no `BAD_PAGE`, `compound_head`,
   corrupted-tail-page, kernel Oops, or unexplained user-process `SIGSEGV` /
-  general-protection-fault event. If one occurs during a bulk checkpoint task,
+  general-protection-fault event. Native GPU validation additionally requires
+  no NVIDIA `Xid` event in the current boot. If one occurs during a bulk task,
   stop all artifact validation and reboot; no later runtime setting can make
   that boot admissible evidence. A Python exit `139` without a Python traceback
   is a host-stability event, not an ordinary retryable builder exception.
 - Keep `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/`
-  read-only and quarantined until `scripts/verify_reap132_checkpoint.py`
-  produces a PASS report. The verifier uses aligned `O_DIRECT` reads to avoid
+  read-only. Its Python 3.12 A/B manifests are byte-identical at
+  `9175b91519f0981ed22b3afb3b780c8ba2b2d1bce041277834c0bd057a9e6e5d`,
+  and `scripts/verify_reap132_checkpoint.py` produced a zero-failure PASS report.
+  The verifier uses aligned `O_DIRECT` reads to avoid
   filling page cache; this is the supported checkpoint workflow, not proof that
   future buffered or `mmap()` model loading is unaffected by the host issue.
 - The 7.0/5600 rebuild completed with a clean kernel and manifest, but direct
@@ -130,11 +133,18 @@ on dual RTX 5090 with:
 - A noMTP artifact must set `num_nextn_predict_layers` to `0` as well as contain
   zero `mtp.*` tensors. The deterministic builder and independent verifier must
   enforce both halves of this contract before native model loading.
-- Run future full raw-safetensors builder attempts with Python fatal-signal
-  diagnostics enabled. Python 3.12 can execute the standard-library-only
-  builder and is the next interpreter A/B; use `-X faulthandler` and a launcher
-  that leaves Apport/core evidence available. Do not treat switching Python as
-  proof of root cause without a repeated result.
+- Run future full raw-safetensors builds with system Python 3.12 and fatal-signal
+  diagnostics enabled: `/usr/bin/python3.12 -X faulthandler`. The config-correct
+  Python 3.12 A/B completed with identical per-file hashes and a clean boot, so
+  it is the production builder baseline. Continue to leave Apport/core evidence
+  available, and do not treat this success as proof that CPython 3.13 caused the
+  earlier GPF.
+- Native HF correctness smoke must use aligned O_DIRECT layer streaming on one
+  CUDA device per process. A multi-token run that switched from GPU0 to GPU1 in
+  one process triggered NVIDIA `Xid 31` on PCI `02:00.0` (GPU1) and an illegal
+  virtual read; do not treat the earlier one-token cross-device PASS as a valid
+  multi-device acceptance. Keep dual-GPU validation in the later llama.cpp
+  runtime gate unless a separate clean-boot native multi-device fix is proven.
 - Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
   5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
   backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose
