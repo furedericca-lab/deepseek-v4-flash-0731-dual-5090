@@ -3,8 +3,11 @@ title: Decision Log
 type: decision-log
 status: current
 generated_by: /home/build/.codex/skills/wiki-note/scripts/wiki_note.py
-updated: 2026-08-12T09:05:48Z
+updated: 2026-08-12T10:48:20Z
 ---
+
+
+
 
 
 
@@ -78,7 +81,7 @@ updated: 2026-08-12T09:05:48Z
 # Decision Log
 
 <!-- BEGIN AUTO -->
-- Last rebuilt: 2026-08-12T09:05:48Z
+- Last rebuilt: 2026-08-12T10:48:20Z
 - Decision count: 1
 
 ## Draft Decisions
@@ -105,3 +108,8 @@ updated: 2026-08-12T09:05:48Z
 ## Manual Review Notes
 
 Keep this section concise. The script preserves text outside the auto block.
+
+- 2026-08-12: Retain the corrected MXFP4 GGUF as an unpromoted candidate. Its
+  sampled routed-expert, nonexpert, and FP8-backbone payload contracts pass;
+  an exact native/GGUF 11-token prompt has the same first greedy token. Finish
+  multi-token behavior quality before promotion.

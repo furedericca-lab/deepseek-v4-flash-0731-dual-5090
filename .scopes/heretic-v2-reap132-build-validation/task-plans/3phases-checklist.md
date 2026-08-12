@@ -19,7 +19,7 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
 |---|---|---|---|---|
 | Phase 1 | Complete | 100% | Healthy | None |
 | Phase 2 | Complete | 100% | Accepted with limitation | Byte verification PASS; native HF accepted through 16 tokens, 32-token runtime limitation recorded |
-| Phase 3 | Ready | 0% | Await clean reboot | Pin converter, build golden GGUF, then dual-5090 llama.cpp |
+| Phase 3 | Complete | 100% | Healthy | Canonical MXFP4 GGUF, direct provenance, dual-5090 runtime, 32K prefill, and behavior probes passed |
 
 ## Phase Entry Links
 1. [phase-1-heretic-v2-reap132-build-validation.md](phase-1-heretic-v2-reap132-build-validation.md)

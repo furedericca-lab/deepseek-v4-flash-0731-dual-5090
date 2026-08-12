@@ -3,7 +3,7 @@ set -euo pipefail
 
 repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 server="$repo_root/vendor/llama.cpp/build/bin/llama-server"
-model=/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf
+model=/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf
 
 if [[ ! -x "$server" ]]; then
   printf 'llama-server is not built: %s\n' "$server" >&2
@@ -17,16 +17,18 @@ fi
 
 exec "$server" \
   -m "$model" \
-  -ngl all \
+  --load-mode dio \
+  -dev CUDA0,CUDA1 \
   -sm layer \
-  -ts 1,1 \
+  --fit on \
+  --fit-target 3072,3072 \
   --no-kv-offload \
   -ctk f16 \
   -ctv f16 \
   -c 65536 \
   -np 1 \
-  -b 1024 \
-  -ub 256 \
+  -b 512 \
+  -ub 128 \
   -fa on \
   --reasoning-format deepseek \
   --host 127.0.0.1 \

@@ -77,13 +77,13 @@ description: Scope boundaries and milestones for heretic-v2-reap132-build-valida
 - Pinned llama.cpp converter produces an MXFP4-preserving GGUF.
 - GGUF SHA, metadata, two-GPU visibility, localhost boot, `/v1/models`, and one
   completion pass.
-- Exit: golden GGUF is frozen before further quantization.
+- Exit: canonical MXFP4 GGUF is read-only and frozen; further quantization is out of scope.
 
 ### M6 - Controlled A/B
 
-- puwaer REAP-150B and HERETIC-v2 + identical REAP132 use the same harness,
-  prompts, runtime flags, and scoring.
-- Exit: results isolate the HERETIC attention overlay as the intended variable.
+- Cancelled by user decision: do not download or evaluate the puwaer checkpoint.
+- Further IQ3/Q2 quantization is also out of scope; the canonical MXFP4 GGUF is
+  the final deployment format.
 
 ## Dependencies
 

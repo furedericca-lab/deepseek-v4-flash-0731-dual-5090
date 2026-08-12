@@ -261,3 +261,39 @@ writer must materialize lazy arrays in `write_array()` before direct staging;
 its small direct GGUF payload regression must pass before a replacement full
 conversion. The user cancelled puwaer A/B and further IQ3/Q2 work: the repaired
 MXFP4 GGUF is the sole deployment target.
+
+Fork commit `1e17097` fixes that direct-output defect by materializing each
+`LazyNumpyTensor` before `write_array()` serializes it. Seven direct-I/O writer
+tests pass, including a 70 MiB cross-chunk staging case. A replacement full
+conversion completed with both direct-I/O flags at
+`/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf`.
+It is 85,049,305,696 bytes with O_DIRECT SHA256
+`f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b`.
+Direct provenance passed for 90 routed-expert blocks and 9 nonexpert
+embedding/norm/head samples.
+
+On a clean 2026-08-12 boot, the corrected candidate loaded in llama.cpp through
+`--load-mode dio` with two-GPU auto-fit, a 3 GiB per-GPU margin, F16 CPU KV,
+and 64K context. Loading took 43.8 s; GPU0/GPU1 used about 28.1/28.5 GiB VRAM.
+`/health` and `/v1/models` passed, and the raw prompt `The capital of France is`
+generated ` Paris.` at 24.6 tok/s without a new Xid, BAD_PAGE, Oops, or GPF.
+The initial `-ngl all` profile is invalid for this model because it disables
+auto-fit and tries an impossible roughly-40-GiB CUDA allocation. The repaired
+candidate remains unpromoted while Phase 3 behavior probes run: JSON structure
+passed, while a short coding probe did not meet the quality gate. Its FP8
+backbone was also independently checked without mapping the full GGUF: 52
+sampled rows from layers 0, 10, and 42 were decoded from source E4M3 plus E8M0
+scales, quantized using the converter's Q8_0 contract, and matched against
+aligned direct GGUF reads. For the exact native 11-token prompt `Write Python:
+def add(a,b): return a+b`, both native HF and the corrected GGUF emitted `\n` as
+the first greedy token. This closes the first-step conversion-mismatch
+hypothesis for that prompt; it does not accept later code-quality output or
+permit promotion before T045.
+
+T045 subsequently passed on the corrected artifact. At temperature zero, the
+OpenAI-compatible endpoint returned valid JSON, a concise Chinese answer, and
+valid Python `add(a, b)` code. A 32,767-token prefill plus eight-token decode
+completed at 371.5 prompt tokens/s with no Xid, BAD_PAGE, Oops, GPF, NaN, or
+routing error. The corrected read-only file was promoted to the canonical
+non-`.fixed` name; the original lazy-zero-payload GGUF was deleted after its
+SHA256, provenance failure, writer cause, and regression coverage were recorded.

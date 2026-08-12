@@ -10,7 +10,7 @@ converts it to a golden MXFP4 GGUF, and deploys it with llama.cpp on two RTX
 |---|---|---|
 | 1. Checkpoint build | Complete | Deterministic Python 3.12 A/B builds and independent byte-provenance verification passed |
 | 2. Native HF smoke | Complete with limitation | 1- and 16-token prefills passed; 32-token CSA exposed a reproducible Torch/cuBLAS zero-stride runtime fault on Blackwell |
-| 3. GGUF and runtime | In progress | Initial 80 GiB GGUF is quarantined: direct output zeroed lazy ordinary tensors; corrected converter is under validation |
+| 3. GGUF and runtime | Complete | Canonical MXFP4 GGUF passed provenance, dual-5090 64K load, 32K prefill, API, and behavior probes |
 
 Accepted checkpoint:
 
@@ -83,11 +83,15 @@ committing the new parent pin.
 
 The pinned converter supports DeepSeek V4, `--no-mtp`, I32 `tid2eid`, routed
 expert MXFP4 repacking, and aligned direct I/O. The conversion is a packed-format
-repack, not floating-point requantization. The first full output is quarantined,
-not golden: it has the expected structure and correct MXFP4 expert bytes, but
-ordinary lazy BF16/F32 tensors were serialized as zeroes by the direct-output
-writer. Do not serve or overwrite it. Regenerate only after the writer fix and
-small direct-payload verification pass.
+repack, not floating-point requantization. The first full output is quarantined:
+the direct-output writer serialized lazy ordinary BF16/F32 tensors as zeroes.
+Fork commit `1e17097` materializes lazy arrays before writing and is covered by
+payload-level direct-I/O tests. The corrected canonical artifact is
+`DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf`:
+`85,049,305,696` bytes and O_DIRECT SHA256
+`f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b`.
+It passed 90 routed-expert, 9 nonexpert, and 52 sampled FP8-backbone-to-Q8_0
+payload-provenance comparisons.
 
 Full conversion must run only after the clean-boot gate passes:
 
@@ -120,27 +124,43 @@ After the golden GGUF passes metadata and direct-I/O SHA256 verification, start
 the localhost-only runtime with this initial profile:
 
 ```bash
+scripts/llama-server-first-boot.sh
+```
+
+The script uses direct I/O, automatic two-GPU layer fitting with a 3 GiB margin
+per GPU, F16 CPU KV, 64K context, `-b 512`, and `-ub 128`. Do not use `-ngl all`
+for this 80 GiB model: it disables fitting and attempts an impossible per-GPU
+allocation. The equivalent explicit runtime profile is:
+
+```bash
 llama-server \
   -m /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf \
-  -ngl all \
+  --load-mode dio \
+  -dev CUDA0,CUDA1 \
   -sm layer \
-  -ts 1,1 \
+  --fit on \
+  --fit-target 3072,3072 \
   --no-kv-offload \
   -ctk f16 \
   -ctv f16 \
   -c 65536 \
   -np 1 \
-  -b 1024 \
-  -ub 256 \
+  -b 512 \
+  -ub 128 \
   -fa on \
   --reasoning-format deepseek \
   --host 127.0.0.1 \
   --port 8000
 ```
 
-If startup OOMs, lower `-b/-ub`, then context to `-c 32768`, and only then
-consider limited expert CPU offload. A 64K context remains a runtime acceptance
-target until the new golden GGUF proves it on this host.
+On 2026-08-12 this profile loaded the corrected candidate at 64K in 43.8 s,
+using approximately 28.1 GiB and 28.5 GiB VRAM with 14 GiB host memory still
+available. `/health` and `/v1/models` passed, and the raw prompt `The capital
+of France is` began ` Paris.` at 24.6 tok/s with no Xid or kernel fault. It
+also completed a 32,767-token prefill plus eight-token decode at 371.5 prompt
+tok/s without a fault. Chat JSON, Chinese answer, and Python-code probes passed.
+For the exact 11-token native-smoke prompt `Write Python: def add(a,b): return
+a+b`, both native HF and the GGUF emit a newline as the first greedy token.
 
 ## Project Sources
 

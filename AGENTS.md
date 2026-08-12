@@ -205,22 +205,36 @@ on dual RTX 5090 with:
   HF limited beyond the prior clean 16-token prefill; proceed to Phase 3 with
   the byte-verified checkpoint after a clean reboot.
 - Phase 3 pins the `vendor/llama.cpp` submodule from
-  `https://github.com/furedericca-lab/llama.cpp.git` at commit `8704e31`, based
-  on upstream `89e0aa6fd362617d9073e0dafc18e41241521572`. Its DeepSeek V4 converter repacks
-  routed expert weight+scale into GGUF MXFP4 and supports `--no-mtp`. However,
-  its default local safetensors materializer uses `np.memmap`; never run it over
-  the full checkpoint on this host. The local converter now has fixture-tested
-  `--direct-io-input` and `--direct-io-output` paths with aligned 64 MiB bounded
-  staging. Direct-I/O output also stages converted tensor payloads immediately
-  to a same-filesystem O_DIRECT temporary file instead of retaining every array
-  in RAM. A real 1,328-tensor dry-run planned an 85.0 GB GGUF with 1.67 GiB peak
-  RSS and zero process swaps. Full conversion must use both flags and start only
-  on a clean boot. Commit `8704e31` has a direct-output correctness defect:
-  `np.ascontiguousarray(LazyNumpyTensor)` serializes zero-valued metadata rather
-  than payload bytes. MXFP4 experts are unaffected because they are eager before
-  writing; ordinary BF16/F32 tensors are zeroed. The next converter commit must
-  materialize `LazyNumpyTensor` in `write_array()` and pass direct GGUF payload
-  tests before a replacement full conversion.
+  `https://github.com/furedericca-lab/llama.cpp.git` at fork commit `1e17097`.
+  Its DeepSeek V4 converter repacks routed expert weight+scale into GGUF MXFP4,
+  supports `--no-mtp`, and materializes `LazyNumpyTensor` before serializing a
+  direct-I/O payload. The default local safetensors materializer uses
+  `np.memmap`; never run it over the full checkpoint on this host. Full
+  conversion must use the fixture-tested `--direct-io-input` and
+  `--direct-io-output` paths with aligned 64 MiB bounded staging and start only
+  on a clean boot. Direct-I/O output stages converted tensor payloads immediately
+  to a same-filesystem temporary file instead of retaining every array in RAM.
+  The replacement output
+  `DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf` is
+  85,049,305,696 bytes, has SHA256
+  `f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b`, and
+  passed 90 routed-expert plus 9 nonexpert provenance comparisons, plus 52
+  sampled dequantized-FP8-to-Q8_0 backbone row comparisons across layers 0,
+  10, and 42. The earlier lazy-zero-payload output was deleted after recording
+  its SHA256 and direct-writer root cause; it had zeroed ordinary BF16/F32
+  payloads despite correct routed MXFP4 payloads.
+- The runtime baseline for the corrected candidate is `--load-mode dio -dev
+  CUDA0,CUDA1 -sm layer --fit on --fit-target 3072,3072 --no-kv-offload -ctk
+  f16 -ctv f16 -c 65536 -np 1 -b 512 -ub 128 -fa on`. Do not use `-ngl all`:
+  it disables auto-fit and requests an impossible roughly-40-GiB allocation per
+  GPU. The corrected candidate passed 64K dual-5090 startup, API health, and a
+  raw `Paris` completion without a new Xid, BAD_PAGE, Oops, or GPF. It also
+  completed a 32,767-token prefill plus eight-token decode at 371.5 prompt
+  tok/s, and Chat JSON, Chinese, and Python-code probes passed. The exact native-smoke prompt
+  `Write Python: def add(a,b): return a+b` tokenizes to 11 tokens and produces
+  a newline as its first greedy token in both native HF and the corrected GGUF;
+  this rules out a first-step conversion mismatch for that prompt. The canonical
+  GGUF is read-only and is the sole deployment artifact.
 - Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
   5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
   backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose

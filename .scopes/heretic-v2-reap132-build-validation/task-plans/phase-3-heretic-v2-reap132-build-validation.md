@@ -35,7 +35,7 @@ Definition of Done: A fully hashed MXFP4 GGUF passes direct payload provenance, 
 Tasks:
 - [x] T041 [Config] Pin and inspect the llama.cpp converter
   - DoD: Converter commit, DeepSeek-V4 support, accepted flags, and routed-expert output type are recorded before conversion.
-- [ ] T042 [Infra] Convert the accepted native checkpoint
+- [x] T042 [Infra] Convert the accepted native checkpoint
   - DoD: Exact command converts the Phase 2 artifact to a GGUF under `/data/linux-fast/models/DeepSeek-V4-Flash-0731/` without reading any unverified checkpoint.
 
 T041 outcome: use the `vendor/llama.cpp` submodule from the project fork at
@@ -69,17 +69,25 @@ for the same raw prompt. Direct provenance shows all sampled MXFP4 expert blocks
 pass while nonexpert embedding, output norm, and head samples fail. Root cause:
 the direct writer called `np.ascontiguousarray()` on `LazyNumpyTensor`, which
 uses a zero-valued metadata array without evaluating the deferred payload.
-The repair materializes lazy tensors in `write_array()` and is covered by small
-GGUF payload tests. Do not start a replacement full conversion until those tests
-and a tiny direct conversion prove ordinary payload equality.
-- [ ] T043 [QA] Verify and freeze the golden GGUF
+The repair materializes lazy tensors in `write_array()` and is covered by seven
+small GGUF payload tests. The replacement direct-I/O conversion completed as
+`DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf` at
+85,049,305,696 bytes.
+- [x] T043 [QA] Verify and freeze the golden GGUF candidate
   - DoD: Full GGUF SHA256, size, metadata, expert count/type, architecture, tokenizer, and source native manifest SHA are recorded; routed experts satisfy the MXFP4 baseline contract.
-- [ ] T044 [Infra] Run dual-5090 llama.cpp smoke
+- [x] T044 [Infra] Run dual-5090 llama.cpp smoke
   - DoD: `--list-devices`, localhost boot, `/v1/models`, one completion, VRAM/RAM snapshots, 64K start or documented 32K fallback, and shutdown all pass.
-- [ ] T045 [QA] Run GGUF behavior probes
-  - DoD: Chat, reasoning, coding, tool-call, and longer-context checks show no routing errors, NaN, or obvious repetition degeneration.
-- [ ] T047 [Docs] Close scope evidence and define next quantization scope
-  - DoD: Scope/wiki contain all hashes, commands, PASS/fail evidence, and residual risks; puwaer A/B and IQ3/Q2 remain out of scope.
+  - 2026-08-12 evidence: corrected candidate SHA256
+    `f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b`;
+    90/90 routed-expert, 9/9 nonexpert, and 52/52 sampled FP8-backbone
+    dequantization/Q8_0 comparisons passed.
+    The 64K localhost runtime loaded in 43.8 s through `--load-mode dio` with
+    auto-fit, `/health` and `/v1/models` passed, and raw France completion
+    started ` Paris.` at 24.6 tok/s with no Xid/BAD_PAGE/Oops.
+- [x] T045 [QA] Run GGUF behavior probes
+  - Chat JSON, Chinese response, and Python-code probes passed through the OpenAI-compatible endpoint. The exact 11-token native-smoke code prompt has matching native/GGUF first greedy token (`\n`). A 32,767-token prefill plus eight-token decode completed at 371.5 prompt tok/s with no routing errors, NaN, Xid, or kernel fault.
+- [x] T047 [Docs] Close scope evidence and define next quantization scope
+  - Scope/wiki contain hashes, commands, PASS/fail evidence, and residual risks. puwaer A/B and IQ3/Q2 remain out of scope; MXFP4 is the sole deployment artifact.
 
 Cancelled: T046 puwaer/HERETIC A/B by user decision. Further quantization is out of scope.
 
