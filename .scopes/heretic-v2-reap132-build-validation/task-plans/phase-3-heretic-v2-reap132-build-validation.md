@@ -39,7 +39,7 @@ Tasks:
   - DoD: Exact command converts the Phase 2 artifact to a GGUF under `/data/linux-fast/models/DeepSeek-V4-Flash-0731/` without reading any unverified checkpoint.
 
 T041 outcome: use the `vendor/llama.cpp` submodule from the project fork at
-commit `9d368bc`, based on upstream
+commit `8704e31`, based on upstream
 `89e0aa6fd362617d9073e0dafc18e41241521572`. Its converter registers
 `DeepseekV4ForCausalLM`, accepts `--no-mtp`, emits hash routing as I32, combines
 each routed expert's frozen weight+E8M0 scale into GGUF `MXFP4`, and marks the
@@ -54,6 +54,14 @@ logical length. Small fixtures pass for non-aligned tensor ranges, a 70 MiB
 cross-boundary output stream, and existing GGUF reader validation. The full
 conversion remains pending because the current boot contains Xid 31; start it
 only after reboot and a clean boot gate.
+
+The first real dry-run exposed upstream writer retention: converted tensors were
+kept in RAM until final output, exhausting 45 GiB RAM around Layer 24. Commit
+`8704e31` changes only the explicit direct-I/O output path to stage each tensor
+immediately into a same-filesystem O_DIRECT temporary payload and release its
+array; dry-run records metadata without retaining payloads. The full 43-layer
+dry-run now passes with 1,328 tensors, an estimated 85.0 GB output, 1.67 GiB peak
+RSS, zero process swaps, and no kernel fault.
 - [ ] T043 [QA] Verify and freeze the golden GGUF
   - DoD: Full GGUF SHA256, size, metadata, expert count/type, architecture, tokenizer, and source native manifest SHA are recorded; routed experts satisfy the MXFP4 baseline contract.
 - [ ] T044 [Infra] Run dual-5090 llama.cpp smoke

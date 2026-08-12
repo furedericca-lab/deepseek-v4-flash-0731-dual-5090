@@ -217,13 +217,17 @@ on dual RTX 5090 with:
   HF limited beyond the prior clean 16-token prefill; proceed to Phase 3 with
   the byte-verified checkpoint after a clean reboot.
 - Phase 3 pins the `vendor/llama.cpp` submodule from
-  `https://github.com/furedericca-lab/llama.cpp.git` at commit `9d368bc`, based
+  `https://github.com/furedericca-lab/llama.cpp.git` at commit `8704e31`, based
   on upstream `89e0aa6fd362617d9073e0dafc18e41241521572`. Its DeepSeek V4 converter repacks
   routed expert weight+scale into GGUF MXFP4 and supports `--no-mtp`. However,
   its default local safetensors materializer uses `np.memmap`; never run it over
   the full checkpoint on this host. The local converter now has fixture-tested
   `--direct-io-input` and `--direct-io-output` paths with aligned 64 MiB bounded
-  staging. Full conversion must use both flags and start only on a clean boot.
+  staging. Direct-I/O output also stages converted tensor payloads immediately
+  to a same-filesystem O_DIRECT temporary file instead of retaining every array
+  in RAM. A real 1,328-tensor dry-run planned an 85.0 GB GGUF with 1.67 GiB peak
+  RSS and zero process swaps. Full conversion must use both flags and start only
+  on a clean boot.
 - Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
   5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
   backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose

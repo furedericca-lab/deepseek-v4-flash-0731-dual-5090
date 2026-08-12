@@ -434,7 +434,7 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   and reproduced Xid 31 at QK. Complete native execution would require a
   model-wide workaround, which exceeds the debug budget. Phase 2 closes with
   the native HF limitation recorded; T5 is not run.
-- Phase 3 converter pin: `vendor/llama.cpp` submodule commit `9d368bc` from the
+- Phase 3 converter pin: `vendor/llama.cpp` submodule commit `8704e31` from the
   project fork, based on upstream `89e0aa6fd362617d9073e0dafc18e41241521572`, supports
   `DeepseekV4ForCausalLM`, `--no-mtp`, I32 `tid2eid`, and routed-expert MXFP4
   repacking from frozen weight+scale bytes. T041 is complete.
@@ -444,6 +444,12 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   tensor range, a 70 MiB output crossing the staging boundary, exact final
   truncation, and existing GGUF reader validation. Full conversion waits for a
   clean reboot because the current boot contains Xid 31.
+- The clean-boot real dry-run exposed unbounded upstream GGUF writer retention:
+  the original direct path filled 45 GiB RAM around Layer 24. Converter commit
+  `8704e31` stages each converted tensor into a same-filesystem O_DIRECT payload
+  file and releases the ndarray; dry-run retains metadata only. The complete
+  43-layer plan passed at 1,328 tensors / 85.0 GB with 1.67 GiB peak RSS, zero
+  process swaps, and a clean kernel gate.
 
 ## Final Release Gate
 - Scope constraints preserved.

@@ -224,7 +224,7 @@ a documented native HF limitation beyond the clean 16-token prefill; the
 Phase 3 GGUF/llama.cpp conversion after a clean reboot.
 
 Phase 3 pins the `vendor/llama.cpp` submodule from the project fork at commit
-`9d368bc`, based on upstream `89e0aa6fd362617d9073e0dafc18e41241521572`. The registered
+`8704e31`, based on upstream `89e0aa6fd362617d9073e0dafc18e41241521572`. The registered
 `DeepseekV4ForCausalLM` converter supports `--no-mtp`, writes `tid2eid` as I32,
 and deterministically repacks every routed expert's packed weight plus E8M0
 scale into GGUF MXFP4 blocks, marking the result `MOSTLY_MXFP4_MOE`. This is the
@@ -239,3 +239,12 @@ GGUF writer's small and unaligned logical writes, stages them into aligned
 length. Tests pass for an unaligned tensor range, a 70 MiB cross-boundary output
 stream, exact content/length, and existing GGUF reader validation. Full
 conversion starts only after a clean reboot because the current boot has Xid 31.
+
+After that reboot, the first real dry-run exposed an independent converter
+memory issue: upstream GGUFWriter retained every converted ndarray until the
+final write and exhausted the host's 45 GiB RAM around Layer 24. Fork commit
+`8704e31` makes explicit direct-I/O output stage each converted payload
+immediately into a same-filesystem O_DIRECT temporary file and release the
+array; dry-run retains metadata only. The complete 43-layer dry-run then passed
+with 1,328 output tensors, an estimated 85.0 GB GGUF, 1.67 GiB peak RSS, zero
+process swaps, and no kernel fault.
