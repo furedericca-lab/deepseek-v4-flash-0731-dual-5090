@@ -165,6 +165,20 @@ on dual RTX 5090 with:
 - Layer 2 is the first compressed sparse attention layer, so keep a 32-token
   CSA/eager-cuBLAS defect as a parallel hypothesis. Do not assign the Xid solely
   to layer-release ordering before a clean-boot rerun with synchronization.
+- On the next clean boot, run `t3-32-token-code` alone through the matrix
+  runner's `--case` selector. Continue to T4/T5 only after T3 and its post-case
+  kernel gate pass; then backfill T1/T2 for same-commit acceptance evidence.
+- The synchronized T3 rerun still failed at the same Layer 2 second attention
+  matmul with GPU0 Xid 31, so downgrade premature layer release as the cause.
+  On the next clean boot run only T3 with `--cuda-launch-blocking`; do not run
+  T4/T5. If the failure remains at the matmul, record operand metadata before
+  changing layout with `.contiguous()`.
+- Launch blocking moved the T3 traceback to Layer 2's first QK matmul, proving
+  the second AV matmul was a delayed observation point. The next clean boot must
+  run only T3 with launch blocking and `--trace-attention-layer 2`; capture the
+  flushed operand metadata before any contiguous-layout or backend change.
+  Keep the first trace metadata-only: `--trace-values` is opt-in because finite,
+  min/max, and mask-count reductions launch extra CUDA kernels and alter timing.
 - Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
   5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
   backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose

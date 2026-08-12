@@ -145,3 +145,28 @@ Layer 2 is also the first `compressed_sparse_attention` layer after two sliding
 attention layers. The next clean-boot rerun therefore distinguishes two live
 hypotheses: premature asynchronous weight release versus a 32-token CSA/eager
 cuBLAS defect. Current evidence does not select between them.
+
+The matrix runner supports repeatable `--case` selection. On the next clean
+boot, run only `t3-32-token-code` first. A clean PASS advances to T4/T5 and then
+backfills T1/T2 for a complete same-commit record; any failure stops immediately
+for targeted Layer 2 diagnosis.
+
+The synchronized clean-boot T3 rerun still failed at the same Layer 2 second
+attention matmul and produced the same GPU0 Xid 31 MMU virtual-read fault.
+Layers 0-1 completed under explicit synchronization, so premature release of
+their weights is no longer a leading explanation. T4/T5 were not run. The next
+clean boot runs only T3 with `CUDA_LAUNCH_BLOCKING=1`; an earlier traceback will
+identify the actual preceding operation, while an unchanged traceback advances
+to read-only operand layout/statistics capture before a contiguous-layout A/B.
+
+The launch-blocking T3 made the traceback move to the first Layer 2 QK matmul,
+`query x key_states.transpose(2, 3)`. The second AV GEMM was therefore a delayed
+observation point, not the first failing API. The kernel again recorded GPU0
+Xid 31, so that boot was quarantined. The next clean boot keeps launch blocking
+and enables read-only Layer 2 tracing: shape, dtype, stride, storage offset,
+contiguity, device, and pointer alignment metadata are flushed before QK, with
+explicit synchronization around both GEMMs. Value reductions are opt-in via
+`--trace-values`, so the first diagnostic does not add finite/min/max CUDA
+reduction kernels or require an attention mask containing expected `-inf` to be
+fully finite. No layout or math
+change is allowed before this evidence is captured.

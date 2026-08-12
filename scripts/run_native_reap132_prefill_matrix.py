@@ -78,6 +78,13 @@ CASES = (
         ),
     ),
 )
+CASES_BY_NAME = {case.name: case for case in CASES}
+
+
+def select_cases(names: list[str] | None) -> tuple[Case, ...]:
+    if not names:
+        return CASES
+    return tuple(CASES_BY_NAME[name] for name in names)
 
 
 def kernel_log() -> str:
@@ -118,6 +125,27 @@ def main() -> int:
     parser.add_argument("checkpoint", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--python", type=Path, default=Path(sys.executable))
+    parser.add_argument(
+        "--case",
+        action="append",
+        choices=tuple(CASES_BY_NAME),
+        help="run only this case; repeat to set an explicit execution order",
+    )
+    parser.add_argument(
+        "--cuda-launch-blocking",
+        action="store_true",
+        help="set CUDA_LAUNCH_BLOCKING=1 in each isolated case process",
+    )
+    parser.add_argument(
+        "--trace-attention-layer",
+        type=int,
+        help="record read-only eager-attention operand diagnostics for this layer",
+    )
+    parser.add_argument(
+        "--trace-values",
+        action="store_true",
+        help="include CUDA value reductions in attention traces; disabled by default",
+    )
     args = parser.parse_args()
 
     checkpoint = args.checkpoint.resolve()
@@ -126,10 +154,18 @@ def main() -> int:
     smoke = Path(__file__).with_name("native_reap132_smoke.py")
     env = os.environ.copy()
     env["CUDA_VISIBLE_DEVICES"] = "0"
+    if args.cuda_launch_blocking:
+        env["CUDA_LAUNCH_BLOCKING"] = "1"
+    else:
+        env.pop("CUDA_LAUNCH_BLOCKING", None)
 
     matrix = {
         "schema": "native-reap132-direct-prefill-matrix-v1",
         "checkpoint": str(checkpoint),
+        "selected_cases": [case.name for case in select_cases(args.case)],
+        "cuda_launch_blocking": args.cuda_launch_blocking,
+        "trace_attention_layer": args.trace_attention_layer,
+        "trace_values": args.trace_values,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "cases": [],
         "status": "RUNNING",
@@ -144,7 +180,7 @@ def main() -> int:
         matrix["status"] = "FAIL"
         matrix_path.write_text(json.dumps(matrix, indent=2) + "\n", encoding="utf-8")
 
-    for case in CASES:
+    for case in select_cases(args.case):
         before = enforce_boot_gate()
         report = output_dir / f"{case.name}.json"
         log = output_dir / f"{case.name}.log"
@@ -165,6 +201,17 @@ def main() -> int:
             "--report",
             str(report),
         ]
+        if args.trace_attention_layer is not None:
+            command.extend(
+                [
+                    "--trace-attention-layer",
+                    str(args.trace_attention_layer),
+                    "--attention-trace",
+                    str(output_dir / f"{case.name}-attention-trace.jsonl"),
+                ]
+            )
+        if args.trace_values:
+            command.append("--trace-values")
         print(f"running {case.name}: {case.tokens} tokens", flush=True)
         with log.open("w", encoding="utf-8") as stream:
             result = subprocess.run(

@@ -370,6 +370,31 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   is the first `compressed_sparse_attention` layer. Keep two hypotheses open:
   unsafe asynchronous layer release ordering and a 32-token CSA/eager batched
   matmul runtime defect.
+- After reboot, use the runner's repeatable `--case` selector to execute T3
+  alone first. If T3 and its post-case kernel gate pass, continue T4 then T5;
+  only after 32/64/128 pass, rerun T1/T2 under the same code commit to complete
+  the matrix record. Any failure stops the sequence.
+- The synchronized T3 rerun on a new clean boot still passed Layers 0-1 and
+  failed at the same Layer 2 `torch.matmul(attn_weights, value_states)` call,
+  followed by the same GPU0 Xid 31 MMU virtual-read fault. This materially
+  downgrades premature layer release as the cause. T4/T5 remained blocked.
+- The next clean-boot diagnostic runs only T3 with
+  `--cuda-launch-blocking`. If the traceback moves earlier, that earlier CUDA
+  operation becomes the primary suspect; if it remains at the second attention
+  matmul, capture its operand shape/dtype/stride/contiguity/finite statistics
+  before any contiguous-layout A/B.
+- With `CUDA_LAUNCH_BLOCKING=1`, the failure moved from the second AV matmul to
+  the first QK matmul in Layer 2:
+  `torch.matmul(query, key_states.transpose(2, 3))`. This proves the second GEMM
+  was only where the asynchronous failure surfaced previously. The boot then
+  recorded the same GPU0 Xid 31 and was quarantined.
+- The next clean-boot T3 uses launch blocking plus read-only Layer 2 attention
+  tracing. Before QK it flushes shape, dtype, stride, storage offset,
+  contiguity, device, and pointer alignment metadata for query, key/value, and
+  mask; it synchronizes before and after each GEMM. Value reductions are
+  disabled unless `--trace-values` is explicitly supplied, because those
+  reductions launch extra CUDA kernels and alter timing. It does not call
+  `.contiguous()` or change the attention math.
 
 ## Final Release Gate
 - Scope constraints preserved.
