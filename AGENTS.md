@@ -2,8 +2,9 @@
 
 ## Source of truth
 
-1. Active K96 consensus scope under `.scopes/heretic-v2-reap96-consensus/`
-2. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
+1. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
+2. Archived K96 consensus record under
+   `.scopes/archive/heretic-v2-reap96-consensus/`
 3. Archived REAP132 delivery record under
    `.scopes/archive/heretic-v2-reap132-build-validation/`
 4. Durable project knowledge under `.wiki/`
@@ -33,10 +34,9 @@
 
 ## Mission
 
-Keep the accepted REAP132 MXFP4 GGUF deployable while deriving a separate,
-evidence-backed REAP96 candidate from the immutable K132 survivor universe.
-Do not replace the canonical K132 artifact until the K96 candidate independently
-passes the same O_DIRECT provenance and dual-RTX-5090 runtime gates.
+Keep the accepted REAP132 MXFP4 GGUF deployable. The completed REAP96 consensus
+experiment is archived after runtime semantic rejection and does not replace the
+canonical K132 artifact.
 
 The deployment baseline uses llama.cpp on dual RTX 5090 with:
 

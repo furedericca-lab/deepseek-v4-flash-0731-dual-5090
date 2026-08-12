@@ -6,7 +6,7 @@ description: Lock and validate external survivor-mask evidence for K96 consensus
 
 ## Input
 
-- `.scopes/heretic-v2-reap96-consensus/` contracts and research notes
+- `.scopes/archive/heretic-v2-reap96-consensus/` contracts and research notes
 - `squanchyzx-puwaer-reap132-mask.json`
 - Archived REAP132 scope and implementation wiki record
 

@@ -6,7 +6,7 @@ description: Execution and verification checklist for the K96 consensus candidat
 
 ## Input
 
-- `.scopes/heretic-v2-reap96-consensus/` contract, milestones, and research notes
+- `.scopes/archive/heretic-v2-reap96-consensus/` contract, milestones, and research notes
 - immutable `squanchyzx-puwaer-reap132-mask.json`
 - archived REAP132 delivery audit record
 
@@ -93,6 +93,11 @@ description: Execution and verification checklist for the K96 consensus candidat
   `MOSTLY_MXFP4_MOE`. Expert, nonexpert, and FP8-backbone provenance passed
   108 of 108, 7 of 7, and 104 of 104. Dual-5090 runtime acceptance remains
   pending.
+- Runtime gate executed and rejected the candidate. Pinned llama.cpp `1e17097`
+  passed 64K startup, OpenAI API, Chinese, JSON, Python, reasoning, integer tool
+  call, and 32,767-token prefill stability. The raw France completion failed,
+  and K96 Native reproduced the same first token, so no converter fix is
+  indicated. K132 remains canonical and the K96 plan stays frozen.
 
 ## Final Release Gate
 
@@ -101,3 +106,11 @@ description: Execution and verification checklist for the K96 consensus candidat
 - The separate K96 artifact passes the existing O_DIRECT, provenance, and
   dual-5090 runtime gates.
 - K132 remains canonical if any K96 gate fails.
+
+
+## Archive Record
+
+- Archived on 2026-08-13 under `.scopes/archive/heretic-v2-reap96-consensus/`.
+- Archive purpose: preserve the completed heretic-v2-reap96-consensus audit trail.
+- Future enhancements should use a new `repo-task-driven` scope under `.scopes/<enhancement-scope>/`.
+- Archived docs should only change for factual errata or path-maintenance updates.

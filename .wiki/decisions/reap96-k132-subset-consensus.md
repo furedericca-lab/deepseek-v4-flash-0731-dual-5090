@@ -7,7 +7,7 @@ related_scopes:
   - deepseek-v4-flash-0731-dual-5090
 related_files:
   - squanchyzx-puwaer-reap132-mask.json
-  - .scopes/heretic-v2-reap96-consensus
+  - .scopes/archive/heretic-v2-reap96-consensus
 source_docs: []
 tags:
   - reap96

@@ -79,8 +79,15 @@ K96 native source.
 
 GGUF sub-gate: complete. The pinned direct-I/O converter produced a read-only
 `64,340,873,568`-byte MXFP4 candidate at O_DIRECT SHA256 `697309d1...ff31`.
-Metadata and all three payload-provenance classes passed. The runtime sub-gate
-remains open, so K132 is still the deployed artifact.
+Metadata and all three payload-provenance classes passed.
+
+Runtime sub-gate: executed and rejected. Dual-5090 64K startup, API behavior,
+and 32,767-token prefill stability passed without swap, Xid, or kernel faults.
+However, both K96 Native and GGUF chose `',` rather than ` Paris` for the
+five-token France prompt. The shared Native/GGUF result excludes conversion as
+the cause and identifies unacceptable K96 quality loss. Per the frozen-plan
+stop-loss, K96 is not rescored or rebuilt; K132 remains the sole deployment
+artifact. M3 is closed with a rejected candidate.
 
 ## Dependencies
 

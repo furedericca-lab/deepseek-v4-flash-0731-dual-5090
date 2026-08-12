@@ -12,7 +12,7 @@ independently published mask evidence.
 | 1. Checkpoint build | Complete | Deterministic Python 3.12 A/B builds and independent byte-provenance verification passed |
 | 2. Native HF smoke | Complete with limitation | 1- and 16-token prefills passed; 32-token CSA exposed a reproducible Torch/cuBLAS zero-stride runtime fault on Blackwell |
 | 3. GGUF and runtime | Complete | Canonical MXFP4 GGUF passed provenance, dual-5090 64K load, 32K prefill, API, and behavior probes |
-| 4. REAP96 consensus | GGUF validated; runtime pending | Frozen cosine plan, deterministic native A/B, and K96 GGUF provenance passed; dual-5090 acceptance remains |
+| 4. REAP96 consensus | Complete; candidate rejected | Native/GGUF provenance and runtime stability passed, but semantic acceptance failed; K132 remains deployed |
 
 Accepted checkpoint:
 
@@ -55,7 +55,11 @@ It is read-only, `64,340,873,568` bytes, and has O_DIRECT SHA256
 Its metadata reports `deepseek4`, 43 blocks, 96 routed experts, six active
 experts, 1,328 tensors, and `MOSTLY_MXFP4_MOE`. Payload provenance passed
 108 routed-expert, 7 nonexpert, and 104 FP8-backbone comparisons. It remains a
-candidate until the dual-5090 runtime gate passes; K132 is still deployed.
+an archived diagnostic candidate, not a deployment artifact. Dual-5090 64K and
+32K-prefill stability passed, but both Native K96 and GGUF selected `',` instead
+of ` Paris` for the raw France prompt. This identifies K96 quality loss rather
+than conversion failure. The frozen plan will not be rescored; K132 remains the
+sole deployed model.
 
 ## Checkout
 
@@ -190,7 +194,8 @@ a+b`, both native HF and the GGUF emit a newline as the first greedy token.
 
 ## Project Sources
 
-- Active K96 build-candidate scope: `.scopes/heretic-v2-reap96-consensus/`
+- Archived K96 rejected-candidate scope:
+  `.scopes/archive/heretic-v2-reap96-consensus/`
 - Deployment scope: `.scopes/deepseek-v4-flash-0731-dual-5090/`
 - Archived REAP132 delivery scope:
   `.scopes/archive/heretic-v2-reap132-build-validation/`
@@ -202,6 +207,6 @@ a+b`, both native HF and the GGUF emit a newline as the first greedy token.
 
 The native HF CSA fault is documented and closed under the Phase 2 stop-loss
 rule. Phase 3 acceptance is based on the pinned llama.cpp/GGUF deployment path;
-do not reopen Torch/cuBLAS root-cause debugging as a prerequisite. The K96
-scope does not download puwaer or other external weights, and it does not
-replace the canonical K132 deployment until its own release gates pass.
+do not reopen Torch/cuBLAS root-cause debugging as a prerequisite. The archived
+K96 scope did not download puwaer or other external weights and did not replace
+the canonical K132 deployment.

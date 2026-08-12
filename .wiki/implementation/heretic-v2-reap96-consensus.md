@@ -1,23 +1,23 @@
 ---
 title: HERETIC v2 REAP96 consensus candidate
 type: implementation
-status: current
+status: archived
 scope: heretic-v2-reap96-consensus
 related_scopes:
   - deepseek-v4-flash-0731-dual-5090
 related_files:
-  - .scopes/heretic-v2-reap96-consensus
+  - .scopes/archive/heretic-v2-reap96-consensus
   - squanchyzx-puwaer-reap132-mask.json
   - README.md
   - AGENTS.md
 source_docs:
-  - .scopes/heretic-v2-reap96-consensus/heretic-v2-reap96-consensus-technical-documentation.md
+  - .scopes/archive/heretic-v2-reap96-consensus/heretic-v2-reap96-consensus-technical-documentation.md
 tags:
   - reap96
   - consensus
   - provenance
 last_checked: 2026-08-13
-updated: 2026-08-13T01:58:00+08:00
+updated: 2026-08-13T02:31:22+08:00
 ---
 
 # HERETIC v2 REAP96 consensus candidate
@@ -25,7 +25,8 @@ updated: 2026-08-13T01:58:00+08:00
 K96 is a separate candidate derived only from the immutable 43-layer REAP132
 survivor universe. Phases 1 and 2 are complete, and the Phase 3 native A/B build
 and GGUF provenance gates have passed. The canonical REAP132 GGUF remains
-immutable and deployed until K96 passes runtime acceptance.
+immutable and deployed. Runtime stability passed, but semantic acceptance
+rejected K96, closing this candidate line without promotion.
 
 ## Evidence matrix
 
@@ -166,7 +167,27 @@ Independent aligned direct-I/O payload provenance passed:
 | FP8 backbone to runtime Q8_0 | 104/104 | `078d5303...4ed622` |
 
 The compact acceptance record is
-`.scopes/heretic-v2-reap96-consensus/evidence/gguf/reap96-gguf-acceptance.json`.
+`.scopes/archive/heretic-v2-reap96-consensus/evidence/gguf/reap96-gguf-acceptance.json`.
+
+## Runtime rejection
+
+The CUDA runtime was rebuilt from the pinned `1e17097` source before final
+acceptance. Dual RTX 5090 startup at 64K, localhost health/OpenAI API, Chinese,
+JSON, Python, arithmetic reasoning, integer tool call, and a 32,767-token
+prefill all ran without Xid, kernel fault, or server swap. The pinned long
+prefill reached 911.9 prompt tok/s and 25.2 decode tok/s.
+
+Semantic acceptance nevertheless failed. For `The capital of France is`, the
+GGUF deterministically began `',` rather than ` Paris`. A full 43-layer K96
+Native O_DIRECT forward chose the same `',` token; `',` and ` Paris` were tied
+at logit 19.5, with argmax resolving to `',`. Native/GGUF agreement rules out a
+conversion or llama.cpp numerical-contract failure. A weather tool call also
+misspelled Shanghai as `Shangai`, although a strict integer tool call passed.
+
+The frozen-plan contract forbids rescoring or changing `tid2eid` to chase model
+quality. K96 is therefore rejected, its artifacts remain diagnostic, and K132
+continues as the sole deployment release. The compact report is
+`.scopes/archive/heretic-v2-reap96-consensus/evidence/gguf/reap96-runtime-acceptance.json`.
 
 ## Risk and next gate
 
@@ -177,7 +198,6 @@ layers cross into their score-4 group. Layer 26 is the only strict 4/3 boundary.
 Layers 37, 39, and 41 are quality-sensitive examples. The 21.43%-30.38% static
 hash-route replacement is the largest early-layer semantic risk.
 
-These risks do not invalidate the plan's structural correctness. The native and
-GGUF provenance gates are complete. Phase 3 must next run dual-5090
-semantic/runtime acceptance. Any failure leaves the deployed K132 GGUF
-canonical.
+These risks did not invalidate structural correctness, but runtime semantic
+acceptance confirmed material quality loss. The scope is closed with K96
+rejected and the deployed K132 GGUF unchanged.

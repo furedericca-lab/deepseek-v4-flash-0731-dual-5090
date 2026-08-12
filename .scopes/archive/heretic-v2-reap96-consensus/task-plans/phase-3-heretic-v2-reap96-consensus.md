@@ -50,13 +50,21 @@ Tasks:
     experts, and `MOSTLY_MXFP4_MOE` file type. Routed-expert, nonexpert, and
     FP8-backbone provenance passed 108 of 108, 7 of 7, and 104 of 104; see
     `evidence/gguf/reap96-gguf-acceptance.json`.
-- [ ] T044 [QA] Run localhost dual-5090 64K/API/behavior and long-prefill gates.
+- [x] T044 [QA] Run localhost dual-5090 64K/API/behavior and long-prefill gates.
   - DoD: No kernel/NVIDIA faults, raw/chat/JSON/Chinese/Python probes pass, and
     K96 is promoted only with recorded SHA256 and read-only status.
+  - Result: runtime stability passed but semantic acceptance failed. The pinned
+    `1e17097` server passed dual-5090 64K startup, API, Chinese, JSON, Python,
+    reasoning, integer tool call, and a 32,767-token prefill at 911.9 prompt
+    tok/s. The raw France prompt deterministically began `',` instead of
+    ` Paris`; K96 Native produced the same token with ` Paris` tied at logit
+    19.5. This proves a K96 quality failure rather than a GGUF conversion fault.
+    K96 is rejected and K132 remains the sole deployment artifact. See
+    `evidence/gguf/reap96-runtime-acceptance.json`.
 
-Checkpoint: the canonical K96 native source and validated K96 GGUF candidate are
-accepted and read-only. The GGUF is not yet a deployment release. T044
-dual-5090 runtime acceptance remains required; K132 remains the deployed model.
+Checkpoint: all planned gates were executed. K96 native and GGUF provenance are
+valid, but runtime semantic acceptance rejected the candidate. The frozen plan
+is not reopened; K132 remains the deployed model.
 
 ## Dependencies & Execution Order
 

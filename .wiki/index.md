@@ -3,8 +3,9 @@ title: Project Wiki Index
 type: wiki-index
 status: current
 generated_by: /home/build/.codex/skills/wiki-note/scripts/wiki_note.py
-updated: 2026-08-12T17:58:14Z
+updated: 2026-08-12T18:34:14Z
 ---
+
 
 
 
@@ -90,7 +91,7 @@ updated: 2026-08-12T17:58:14Z
 # Project Wiki Index
 
 <!-- BEGIN AUTO -->
-- Last rebuilt: 2026-08-12T17:58:14Z
+- Last rebuilt: 2026-08-12T18:34:14Z
 - Page count: 9
 
 ## By Type
@@ -111,7 +112,7 @@ updated: 2026-08-12T17:58:14Z
 ### implementation
 
 - [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | status: archived | updated: 2026-08-12T13:45:00+08:00
-- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | status: current | updated: 2026-08-13T01:58:00+08:00
+- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | status: archived | updated: 2026-08-13T02:31:22+08:00
 - [Model placement and disk strategy](implementation/model-placement-and-disk-strategy.md) | status: current | updated: 2026-08-11T07:17:23Z
 - [REAP-132 plan and checkpoint provenance](implementation/reap132-plan-checkpoint-provenance.md) | status: current | updated: 2026-08-11T07:17:07Z
 
@@ -130,7 +131,7 @@ updated: 2026-08-12T17:58:14Z
 - [First-boot llama-server recipe](how-to/first-boot-llama-server-recipe.md) | type: how-to | status: current
 - [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | type: implementation | status: archived
 - [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | type: implementation | status: archived
-- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | type: implementation | status: current
+- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | type: implementation | status: archived
 - [Model placement and disk strategy](implementation/model-placement-and-disk-strategy.md) | type: implementation | status: current
 - [REAP-132 plan and checkpoint provenance](implementation/reap132-plan-checkpoint-provenance.md) | type: implementation | status: current
 - [DeepSeek V4 first-boot and agent stability risks](reflections/deepseek-v4-first-boot-agent-risks.md) | type: reflection | status: current
@@ -141,11 +142,11 @@ updated: 2026-08-12T17:58:14Z
 - [HERETIC v2 streaming writer namespace corruption](debugging/heretic-v2-streaming-writer-namespace-corruption.md) | type: debugging | status: historical
 - [Derive K96 only as a REAP132 subset](decisions/reap96-k132-subset-consensus.md) | type: decision | status: accepted
 - [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | type: implementation | status: archived
-- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | type: implementation | status: current
+- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | type: implementation | status: archived
 
 ## Recently Updated
 
-- 2026-08-13T01:58:00+08:00 | [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md)
+- 2026-08-13T02:31:22+08:00 | [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md)
 - 2026-08-12T16:52:47Z | [Derive K96 only as a REAP132 subset](decisions/reap96-k132-subset-consensus.md)
 - 2026-08-12T13:45:00+08:00 | [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md)
 - 2026-08-11T12:16:32Z | [HERETIC v2 streaming writer namespace corruption](debugging/heretic-v2-streaming-writer-namespace-corruption.md)
@@ -162,9 +163,9 @@ updated: 2026-08-12T17:58:14Z
 ## Code Navigation
 
 - [HERETIC v2 streaming writer namespace corruption](debugging/heretic-v2-streaming-writer-namespace-corruption.md) | files: `vendor/moe-expert-compress/src/moe_compress/streaming/naming.py`, `vendor/moe-expert-compress/tests/test_naming.py`, `squanchyzx-puwaer-reap132-mask.json` ... | anchors: 3 | status: historical
-- [Derive K96 only as a REAP132 subset](decisions/reap96-k132-subset-consensus.md) | files: `squanchyzx-puwaer-reap132-mask.json`, `.scopes/heretic-v2-reap96-consensus` | anchors: 0 | status: accepted
+- [Derive K96 only as a REAP132 subset](decisions/reap96-k132-subset-consensus.md) | files: `squanchyzx-puwaer-reap132-mask.json`, `.scopes/archive/heretic-v2-reap96-consensus` | anchors: 0 | status: accepted
 - [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | files: `.scopes/archive/heretic-v2-reap132-build-validation`, `squanchyzx-puwaer-reap132-mask.json`, `scripts/checkpoint_content_manifest.py` ... | anchors: 0 | status: archived
-- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | files: `.scopes/heretic-v2-reap96-consensus`, `squanchyzx-puwaer-reap132-mask.json`, `README.md` ... | anchors: 0 | status: current
+- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | files: `.scopes/archive/heretic-v2-reap96-consensus`, `squanchyzx-puwaer-reap132-mask.json`, `README.md` ... | anchors: 0 | status: archived
 - [Model placement and disk strategy](implementation/model-placement-and-disk-strategy.md) | files: `/data/linux-fast/models/DeepSeek-V4-Flash-0731`, `scripts/write_checkpoint_source_manifest.py` | anchors: 0 | status: current
 - [REAP-132 plan and checkpoint provenance](implementation/reap132-plan-checkpoint-provenance.md) | files: `squanchyzx-puwaer-reap132-mask.json`, `scripts/extract_puwaer_reap132_mask.py`, `scripts/write_checkpoint_source_manifest.py` ... | anchors: 0 | status: current
 - [DeepSeek V4 first-boot and agent stability risks](reflections/deepseek-v4-first-boot-agent-risks.md) | files: `scripts/llama-server-first-boot.sh` | anchors: 0 | status: current

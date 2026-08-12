@@ -1,0 +1,72 @@
+{
+  "schema": "heretic-reap96-runtime-acceptance-v1",
+  "status": "REJECTED",
+  "decision": "K96 is not promoted; K132 remains the sole deployment artifact",
+  "artifact": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4.gguf",
+    "size_bytes": 64340873568,
+    "odirect_sha256": "697309d18ada765bdce2a72b52cb1497ed5e374cd5c77edfa7fc0085aa68ff31",
+    "read_only": true
+  },
+  "runtime": {
+    "llama_cpp_commit": "1e17097be2c19c7ae4ff4f635fef25f24f25dbd2",
+    "llama_server_version": "259 (1e17097)",
+    "devices": ["CUDA0: NVIDIA GeForce RTX 5090", "CUDA1: NVIDIA GeForce RTX 5090"],
+    "context": 65536,
+    "load_mode": "dio",
+    "split_mode": "layer",
+    "fit_target_mib": [3072, 3072],
+    "kv": "F16 in system RAM",
+    "bind": "127.0.0.1:8000",
+    "health": "PASS",
+    "openai_api": "PASS",
+    "gpu_peak_mib": [29255, 29129],
+    "server_memory_peak_bytes": 7923163136,
+    "server_swap_peak_bytes": 0
+  },
+  "behavior": {
+    "chinese": "PASS",
+    "json": "PASS",
+    "python": "PASS",
+    "reasoning": "PASS",
+    "integer_tool_call": "PASS",
+    "weather_tool_call": "FAIL: city argument was misspelled as Shangai",
+    "raw_france": {
+      "status": "FAIL",
+      "prompt": "The capital of France is",
+      "expected_first_token": " Paris",
+      "actual_first_token": "',",
+      "actual_completion": "', 'France', 'Paris', 'France is', 'France', 'Paris",
+      "deterministic_reproduction": true
+    }
+  },
+  "native_differential": {
+    "checkpoint": "/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP",
+    "io_backend": "direct",
+    "input_tokens": [671, 6102, 294, 8760, 344],
+    "first_token": 1780,
+    "first_token_text": "',",
+    "first_token_logit": 19.5,
+    "paris_token": 11111,
+    "paris_token_text": " Paris",
+    "paris_token_logit": 19.5,
+    "layers_completed": 43,
+    "finite_logits": true,
+    "conclusion": "Native and GGUF agree; the failure is K96 model quality, not GGUF conversion"
+  },
+  "long_prefill": {
+    "status": "PASS",
+    "prompt_tokens": 32767,
+    "decode_tokens": 8,
+    "truncated": false,
+    "prompt_tokens_per_second": 911.9209387617551,
+    "decode_tokens_per_second": 25.212335134964782
+  },
+  "host_gate": {
+    "kernel": "7.0.0-28-generic",
+    "kernel_tainted": 4096,
+    "model_fault_signatures": 0,
+    "nvidia_xid": 0
+  },
+  "stop_loss": "Do not rescore the frozen K96 plan or alter tid2eid to chase runtime quality"
+}
