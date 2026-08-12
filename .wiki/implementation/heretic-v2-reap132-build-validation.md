@@ -170,3 +170,20 @@ explicit synchronization around both GEMMs. Value reductions are opt-in via
 reduction kernels or require an attention mask containing expected `-inf` to be
 fully finite. No layout or math
 change is allowed before this evidence is captured.
+
+That metadata-only trace completed and was flushed before QK. Query was a
+contiguous, 256-byte-aligned BF16 tensor with shape `[1, 64, 32, 512]`. The
+repeated key was BF16 shape `[1, 64, 40, 512]` with stride `[0, 0, 512, 1]`;
+after transpose it was `[1, 64, 512, 40]` with stride `[0, 0, 1, 512]`. Thus all
+64 heads broadcast the same key storage through zero batch/head strides. QK
+then immediately returned `CUBLAS_STATUS_INTERNAL_ERROR` and GPU0 recorded Xid
+31. The reported virtual-read fault was 54,784 bytes after the key pointer,
+13,824 bytes beyond the logical 40 KiB key storage region. This is strong but
+not conclusive evidence that the PyTorch/cuBLAS strided-batched lowering reads
+past a zero-stride broadcast view.
+
+Query is already contiguous, so query-only `.contiguous()` would be a no-op.
+The next clean-boot A/B changes only the transposed key operand using
+`--qk-layout key-transposed-contiguous`, while tracing both the original view
+and actual GEMM operand. It keeps launch blocking and value reductions off. No
+further GPU work is admissible in the boot containing this Xid.

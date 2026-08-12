@@ -73,6 +73,7 @@ def install_attention_trace(
     trace_path: Path,
     *,
     trace_values: bool = False,
+    qk_layout: str = "original",
 ) -> None:
     original = deepseek_v4.eager_attention_forward
 
@@ -101,6 +102,11 @@ def install_attention_trace(
         key_states = deepseek_v4.repeat_kv(key, module.num_key_value_groups)
         value_states = deepseek_v4.repeat_kv(value, module.num_key_value_groups)
         key_transposed = key_states.transpose(2, 3)
+        qk_key_operand = (
+            key_transposed.contiguous()
+            if qk_layout == "key-transposed-contiguous"
+            else key_transposed
+        )
         torch.cuda.synchronize(query.device)
         append_trace(
             trace_path,
@@ -108,10 +114,14 @@ def install_attention_trace(
                 "event": "before_qk_matmul",
                 "layer": layer_index,
                 "trace_values": trace_values,
+                "qk_layout": qk_layout,
                 "query": tensor_metadata(query, trace_values=trace_values),
                 "key_states_original": tensor_metadata(key_states, trace_values=trace_values),
                 "key_states_transposed": tensor_metadata(
                     key_transposed, trace_values=trace_values
+                ),
+                "qk_key_operand": tensor_metadata(
+                    qk_key_operand, trace_values=trace_values
                 ),
                 "value_states": tensor_metadata(value_states, trace_values=trace_values),
                 "attention_mask": (
@@ -126,7 +136,7 @@ def install_attention_trace(
             },
         )
         torch.cuda.synchronize(query.device)
-        attn_weights = torch.matmul(query, key_transposed) * scaling
+        attn_weights = torch.matmul(query, qk_key_operand) * scaling
         torch.cuda.synchronize(query.device)
         append_trace(
             trace_path,
@@ -192,6 +202,12 @@ def main() -> int:
         action="store_true",
         help="include CUDA value reductions in attention traces; disabled by default",
     )
+    parser.add_argument(
+        "--qk-layout",
+        choices=("original", "key-transposed-contiguous"),
+        default="original",
+        help="controlled Layer 2 QK key-layout diagnostic",
+    )
     args = parser.parse_args()
 
     if not torch.cuda.is_available():
@@ -233,11 +249,14 @@ def main() -> int:
         raise ValueError("attention tracing requires both trace arguments")
     if args.trace_values and args.trace_attention_layer is None:
         raise ValueError("--trace-values requires attention tracing")
+    if args.qk_layout != "original" and args.trace_attention_layer is None:
+        raise ValueError("non-original --qk-layout requires attention tracing")
     if args.trace_attention_layer is not None:
         install_attention_trace(
             args.trace_attention_layer,
             args.attention_trace.resolve(),
             trace_values=args.trace_values,
+            qk_layout=args.qk_layout,
         )
 
     skeleton = build_skeleton(str(checkpoint), device="cpu")
@@ -320,6 +339,7 @@ def main() -> int:
         "cuda_launch_blocking": os.environ.get("CUDA_LAUNCH_BLOCKING"),
         "trace_attention_layer": args.trace_attention_layer,
         "trace_values": args.trace_values,
+        "qk_layout": args.qk_layout,
         "attention_trace": str(args.attention_trace.resolve()) if args.attention_trace else None,
         "torch_cuda_device_count": torch.cuda.device_count(),
         "device": str(device),

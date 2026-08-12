@@ -146,6 +146,12 @@ def main() -> int:
         action="store_true",
         help="include CUDA value reductions in attention traces; disabled by default",
     )
+    parser.add_argument(
+        "--qk-layout",
+        choices=("original", "key-transposed-contiguous"),
+        default="original",
+        help="controlled QK key-layout diagnostic for the traced layer",
+    )
     args = parser.parse_args()
 
     checkpoint = args.checkpoint.resolve()
@@ -166,6 +172,7 @@ def main() -> int:
         "cuda_launch_blocking": args.cuda_launch_blocking,
         "trace_attention_layer": args.trace_attention_layer,
         "trace_values": args.trace_values,
+        "qk_layout": args.qk_layout,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "cases": [],
         "status": "RUNNING",
@@ -212,6 +219,8 @@ def main() -> int:
             )
         if args.trace_values:
             command.append("--trace-values")
+        if args.qk_layout != "original":
+            command.extend(["--qk-layout", args.qk_layout])
         print(f"running {case.name}: {case.tokens} tokens", flush=True)
         with log.open("w", encoding="utf-8") as stream:
             result = subprocess.run(

@@ -179,6 +179,14 @@ on dual RTX 5090 with:
   flushed operand metadata before any contiguous-layout or backend change.
   Keep the first trace metadata-only: `--trace-values` is opt-in because finite,
   min/max, and mask-count reductions launch extra CUDA kernels and alter timing.
+- The metadata-only T3 trace completed immediately before QK, then QK failed
+  with Xid 31. Query was contiguous and 256-byte aligned. The repeated key used
+  zero batch/head strides `[0, 0, 512, 1]`; after transpose its stride was
+  `[0, 0, 1, 512]`. The reported virtual-read fault lay just beyond the logical
+  40 KiB shared key storage region. Treat this as strong evidence for a
+  PyTorch/cuBLAS zero-stride broadcast-view defect, not yet proof. The next
+  clean-boot A/B may change only the transposed key operand to contiguous via
+  `--qk-layout key-transposed-contiguous`; do not run it in the Xid-tainted boot.
 - Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
   5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
   backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose

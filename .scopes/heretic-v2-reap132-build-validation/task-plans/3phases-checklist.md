@@ -395,6 +395,20 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   disabled unless `--trace-values` is explicitly supplied, because those
   reductions launch extra CUDA kernels and alter timing. It does not call
   `.contiguous()` or change the attention math.
+- The metadata-only trace flushed successfully before QK. Query was contiguous,
+  BF16, shape `[1, 64, 32, 512]`, stride `[1048576, 16384, 512, 1]`, and
+  256-byte aligned. The repeated key was BF16 shape `[1, 64, 40, 512]` with
+  zero batch/head strides `[0, 0, 512, 1]`; its transpose was shape
+  `[1, 64, 512, 40]`, stride `[0, 0, 1, 512]`. QK immediately returned
+  `CUBLAS_STATUS_INTERNAL_ERROR`, followed by GPU0 Xid 31. The fault address was
+  54,784 bytes after the key pointer, 13,824 bytes beyond its logical 40 KiB
+  storage region. This strongly implicates the zero-stride broadcast view or
+  its PyTorch/cuBLAS lowering, but remains an A/B hypothesis.
+- Query is already contiguous, so a query-only `.contiguous()` call is not an
+  effective variable. On the next clean boot run only T3 with launch blocking,
+  metadata-only tracing, and `--qk-layout key-transposed-contiguous`. Preserve
+  both the original transposed-view metadata and the actual contiguous GEMM
+  operand metadata. Do not run this A/B in the boot containing the Xid.
 
 ## Final Release Gate
 - Scope constraints preserved.

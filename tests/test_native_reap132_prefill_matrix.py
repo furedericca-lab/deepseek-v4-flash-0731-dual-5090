@@ -56,3 +56,4 @@ def test_runner_help_exposes_targeted_diagnostics():
     assert "--cuda-launch-blocking" in result.stdout
     assert "--trace-attention-layer" in result.stdout
     assert "--trace-values" in result.stdout
+    assert "--qk-layout" in result.stdout
