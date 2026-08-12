@@ -106,3 +106,10 @@ Append-only history for wiki updates caused by scope work, implementation closeo
 - Pages: implementation/heretic-v2-reap96-consensus.md, decisions/reap96-k132-subset-consensus.md
 - Verification: uv run python scripts/verify_reap96_plan.py
 - Residual risk: K96 remains an unbuilt aggressive pruning candidate; K132 stays canonical until all Phase 3 O_DIRECT, provenance, GGUF, and dual-5090 semantic gates pass.
+
+## 2026-08-12T23:19:02Z [heretic-v2-reap96-iq4xs-backbone]
+
+- Summary: Archived completed K96 Profile A IQ4_XS release scope and aligned repository entry points.
+- Pages: implementation/k96-profile-a-iq4xs-non-routed-release.md
+- Verification: repo-task-driven archive; wiki-note rebuild/lint/doctor
+- Residual risk: K96 semantic limitation remains; K132 remains deployed.

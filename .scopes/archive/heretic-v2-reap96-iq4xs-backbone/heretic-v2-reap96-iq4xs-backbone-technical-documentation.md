@@ -83,7 +83,7 @@ Golden. Do not run it concurrently with hashing or provenance scans.
 uv run python scripts/verify_reap96_iq4xs_gguf.py \
   --golden "$IN" \
   --candidate "$OUT" \
-  --report .scopes/heretic-v2-reap96-iq4xs-backbone/evidence/reap96-iq4xs-final-acceptance.json
+  --report .scopes/archive/heretic-v2-reap96-iq4xs-backbone/evidence/reap96-iq4xs-final-acceptance.json
 
 uv run python tools/verify_io_paths.py --direct-only "$OUT"
 ```

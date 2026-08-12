@@ -5,13 +5,13 @@ and a separate K96 consensus-planning line. REAP132 remains the deployed
 canonical MXFP4 GGUF while K96 is derived only from its survivor universe and
 independently published mask evidence.
 
-The active release work is the independent K96 Profile A IQ4_XS-backbone scope
-under `.scopes/heretic-v2-reap96-iq4xs-backbone/`. It consumes the read-only
-K96 MXFP4 Golden and preserves all 129 routed-expert MXFP4 payloads
-byte-for-byte. Only llama.cpp's default mixed Profile A is allowed; this work
-does not use `--pure`, imatrix, or a second quantization profile. Shared Expert
-and Core Backbone weights are both non-routed inputs to the default IQ4_XS
-mixed policy; router, `tid2eid`, norms, and other structural tensors remain
+The completed independent K96 Profile A IQ4_XS-backbone release is archived
+under `.scopes/archive/heretic-v2-reap96-iq4xs-backbone/`. It consumed the
+read-only K96 MXFP4 Golden and preserved all 129 routed-expert MXFP4 payloads
+byte-for-byte. Only llama.cpp's default mixed Profile A was used; the release
+did not use `--pure`, imatrix, or a second quantization profile. Shared Expert
+and Core Backbone weights were non-routed inputs to the default IQ4_XS mixed
+policy; router, `tid2eid`, norms, and other structural tensors remained
 unchanged.
 
 ## Current Status

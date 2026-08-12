@@ -1,7 +1,7 @@
 ---
 title: K96 Profile A IQ4_XS non-routed release
 type: implementation
-status: current
+status: archived
 scope: heretic-v2-reap96-iq4xs-backbone
 related_scopes:
   - heretic-v2-reap96-consensus
@@ -9,9 +9,9 @@ related_files:
   - vendor/llama.cpp/src/llama-quant.cpp
   - scripts/finalize_reap96_iq4xs_experts.py
   - scripts/verify_reap96_iq4xs_gguf.py
-  - .scopes/heretic-v2-reap96-iq4xs-backbone
+  - .scopes/archive/heretic-v2-reap96-iq4xs-backbone
 source_docs:
-  - .scopes/heretic-v2-reap96-iq4xs-backbone/heretic-v2-reap96-iq4xs-backbone-technical-documentation.md
+  - .scopes/archive/heretic-v2-reap96-iq4xs-backbone/heretic-v2-reap96-iq4xs-backbone-technical-documentation.md
 tags:
   - reap96
   - iq4-xs
@@ -24,6 +24,8 @@ updated: 2026-08-13T03:50:00+08:00
 
 This independent release consumes the immutable K96 MXFP4 Golden. It does not
 reopen consensus scoring and does not replace the deployed K132 artifact.
+Its completed scope is archived under
+`.scopes/archive/heretic-v2-reap96-iq4xs-backbone/`.
 
 ## Tensor contract
 
