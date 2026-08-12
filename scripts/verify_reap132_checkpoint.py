@@ -7,6 +7,7 @@ import argparse
 import base64
 import hashlib
 import json
+import mmap
 import os
 import re
 import struct
@@ -34,7 +35,9 @@ EXPECTED_CONFIG = {
     "num_hidden_layers": 43,
     "num_hash_layers": 3,
     "num_experts_per_tok": 6,
+    "num_nextn_predict_layers": 0,
 }
+DIRECT_ALIGN = 4096
 
 
 @dataclass(frozen=True)
@@ -50,31 +53,56 @@ class TensorRef:
         return self.end - self.start
 
     def chunks(self, size: int = 8 * 1024 * 1024) -> Iterable[bytes]:
-        fd = os.open(self.path, os.O_RDONLY)
+        fd = os.open(self.path, os.O_RDONLY | os.O_DIRECT)
         try:
             position = self.start
             remaining = self.nbytes
             while remaining:
-                block = os.pread(fd, min(size, remaining), position)
-                if not block:
-                    raise ValueError(f"short tensor payload: {self.path}")
+                wanted = min(size, remaining)
+                aligned_position = position - position % DIRECT_ALIGN
+                leading = position - aligned_position
+                aligned_size = ((leading + wanted + DIRECT_ALIGN - 1) // DIRECT_ALIGN) * DIRECT_ALIGN
+                buffer = mmap.mmap(-1, aligned_size)
+                try:
+                    view = memoryview(buffer)
+                    read = os.preadv(fd, [view], aligned_position)
+                    if read < leading + wanted:
+                        view.release()
+                        raise ValueError(f"short O_DIRECT tensor payload: {self.path}")
+                    block = bytes(view[leading:leading + wanted])
+                    view.release()
+                finally:
+                    buffer.close()
                 position += len(block)
                 remaining -= len(block)
                 yield block
-                # Keep a full-checkpoint verification from filling page cache.
-                try:
-                    os.posix_fadvise(fd, position - len(block), len(block), os.POSIX_FADV_DONTNEED)
-                except AttributeError:
-                    pass
         finally:
             os.close(fd)
 
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for block in iter(lambda: handle.read(8 * 1024 * 1024), b""):
-            digest.update(block)
+    fd = os.open(path, os.O_RDONLY | os.O_DIRECT)
+    try:
+        size = os.fstat(fd).st_size
+        position = 0
+        while position < size:
+            wanted = min(8 * 1024 * 1024, size - position)
+            aligned_size = ((wanted + DIRECT_ALIGN - 1) // DIRECT_ALIGN) * DIRECT_ALIGN
+            buffer = mmap.mmap(-1, aligned_size)
+            try:
+                view = memoryview(buffer)
+                read = os.preadv(fd, [view], position)
+                if read < wanted:
+                    view.release()
+                    raise ValueError(f"short O_DIRECT file payload: {path}")
+                digest.update(view[:wanted])
+                view.release()
+            finally:
+                buffer.close()
+            position += wanted
+    finally:
+        os.close(fd)
     return digest.hexdigest()
 
 

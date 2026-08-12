@@ -5,7 +5,7 @@
     "logical_sha256": "082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17"
   },
   "source_manifest_sha256": "815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98",
-  "output_manifest_sha256": "a7f9c7a4d4fa4c4c7669c6170c2ce690a3d4a241d58ff59665976ec639e07993",
+  "output_manifest_sha256": "0a9ef2634e3d8944a8e96da6fe2eb8c31278aee0fcea1441c0134fba70307f44",
   "source_tensor_count": 72317,
   "output_tensor_count": 35620,
   "expected_output_tensor_count": 35620,
@@ -109,13 +109,18 @@
       "layer": 14,
       "kept_experts": 132,
       "expert_tensors": 792,
-      "failures": []
+      "failures": [
+        "expert bytes mismatch layers.14.ffn.experts.119.w1.weight <- layers.14.ffn.experts.235.w1.weight"
+      ]
     },
     {
       "layer": 15,
       "kept_experts": 132,
       "expert_tensors": 792,
-      "failures": []
+      "failures": [
+        "expert bytes mismatch layers.15.ffn.experts.17.w3.weight <- layers.15.ffn.experts.34.w3.weight",
+        "expert bytes mismatch layers.15.ffn.experts.19.w1.weight <- layers.15.ffn.experts.37.w1.weight"
+      ]
     },
     {
       "layer": 16,
@@ -151,9 +156,7 @@
       "layer": 21,
       "kept_experts": 132,
       "expert_tensors": 792,
-      "failures": [
-        "expert bytes mismatch layers.21.ffn.experts.31.w1.weight <- layers.21.ffn.experts.67.w1.weight"
-      ]
+      "failures": []
     },
     {
       "layer": 22,
@@ -243,7 +246,9 @@
       "layer": 36,
       "kept_experts": 132,
       "expert_tensors": 792,
-      "failures": []
+      "failures": [
+        "expert bytes mismatch layers.36.ffn.experts.12.w2.weight <- layers.36.ffn.experts.24.w2.weight"
+      ]
     },
     {
       "layer": 37,
@@ -273,9 +278,7 @@
       "layer": 41,
       "kept_experts": 132,
       "expert_tensors": 792,
-      "failures": [
-        "expert bytes mismatch layers.41.ffn.experts.31.w3.weight <- layers.41.ffn.experts.57.w3.weight"
-      ]
+      "failures": []
     },
     {
       "layer": 42,
@@ -285,7 +288,9 @@
     }
   ],
   "failures": [
-    "expert bytes mismatch layers.21.ffn.experts.31.w1.weight <- layers.21.ffn.experts.67.w1.weight",
-    "expert bytes mismatch layers.41.ffn.experts.31.w3.weight <- layers.41.ffn.experts.57.w3.weight"
+    "expert bytes mismatch layers.14.ffn.experts.119.w1.weight <- layers.14.ffn.experts.235.w1.weight",
+    "expert bytes mismatch layers.15.ffn.experts.17.w3.weight <- layers.15.ffn.experts.34.w3.weight",
+    "expert bytes mismatch layers.15.ffn.experts.19.w1.weight <- layers.15.ffn.experts.37.w1.weight",
+    "expert bytes mismatch layers.36.ffn.experts.12.w2.weight <- layers.36.ffn.experts.24.w2.weight"
   ]
 }

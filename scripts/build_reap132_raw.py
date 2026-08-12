@@ -86,38 +86,79 @@ def plan_tid(plan: dict, layer: int) -> tuple[bytes, tuple[int, ...]]:
 
 
 BLOCK = 8 * 1024 * 1024
+DIRECT_ALIGN = 4096
 
 
-def _chunk_write(fd: int, data: bytes) -> None:
-    """Write bounded chunks and avoid retaining completed source pages."""
-    offset = 0
-    while offset < len(data):
-        size = min(BLOCK, len(data) - offset)
-        aligned = mmap.mmap(-1, BLOCK)
-        try:
-            aligned[:size] = data[offset:offset + size]
-            view = memoryview(aligned)[:size]
-            written = os.write(fd, view)
-            if written != size:
-                raise OSError(f"short O_DIRECT write: {written}/{size}")
+class DirectWriter:
+    def __init__(self, path: Path):
+        self.fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_DIRECT, 0o644)
+        self.pending = bytearray()
+        self.logical_size = 0
+
+    def write(self, data: bytes) -> None:
+        self.pending.extend(data)
+        self.logical_size += len(data)
+        flush_size = len(self.pending) - len(self.pending) % DIRECT_ALIGN
+        if flush_size:
+            self._write_aligned(bytes(self.pending[:flush_size]))
+            del self.pending[:flush_size]
+
+    def _write_aligned(self, data: bytes) -> None:
+        offset = 0
+        while offset < len(data):
+            size = min(BLOCK, len(data) - offset)
+            buffer = mmap.mmap(-1, size)
+            try:
+                buffer[:size] = data[offset:offset + size]
+                view = memoryview(buffer)
+                written = os.write(self.fd, view)
+                view.release()
+                if written != size:
+                    raise OSError(f"short O_DIRECT write: {written}/{size}")
+            finally:
+                buffer.close()
+            offset += size
+
+    def close(self) -> None:
+        if self.pending:
+            padded = bytes(self.pending) + bytes(DIRECT_ALIGN - len(self.pending))
+            self._write_aligned(padded)
+            self.pending.clear()
+        os.ftruncate(self.fd, self.logical_size)
+        os.fsync(self.fd)
+        os.close(self.fd)
+
+
+def _direct_pread(fd: int, offset: int, length: int) -> bytes:
+    aligned_offset = offset - (offset % DIRECT_ALIGN)
+    leading = offset - aligned_offset
+    aligned_length = ((leading + length + DIRECT_ALIGN - 1) // DIRECT_ALIGN) * DIRECT_ALIGN
+    buffer = mmap.mmap(-1, aligned_length)
+    try:
+        view = memoryview(buffer)
+        read = os.preadv(fd, [view], aligned_offset)
+        if read < leading + length:
             view.release()
-        finally:
-            aligned.close()
-        offset += size
+            raise ValueError(f"short O_DIRECT source payload: {read}/{leading + length}")
+        data = bytes(view[leading:leading + length])
+        view.release()
+        return data
+    finally:
+        buffer.close()
 
 
-def copy_bytes(item: Slice, out_fd: int):
+def copy_bytes(item: Slice, output: DirectWriter):
     if item.row_indices is not None:
         row_bytes = item.ref.nbytes // item.ref.shape[0]
-        fd = os.open(item.ref.path, os.O_RDONLY)
+        fd = os.open(item.ref.path, os.O_RDONLY | os.O_DIRECT)
         try:
             for row in item.row_indices:
                 if row < 0 or row >= item.ref.shape[0]:
                     raise ValueError(f"row index out of range: {row}")
-                block = os.pread(fd, row_bytes, item.ref.start + row * row_bytes)
+                block = _direct_pread(fd, item.ref.start + row * row_bytes, row_bytes)
                 if len(block) != row_bytes:
                     raise ValueError("short source row payload")
-                _chunk_write(out_fd, block)
+                output.write(block)
                 try:
                     os.posix_fadvise(fd, item.ref.start + row * row_bytes, row_bytes, os.POSIX_FADV_DONTNEED)
                 except AttributeError:
@@ -128,14 +169,14 @@ def copy_bytes(item: Slice, out_fd: int):
     row_bytes = item.ref.nbytes // item.ref.shape[0] if item.row_count is not None else item.ref.nbytes
     start = item.ref.start + item.row_start * row_bytes if item.row_count is not None else item.ref.start
     remaining = item.nbytes
-    fd = os.open(item.ref.path, os.O_RDONLY)
+    fd = os.open(item.ref.path, os.O_RDONLY | os.O_DIRECT)
     try:
         position = start
         while remaining:
-            block = os.pread(fd, min(BLOCK, remaining), position)
+            block = _direct_pread(fd, position, min(BLOCK, remaining))
             if not block:
                 raise ValueError("short source payload")
-            _chunk_write(out_fd, block)
+            output.write(block)
             position += len(block)
             remaining -= len(block)
             try:
@@ -196,54 +237,32 @@ def build(source: Path, output: Path, plan_path: Path, max_shard: int = SHARD_BY
         nonlocal shard_no
         shard_no += 1
         filename = f"model-{shard_no:05d}-of-00000.safetensors"
-        payload_path = output / (filename + ".payload")
         offsets = {}
         cursor = 0
-        # Keep the temporary payload bounded and discard source pages after
-        # each chunk. O_DIRECT is intentionally opt-in because safetensors
-        # tensor lengths are not block-aligned; unaligned direct writes would
-        # require padding gaps in every data offset.
-        payload_fd = os.open(payload_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
-        try:
-            for name, source_item, dtype, shape in items:
-                offsets[name] = {"dtype": dtype, "shape": list(shape), "data_offsets": [cursor, cursor + (len(source_item) if isinstance(source_item, bytes) else source_item.nbytes)]}
-                if isinstance(source_item, bytes):
-                    _chunk_write(payload_fd, source_item)
-                else:
-                    copy_bytes(source_item, payload_fd)
-                cursor = offsets[name]["data_offsets"][1]
-        finally:
-            os.close(payload_fd)
+        for name, source_item, dtype, shape in items:
+            size = len(source_item) if isinstance(source_item, bytes) else source_item.nbytes
+            offsets[name] = {"dtype": dtype, "shape": list(shape), "data_offsets": [cursor, cursor + size]}
+            cursor += size
         header = {"__metadata__": {"format": "pt"}}
         header.update(offsets)
         encoded = json.dumps(header, separators=(",", ":")).encode()
+        header_length = ((8 + len(encoded) + DIRECT_ALIGN - 1) // DIRECT_ALIGN) * DIRECT_ALIGN - 8
+        encoded += b" " * (header_length - len(encoded))
         final = output / filename
+        writer = None
         try:
-            out_fd = os.open(final, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
-            payload_in = os.open(payload_path, os.O_RDONLY)
-            try:
-                prefix = struct.pack("<Q", len(encoded)) + encoded
-                _chunk_write(out_fd, prefix)
-                position = 0
-                while True:
-                    block = os.pread(payload_in, BLOCK, position)
-                    if not block:
-                        break
-                    _chunk_write(out_fd, block)
-                    position += len(block)
-                    try:
-                        os.posix_fadvise(payload_in, position - len(block), len(block), os.POSIX_FADV_DONTNEED)
-                        os.posix_fadvise(out_fd, position, len(block), os.POSIX_FADV_DONTNEED)
-                    except AttributeError:
-                        pass
-                os.fsync(out_fd)
-            finally:
-                os.close(payload_in)
-                os.close(out_fd)
-            payload_path.unlink()
+            writer = DirectWriter(final)
+            writer.write(struct.pack("<Q", len(encoded)) + encoded)
+            for _, source_item, _, _ in items:
+                if isinstance(source_item, bytes):
+                    writer.write(source_item)
+                else:
+                    copy_bytes(source_item, writer)
+            writer.close()
+            writer = None
         except Exception:
-            # Leave the completed payload for an explicit resume/inspection;
-            # never publish a shard whose header and payload are incomplete.
+            if writer is not None:
+                os.close(writer.fd)
             if final.exists():
                 final.unlink()
             raise
@@ -271,6 +290,7 @@ def build(source: Path, output: Path, plan_path: Path, max_shard: int = SHARD_BY
     (output / "model.safetensors.index.json").write_text(json.dumps({"metadata": {"total_size": sum((output / s).stat().st_size for s in set(weight_map.values()))}, "weight_map": weight_map}, indent=2))
     config = json.loads((source / "config.json").read_text())
     config["n_routed_experts"] = 132
+    config["num_nextn_predict_layers"] = 0
     config["moe_compress_args"] = {"plan": str(plan_path), "drop_mtp": True, "raw_safetensors_slice": True}
     (output / "config.json").write_text(json.dumps(config, indent=2))
     for name in ("generation_config.json", "tokenizer.json", "tokenizer_config.json"):

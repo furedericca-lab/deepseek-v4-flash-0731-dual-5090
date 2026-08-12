@@ -85,30 +85,61 @@ on dual RTX 5090 with:
   kernel `BAD_PAGE`/`compound_head not consistent` reports from `kswapd0` even
   with zram nearly unused. Before accepting a post-prune report, check
   `cat /proc/sys/kernel/tainted` and `journalctl -k -b` for these signatures;
-  do not run native smoke or GGUF conversion after a bad-page event. The
-  alternate installed kernel is `6.17.0-23-generic`.
+  do not run native smoke or GGUF conversion after a bad-page event.
+- Keep the project on the current `7.0.0-28-generic` kernel. Do not make a
+  6.15/6.16/6.8 downgrade or broad kernel bisect a prerequisite for checkpoint
+  delivery. The only retained root-cause A/B is an explicitly authorized 7.0
+  test build that disables ext4 regular-file large folios while keeping all
+  other kernel, hardware, filesystem, driver, and workload variables fixed.
+  This diagnostic is deferred until after the model delivery work and must not
+  block the production direct-I/O workflow.
+- The production checkpoint workflow is Linux `7.0.0-28-generic` with aligned
+  `O_DIRECT` for all four bulk-data paths: source reads, output shard writes,
+  content-manifest hashing, and tensor provenance verification. Do not replace
+  any of these paths with buffered I/O for convenience or performance testing.
+- Do not disable or check MGLRU for checkpoint work; it is not a build gate or
+  an operational workaround. The same tail-page `BAD_PAGE` reproduced with
+  MGLRU enabled through `evict_folios` and disabled through the classic
+  `shrink_inactive_list` path, excluding MGLRU-specific logic as the common
+  cause.
+- Never run a full buffered hash, manifest, or tensor scan over multi-GB model
+  files on this host. The current failure boundary is ext4 buffered page cache,
+  higher-order/large folios, and generic reclaim/free. The checkpoint builder
+  source reads, content manifest, and direct tensor verifier must use aligned
+  `O_DIRECT`; use `tools/verify_io_paths.py --direct-only` for full-shard I/O
+  checks. Restrict buffered-versus-direct comparisons to small fixtures that
+  cannot fill page cache. Do not use `drop_caches` or rely on
+  `POSIX_FADV_DONTNEED` as a substitute for bypassing page cache.
 - Before every large checkpoint build, manifest pass, or full tensor verifier,
-  temporarily disable MGLRU for the current boot with
-  `echo 0 | sudo tee /sys/kernel/mm/lru_gen/enabled`, then require
-  `/sys/kernel/mm/lru_gen/enabled` to read `0x0000`. This setting is normally
-  reset by reboot, so repeat the gate after every reboot; do not assume a prior
-  disablement remains active. Also require the current boot to contain no
-  `BAD_PAGE`, `compound_head`, corrupted-tail-page, or kernel Oops event. If one
-  occurs, stop all artifact validation and reboot before rebuilding; disabling
-  MGLRU after the event does not make that boot admissible evidence.
+  require the current boot to contain no `BAD_PAGE`, `compound_head`,
+  corrupted-tail-page, kernel Oops, or unexplained user-process `SIGSEGV` /
+  general-protection-fault event. If one occurs during a bulk checkpoint task,
+  stop all artifact validation and reboot; no later runtime setting can make
+  that boot admissible evidence. A Python exit `139` without a Python traceback
+  is a host-stability event, not an ordinary retryable builder exception.
 - Keep `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/`
   read-only and quarantined until `scripts/verify_reap132_checkpoint.py`
-  produces a PASS report. The verifier uses bounded reads with
-  `POSIX_FADV_DONTNEED` to avoid filling page cache, but this is not a
-  substitute for resolving host memory/kernel instability. A fresh rerun under
-  `6.17.0-23-generic` reproduced `BAD_PAGE` / `compound_head not consistent`
-  in `kswapd0` during verification, so changing kernels alone is not yet a
-  sufficient stability gate.
+  produces a PASS report. The verifier uses aligned `O_DIRECT` reads to avoid
+  filling page cache; this is the supported checkpoint workflow, not proof that
+  future buffered or `mmap()` model loading is unaffected by the host issue.
 - The 7.0/5600 rebuild completed with a clean kernel and manifest, but direct
   verification found five varying FP4 expert-weight byte mutations across
   rebuilds. Treat this as a writer defect: do not promote any artifact until
   routed FP4 weights are copied and sliced directly from CPU safetensors bytes,
   without a CUDA round-trip or fused Transformers reverse conversion.
+- A noMTP artifact must set `num_nextn_predict_layers` to `0` as well as contain
+  zero `mtp.*` tensors. The deterministic builder and independent verifier must
+  enforce both halves of this contract before native model loading.
+- Run future full raw-safetensors builder attempts with Python fatal-signal
+  diagnostics enabled. Python 3.12 can execute the standard-library-only
+  builder and is the next interpreter A/B; use `-X faulthandler` and a launcher
+  that leaves Apport/core evidence available. Do not treat switching Python as
+  proof of root cause without a repeated result.
+- Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
+  5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
+  backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose
+  CPU uplink is Gen3 x4. Treat this as an A/B design constraint, not proof that
+  the chipset, NVMe controller, IOMMU, or DMA path caused a fault.
 
 ## Validation matrix
 

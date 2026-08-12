@@ -5,14 +5,14 @@
     "logical_sha256": "082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17"
   },
   "source_manifest_sha256": "815f75dd1198597d823af439456a7dbd141c19855df277437a0751b925c7bb98",
-  "output_manifest_sha256": "a7f9c7a4d4fa4c4c7669c6170c2ce690a3d4a241d58ff59665976ec639e07993",
+  "output_manifest_sha256": "e3c2d719f4d5a240d5ecd6f707d546b1c14b972d6a01551e489d5091eecbd178",
   "source_tensor_count": 72317,
   "output_tensor_count": 35620,
   "expected_output_tensor_count": 35620,
   "summary": {
-    "layers": "FAIL",
+    "layers": "PASS",
     "router": "PASS",
-    "experts": "FAIL",
+    "experts": "PASS",
     "scales": "PASS",
     "shared_experts": "PASS",
     "tid2eid": "PASS",
@@ -151,9 +151,7 @@
       "layer": 21,
       "kept_experts": 132,
       "expert_tensors": 792,
-      "failures": [
-        "expert bytes mismatch layers.21.ffn.experts.31.w1.weight <- layers.21.ffn.experts.67.w1.weight"
-      ]
+      "failures": []
     },
     {
       "layer": 22,
@@ -273,9 +271,7 @@
       "layer": 41,
       "kept_experts": 132,
       "expert_tensors": 792,
-      "failures": [
-        "expert bytes mismatch layers.41.ffn.experts.31.w3.weight <- layers.41.ffn.experts.57.w3.weight"
-      ]
+      "failures": []
     },
     {
       "layer": 42,
@@ -284,8 +280,5 @@
       "failures": []
     }
   ],
-  "failures": [
-    "expert bytes mismatch layers.21.ffn.experts.31.w1.weight <- layers.21.ffn.experts.67.w1.weight",
-    "expert bytes mismatch layers.41.ffn.experts.31.w3.weight <- layers.41.ffn.experts.57.w3.weight"
-  ]
+  "failures": []
 }

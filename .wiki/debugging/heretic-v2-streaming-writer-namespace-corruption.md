@@ -357,15 +357,72 @@ events and taint changed to `4128`.  Those three mismatches are not admissible
 builder evidence.  Build B and further full-model reads remain blocked until a
 new clean boot; the current Build A is quarantined and must not be deployed.
 
-As a diagnostic on the already-tainted boot, MGLRU was changed from `0x0007`
-to `0x0000`.  All 22 approximately 4 GB shards then passed buffered versus
-`O_DIRECT` SHA256 comparison, representing roughly 170 GB of aggregate reads,
-with no new `BAD_PAGE`, `compound_head`, Oops, MCE, AER, or I/O-error message.
-This strongly identifies MGLRU/folio eviction as the path that exposes the bad
-folio state, but does not prove that MGLRU created that state.  It is not formal
-artifact evidence because the boot was already tainted `4128`.  The formal
-rerun still requires a clean reboot followed by MGLRU disablement before any
-large model read.
+MGLRU was explicitly excluded as the common variable.  One run reproduced with
+MGLRU enabled through `evict_folios`; a later clean-boot run with MGLRU disabled
+reproduced during the same full buffered scan through the classic LRU path.
+The reclaim stack used the classic LRU path (`shrink_inactive_list` ->
+`shrink_lruvec` -> `shrink_folio_list` -> `free_unref_folios`) rather than
+`evict_folios`.  MGLRU is therefore not a build constraint, workaround, or
+leading root-cause candidate.  The common trigger is large buffered ext4
+page-cache population followed by folio reclaim.
+
+The formal observed trigger path is:
+
+```text
+22 x approximately 4 GB safetensors shards
+  -> buffered SHA256 scan
+  -> approximately 79 GB ext4 file page cache
+  -> higher-order / large file-cache folios
+  -> memory pressure and kswapd reclaim
+  -> traditional LRU shrink_inactive_list
+  -> shrink_folio_list
+  -> free_unref_folios
+  -> free_tail_page_prepare
+  -> compound_head not consistent
+  -> BAD_PAGE
+```
+
+Three boundaries are established.  First, MGLRU is not necessary: disabling it
+only changed the reclaim entry from `evict_folios` to `shrink_inactive_list`,
+and both paths converged at `shrink_folio_list` and `free_unref_folios`.
+Second, large buffered page-cache population and subsequent reclaim are the
+reproducible trigger; the builder algorithm, model semantics, and `O_DIRECT`
+path are not that trigger.  Third, the corruption source is not yet proven to
+be ext4.  The leading software hypothesis is an ext4 large-folio or common MM
+lifecycle defect, while RAM/IMC or DMA may instead corrupt folio metadata before
+reclaim detects it.  `free_tail_page_prepare()` is the detection point, not
+necessarily the point where corruption occurred.
+
+## Production I/O policy
+
+The production checkpoint workflow remains on Linux `7.0.0-28-generic` and is
+direct-only for every bulk model operation:
+
+```text
+source read   -> O_DIRECT
+output write  -> O_DIRECT
+manifest      -> O_DIRECT
+verifier      -> O_DIRECT
+```
+
+The raw builder source and output paths, canonical content manifest, and tensor
+provenance verifier use aligned `O_DIRECT`.  Full-shard checks use
+`tools/verify_io_paths.py --direct-only`; buffered-versus-direct comparisons are
+limited to small fixtures.  Any previous full buffered-scan result is diagnostic
+only and must not be repeated during artifact acceptance.
+
+This is also the appropriate steady-state design for this workload: checkpoint
+streaming, hashing, and verification are one-pass reads with little cache reuse.
+Bypassing page cache avoids displacing useful cached data, avoids tens of GiB of
+avoidable reclaim pressure, and keeps available RAM behavior more predictable
+even independently of the unresolved kernel fault.
+
+`drop_caches` and `POSIX_FADV_DONTNEED` are not accepted workarounds: both can
+discard pages only after buffered I/O has already created page-cache folios and
+may actively drive the failing free path.  Direct I/O is different because the
+large file payload never enters the ordinary file page cache.  This workaround
+protects the builder and verifier workload; it does not prove that future
+`mmap()`-based native model loading is safe.
 
 The observed `dead000000000400` mapping must not be interpreted as direct
 use-after-free evidence.  Linux defines the tail-page mapping sentinel as
@@ -376,12 +433,11 @@ folio relationship or required tail metadata do not agree.
 
 The current causal hypotheses therefore remain separate:
 
-1. MGLRU eviction incorrectly handles the folio lifecycle;
-2. page cache, ext4 large-folio, split/free/refcount, or another MM path corrupts
-   the metadata before MGLRU later discovers it;
-3. RAM/IMC or DMA corrupts metadata and reclaim merely detects it.
+1. page cache, ext4 large-folio, split/free/refcount, or another common MM path
+   corrupts the metadata before generic reclaim discovers it;
+2. RAM/IMC or DMA corrupts metadata and reclaim merely detects it.
 
-The first two are now the leading software class.  Linux 6.16 and later include
+The first is now the leading software class.  Linux 6.16 and later include
 ext4 regular-file large-folio support, matching this workload's large buffered
 ext4 reads and writes.  Upstream MM/hugetlb fixes and syzbot reports have also
 demonstrated that software-only folio/tail-page bugs can produce the same
@@ -401,6 +457,133 @@ this class of failure without unstable physical DDR5.
 It still does not prove bug identity on this host: the local stack reaches
 `free_unref_folios` and `free_tail_page_prepare`, and no matching reproducer or
 kernel bisect has been completed.  The evidence now makes a post-6.15 MM/ext4
-large-folio reclaim regression the leading hypothesis.  The highest-value
-control is Ubuntu's 6.8 GA kernel, which predates ext4 regular-file large-folio
-enablement, tested first with MGLRU enabled and then disabled only if needed.
+large-folio reclaim regression the leading hypothesis.  Kernel downgrades and a
+broad bisect are not part of the delivery plan.  The only retained root-cause
+A/B keeps Linux 7.0 and every other variable fixed, but disables ext4
+regular-file large folios in a dedicated test build.
+
+## Optional ext4 large-folio A/B
+
+The diagnostic patch should narrowly prevent ext4 from calling
+`mapping_set_large_folios(inode->i_mapping)` for regular files, for example by
+making `ext4_should_enable_large_folio()` return false.  The comparison is:
+
+```text
+7.0 stock, ext4 large folio enabled
+  -> known buffered reproducer
+  -> BAD_PAGE reproduced
+
+7.0 test build, ext4 large folio disabled
+  -> identical buffered reproducer
+  -> observe whether BAD_PAGE reproduces
+```
+
+Kernel version, generic MM/reclaim, NVIDIA drivers, GPUs, NVMe, PCIe/IOMMU,
+RAM settings, ext4 filesystem, shard data, and reproducer must remain unchanged.
+This provides a cleaner causal test than changing kernel versions.  Do not try
+to toggle the mapping capability dynamically on live inodes: clearing large
+folio support requires correct mapping/inode locking and removal of existing
+page cache, so it is not treated as a safe runtime switch.
+
+This A/B requires separate explicit authorization before building, installing,
+or booting a test kernel.  It is deferred until after the current model delivery
+and is not a production prerequisite.  Production work proceeds first on Linux
+7.0 with direct I/O for all large checkpoint reads and writes; detailed kernel
+root-cause investigation resumes only when separately scheduled.
+
+## Deterministic raw builder evidence
+
+On a clean 2026-08-12 boot, the Transformers-free safetensors builder passed the
+Layer 0 preflight with 132 survivors, 396 weights, 396 scales, 792 total expert
+tensors, and zero missing, duplicate, unknown, or mutated payloads. Full Build A
+then wrote 35,620 tensors in 22 shards. Its O_DIRECT content manifest passed
+twice over 27 files at
+`e3c2d719f4d5a240d5ecd6f707d546b1c14b972d6a01551e489d5091eecbd178`.
+
+The independent O_DIRECT verifier passed all 43 layers and every contracted
+category with zero failures: expert weights, scales, routers, shared experts,
+three `tid2eid` tables, HERETIC overlay, MTP absence, and dangling expert IDs.
+Peak verifier RSS was 127.7 MB with zero swap. A same-source, same-plan,
+same-code Build B also wrote 35,620 tensors in 22 shards. Its canonical manifest
+SHA matched Build A, and a separate comparison proved all 27 relative paths,
+sizes, and SHA256 values identical. This is the first full evidence that the raw
+payload builder eliminates the prior varying FP4 expert mutations.
+
+That A/B copied `num_nextn_predict_layers: 1` from the source while deleting all
+4,705 `mtp.*` tensors. The tensor payloads were correct, but the resulting
+noMTP config was internally inconsistent and was not promoted to native smoke.
+The builder now writes `num_nextn_predict_layers: 0`, and the independent
+verifier rejects any noMTP output that retains a nonzero value. The regression
+suite passes 23/23.
+
+## Python general-protection-fault evidence
+
+The first full config-correct rebuild wrote incomplete `of-00000` shards and
+then Python 3.13 exited 139. The kernel recorded:
+
+```text
+traps: python3 general protection fault ... in python3.13
+```
+
+There was no Python traceback, BAD_PAGE, kernel Oops, MCE, AER, NVMe error,
+swap pressure, or OOM. Symbol lookup places the instruction at
+`_PyEval_EvalFrameDefault+0x882b`, where the interpreter increments the reference
+count of an object fetched from a tuple. The fetched `PyObject` pointer was
+invalid. The incomplete output was deleted, and this boot is not admissible for
+another artifact build.
+
+Historical journal evidence materially changes the interpretation of an older
+2026-08-11 exit 139. That Transformers/CUDA `moe-compress` process also ended in
+a Python 3.13 general-protection fault, at GC `visit_decref`, where another
+invalid `PyObject` type pointer was dereferenced. However, three BAD_PAGE events
+had already occurred six and two minutes before that crash. The old exit 139 is
+therefore downstream evidence from an already corrupted boot, not independent
+proof of a CPython defect. The new crash occurred without a preceding BAD_PAGE,
+but both failures belong to the same broad invalid-Python-object symptom family.
+
+Bounded diagnostics did not reproduce the fault:
+
+- 200 consecutive direct-I/O fixture runs passed;
+- approximately 400 million tuple-subscript operations passed under the same
+  CPython 3.13.11 binary;
+- a 32 GiB native C memory pattern test completed four write/verify passes with
+  zero mismatches;
+- a 16 GiB file written with the same `DirectWriter`, read with the same
+  `_direct_pread`, and copied to another 16 GiB file passed O_DIRECT SHA256 on
+  both files at
+  `ff99b3cb43bcbed957096724f19fa85b3664b19c7c5573f85afe5fbb6a8a69cf`;
+- MAP1602 and both upstream PCIe bridges reported zero correctable, nonfatal,
+  and fatal AER events;
+- NVMe SMART and error logs reported zero media/data-integrity errors and zero
+  error-log entries;
+- all exposed machine-check threshold counters remained zero.
+
+These results weaken a deterministic builder bug, stable CPython tuple bug,
+persistent RAM fault, visible PCIe link error, and SSD media failure. They do
+not exclude a low-probability RAM/IMC event, unreported DMA/IOMMU corruption,
+kernel memory corruption outside the earlier page-cache path, or a rare CPython
+runtime defect. The exact corruptor remains unproven.
+
+The next clean-boot discriminator is the standard-library-only builder under
+system Python 3.12 with `-X faulthandler` and Apport/core collection enabled.
+Python 3.12 already passes the real Layer 0 preflight. A successful 3.12 A/B is
+useful operational evidence but not sufficient by itself to assign blame to
+3.13; a repeat crash must preserve the fatal Python stack and crash package.
+
+## Relevant PCIe topology
+
+The live topology confirms that the checkpoint disk is not CPU-direct:
+
+```text
+CPU
+|- RTX 5090 #1: PCIe 5.0 x8
+|- RTX 5090 #2: PCIe 5.0 x8
+|- WD SN540: PCIe 3.0 x4
+`- X670 #1: CPU uplink Gen3 x4
+   |- MAP1602 / aigo 2 TB: PCIe 4.0 x4
+   `- X670 #2: Gen4 x4 to Wi-Fi, LAN, USB, SATA, and an empty port
+```
+
+`/data/linux-fast` resides on the MAP1602/aigo path behind X670. This topology
+is useful for a future cross-NVMe or IOMMU/DMA A/B, but it is not evidence by
+itself that the storage path caused BAD_PAGE or the Python GPF.

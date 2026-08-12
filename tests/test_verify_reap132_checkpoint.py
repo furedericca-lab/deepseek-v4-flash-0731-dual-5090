@@ -79,7 +79,8 @@ def make_fixture(tmp_path, *, mutate=None, retain_mtp=False):
     config = {
         "model_type": "deepseek_v4", "n_routed_experts": 132,
         "num_hidden_layers": 43, "num_hash_layers": 3,
-        "num_experts_per_tok": 6, "moe_compress_args": {"drop_mtp": True},
+        "num_experts_per_tok": 6, "num_nextn_predict_layers": 0,
+        "moe_compress_args": {"drop_mtp": True},
     }
     for root, tensors in ((source, source_tensors), (output, output_tensors)):
         (root / "model.safetensors.index.json").write_text(
@@ -140,3 +141,14 @@ def test_mutations_fail(patched_plan_hashes, tmp_path, name, value):
 def test_retained_mtp_fails(patched_plan_hashes, tmp_path):
     report = run_fixture(tmp_path, patched_plan_hashes, retain_mtp=True)
     assert any("MTP" in failure or "namespace" in failure for failure in report["failures"])
+
+
+def test_enabled_nextn_config_fails(patched_plan_hashes, tmp_path):
+    source, output, plan, source_manifest, output_manifest = make_fixture(tmp_path)
+    config_path = output / "config.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    config["num_nextn_predict_layers"] = 1
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+    MODULE.PLAN_SHA = hashlib.sha256(plan.read_bytes()).hexdigest()
+    report = MODULE.verify(source, output, plan, source_manifest, output_manifest)
+    assert any("num_nextn_predict_layers" in failure for failure in report["failures"])

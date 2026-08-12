@@ -78,3 +78,10 @@ Append-only history for wiki updates caused by scope work, implementation closeo
 - Pages: debugging/heretic-v2-streaming-writer-namespace-corruption.md, implementation/heretic-v2-reap132-build-validation.md
 - Verification: uv run python tools/verify_hf_checkpoint_sha256.py; uv run python scripts/checkpoint_content_manifest.py --check
 - Residual risk: The process responsible for the second same-size source drift is not proven; do not rerun pruning until the remaining mutation path and exit 139 are isolated.
+
+## 2026-08-12T04:41:23Z [heretic-v2-reap132-build-validation]
+
+- Summary: Recorded deterministic O_DIRECT A/B byte reproducibility, noMTP NextN config correction, CPython 3.13 GPF forensics, bounded RAM/O_DIRECT diagnostics, PCIe topology, and the Python 3.12 faulthandler recovery gate.
+- Pages: debugging/heretic-v2-streaming-writer-namespace-corruption.md, implementation/heretic-v2-reap132-build-validation.md
+- Verification: 23 tests passed; 32 GiB x4 native memory patterns passed; 16 GiB O_DIRECT source/copy SHA256 matched; AER/NVMe/MCE counters clean
+- Residual risk: Exact invalid-PyObject corruptor remains unproven; reboot before the Python 3.12 config-correct full rebuild.

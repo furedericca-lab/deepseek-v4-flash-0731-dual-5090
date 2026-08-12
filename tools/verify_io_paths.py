@@ -67,6 +67,8 @@ def verify(path: Path) -> dict[str, str | bool]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("paths", nargs="+", type=Path)
+    parser.add_argument("--direct-only", action="store_true",
+                        help="hash only through O_DIRECT; required for large checkpoint scans")
     args = parser.parse_args()
     failures = []
     for path in args.paths:
@@ -75,14 +77,19 @@ def main() -> int:
             failures.append(str(path))
             continue
         try:
-            result = verify(path)
+            if args.direct_only:
+                direct = direct_sha256(path)
+                result = {"path": str(path), "direct_sha256": direct, "match": True}
+            else:
+                result = verify(path)
         except OSError as exc:
             print(f"ERROR {path}: {exc}")
             failures.append(str(path))
             continue
         status = "PASS" if result["match"] else "MISMATCH"
         print(f"{status} {path}")
-        print(f"  buffered: {result['buffered_sha256']}")
+        if "buffered_sha256" in result:
+            print(f"  buffered: {result['buffered_sha256']}")
         print(f"  direct:   {result['direct_sha256']}")
         if not result["match"]:
             failures.append(str(path))

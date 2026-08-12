@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import mmap
+import os
 import sys
 from pathlib import Path
 
@@ -14,13 +16,33 @@ SCHEMA = "checkpoint-content-manifest-v1"
 MANIFEST_NAME = "checkpoint-content-manifest.json"
 EXCLUDED_DIRECTORIES = frozenset({".cache", ".git", ".hfd", "__pycache__"})
 PARTIAL_SUFFIXES = (".aria2", ".incomplete", ".lock", ".part", ".tmp")
+BLOCK = 8 * 1024 * 1024
+DIRECT_ALIGN = 4096
 
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
+    fd = os.open(path, os.O_RDONLY | os.O_DIRECT)
+    try:
+        size = os.fstat(fd).st_size
+        position = 0
+        while position < size:
+            wanted = min(BLOCK, size - position)
+            aligned_size = ((wanted + DIRECT_ALIGN - 1) // DIRECT_ALIGN) * DIRECT_ALIGN
+            buffer = mmap.mmap(-1, aligned_size)
+            try:
+                view = memoryview(buffer)
+                read = os.preadv(fd, [view], position)
+                if read < wanted:
+                    view.release()
+                    raise ValueError(f"short O_DIRECT file payload: {path}")
+                digest.update(view[:wanted])
+                view.release()
+            finally:
+                buffer.close()
+            position += wanted
+    finally:
+        os.close(fd)
     return digest.hexdigest()
 
 

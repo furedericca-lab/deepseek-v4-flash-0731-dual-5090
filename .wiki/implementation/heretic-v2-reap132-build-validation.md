@@ -28,8 +28,8 @@ tags:
   - heretic-v2
   - checkpoint-verification
   - gguf
-last_checked: 2026-08-11
-updated: 2026-08-11T12:16:32Z
+last_checked: 2026-08-12
+updated: 2026-08-12T12:40:00+08:00
 ---
 
 # HERETIC v2 REAP132 build and validation
@@ -66,3 +66,27 @@ does not read or write the 4,705 MTP/DSpark tensors (10,862,838,300 source bytes
 tensors. Structural deletion stops here. Shared experts, router, all three
 `tid2eid` tables, Lightning Indexer, CSA/HCA, mHC, attention, embedding, LM head,
 norm, RoPE, sink tensors, and the 66 HERETIC v2 attention tensors remain.
+
+The production implementation is now a Transformers-free, plan-driven
+safetensors builder. Routed expert weights and scales are raw payload remaps;
+routers gather the frozen survivor rows; `tid2eid` comes from the frozen plan;
+untouched backbone tensors are raw copies; MTP tensors are dropped. Source
+reads, output writes, manifest hashing, and provenance verification all use
+aligned O_DIRECT.
+
+On 2026-08-12, one complete A build passed the full independent verifier with
+35,620 tensors, 22 shards, 43 layers x 792 expert tensors, and zero failures. A
+second build was byte-reproducible across all 27 manifest entries at manifest
+SHA256 `e3c2d719f4d5a240d5ecd6f707d546b1c14b972d6a01551e489d5091eecbd178`.
+Review then found that the noMTP output still copied
+`num_nextn_predict_layers: 1` from the source. The builder and verifier now
+require `0`; tests pass 23/23.
+
+The first config-correct full rebuild ended in an unexplained CPython 3.13
+general-protection fault, exit 139, without a Python traceback or preceding
+BAD_PAGE. Its partial output was deleted. Bounded RAM, tuple, O_DIRECT, AER,
+SMART, NVMe, and machine-check diagnostics found no persistent error. There is
+currently no final native artifact directory. The next delivery gate is a clean
+reboot followed by a Python 3.12 `-X faulthandler` Build A, O_DIRECT manifest and
+verifier PASS, same-code Build B, per-file SHA equality, read-only promotion,
+and only then native HF smoke.
