@@ -26,8 +26,13 @@ K132 imatrix exist with recorded source and corpus identities.
 
 Tasks:
 
-- [ ] T001 [Backend] Implement structural-prior extraction
+- [x] T001 [Backend] Implement structural-prior extraction
   - DoD: A script reads the archived score report and writes all contracted 43-layer fields plus deterministic SHA256; unit tests cover layer 0-2 and 3-42 normalization.
+  - Evidence: `scripts/build_reap132_structural_prior.py` validates the complete
+    source boundary and produced `evidence/reap132-structural-prior.json` twice
+    byte-identically. `uv run pytest tests/test_build_reap132_structural_prior.py
+    -q` passed `2/2`; report logical SHA256 is
+    `4493d0e9917aa66da70454d68a1b88e8ba0fd5d9730f6a58d8a19d7291a7e64f`.
 - [ ] T002 [Docs] Freeze calibration corpus contract
   - DoD: Scope evidence records corpus files, hashes, composition, tokenizer handling, context/chunk budget, and why they exercise code, math, Chinese, JSON/tool, and prose behavior.
 - [ ] T003 [Infra] Pass clean-boot imatrix preflight

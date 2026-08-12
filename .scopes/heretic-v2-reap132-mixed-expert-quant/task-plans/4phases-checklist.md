@@ -14,7 +14,7 @@ description: Execution and verification hub for K132 fixed 17/26 mixed expert qu
 
 | Phase | Status | Completion | Health | Blockers |
 |---|---|---:|---|---:|
-| Phase 1 - Structural prior and imatrix | In progress | 15% | Healthy | 0 |
+| Phase 1 - Structural prior and imatrix | In progress | 25% | Healthy | 0 |
 | Phase 2 - Freeze 17/26 plan | Not started | 0% | Unknown | 1 |
 | Phase 3 - DIO production artifact | Not started | 0% | Unknown | 1 |
 | Phase 4 - Runtime acceptance | Not started | 0% | Unknown | 1 |
@@ -43,7 +43,11 @@ description: Execution and verification hub for K132 fixed 17/26 mixed expert qu
   DIO imatrix loading, and packed-expert per-ID collection.
 - Read-only dry-runs recorded all-Q2 and all-IQ3 feasibility sizes; these do not
   alter the fixed ratio.
-- Pending: scripts, calibration corpus contract, imatrix run, and coverage gate.
+- T001 PASS: structural-prior extractor validated the archived K96 report,
+  produced all 43 contracted records, and reproduced byte-identically. Source
+  SHA256 is `ae090c1b...47bfa`; report logical SHA256 is
+  `4493d0e9...a7e64f`; focused tests passed `2/2`.
+- Pending: calibration corpus contract, imatrix run, and coverage gate.
 
 ### Phase 2
 
