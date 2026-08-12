@@ -1,0 +1,1284 @@
+{
+  "candidate": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4exp-IQ4XSbb.verified-build.gguf",
+    "size_bytes": 59256121472
+  },
+  "comparison_bytes": 49359751168,
+  "comparison_count": 175,
+  "comparisons": [
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.0.ffn_down_exps.weight",
+      "sha256": "5c3401cf35fff495d7691e319b12d004221e8cd8e2eae596b9d603ece7b9e962",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.0.ffn_gate_exps.weight",
+      "sha256": "db12e55dec126825af6523ce1a192b7581285f7d52469c0562f70a62386eccd3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.0.ffn_up_exps.weight",
+      "sha256": "e22ce19b8fd7a234ee3c30895502cecc774d7fa2dcf9d13b2ddadc99f5ae41ea",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.1.ffn_down_exps.weight",
+      "sha256": "870146e49c8cbfb58bf5b4d7300421e57a6d5e878f73d1d2263e6ae5251fbf1e",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.1.ffn_gate_exps.weight",
+      "sha256": "09047464483126a91e0891169e9dcfdcbd829bb0c9948637de5290120a3996bb",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.1.ffn_up_exps.weight",
+      "sha256": "87186df9080a06e0a1dd34359a342ee8ddff3a4ea15bd4c66b20c687da6184ae",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.10.ffn_down_exps.weight",
+      "sha256": "6e1b1c6a4857d06332b3833fa419fee39f6f5af43db0478d5a62df232505a697",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.10.ffn_gate_exps.weight",
+      "sha256": "69aabe252b4f23399ac1ba717c46791820909a86e2a15ee5312c672d28b686e3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.10.ffn_up_exps.weight",
+      "sha256": "a14391713a85d3202e8fa506483cc7bd3d8f6d66b5a67ccd75dface2365c4ba2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.11.ffn_down_exps.weight",
+      "sha256": "b96db30c56235ac412d1a7e94e5d847235b700965f941d4859d491cf7d7995da",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.11.ffn_gate_exps.weight",
+      "sha256": "f300c993c09d7ce9128ec05a4072441764062cfa06a5ea2d63dca6fa8b4cae38",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.11.ffn_up_exps.weight",
+      "sha256": "68cf1739d51a74ba6d39c042ff4d49d72f7d461da8c8a07770d27887e4857750",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.12.ffn_down_exps.weight",
+      "sha256": "03e7c858694bcb6500271381991c9d0f25111d221477810d0c8204780b852850",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.12.ffn_gate_exps.weight",
+      "sha256": "26b42b09118e832dec2a5e00728afb7ce0666613202314f1128fee39a83a55b7",
+      "status": "PASS"
+    },
+    {
+      "bytes": 0,
+      "category": "routed_expert",
+      "name": "blk.12.ffn_up_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 0,
+      "category": "routed_expert",
+      "name": "blk.13.ffn_down_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 134217728,
+      "category": "routed_expert",
+      "name": "blk.13.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.13.ffn_up_exps.weight",
+      "sha256": "f95756d4d757f70d81bf0bf2a8b1bf6ab4f777db3bedf0c6f5b7e2768e2bcb94",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.14.ffn_down_exps.weight",
+      "sha256": "359df4a39f36ff67d42f8dfddbdf53d38a354efe10f3543c6484e6db89ef5941",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.14.ffn_gate_exps.weight",
+      "sha256": "5f28606697abf07eb1cdd5e450ebf66921e0fe3605d7c162908c3043fc5e73c5",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.14.ffn_up_exps.weight",
+      "sha256": "dc4ff09b3e6af7fcdee2cb5ee1698f101c8f32b1a08007b6ff565253ac410a11",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.15.ffn_down_exps.weight",
+      "sha256": "710576c8bc8bcf45bc6a19dc1af2d736ac07648e107695506fb2e7379e1a1fe4",
+      "status": "PASS"
+    },
+    {
+      "bytes": 0,
+      "category": "routed_expert",
+      "name": "blk.15.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.15.ffn_up_exps.weight",
+      "sha256": "89e3a59f1363da52a04eca4080362f541668e64d1f3277423bc3013723abc041",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.16.ffn_down_exps.weight",
+      "sha256": "a461fbf7f277d8ec318a470ac2814b990813ff42bac871cf140bf1490c452976",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.16.ffn_gate_exps.weight",
+      "sha256": "b6ea9931e86edd9a2f361f379aa00e1de249b0db2ed14944dee39b299a012c6d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.16.ffn_up_exps.weight",
+      "sha256": "35f34547f904f1793612429ca64e2253c451560bf6215655bd39d76efc08f1ae",
+      "status": "PASS"
+    },
+    {
+      "bytes": 67108864,
+      "category": "routed_expert",
+      "name": "blk.17.ffn_down_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 402653184,
+      "category": "routed_expert",
+      "name": "blk.17.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.17.ffn_up_exps.weight",
+      "sha256": "1fb39db772956000072d2d32f28ce6908c2606d50fe3f6a2d9175098bc201cc1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.18.ffn_down_exps.weight",
+      "sha256": "1f973daccae8053b7cf7f6bddd0ea72d7bc7fa6ed9d02aa838d06a69ced52a54",
+      "status": "PASS"
+    },
+    {
+      "bytes": 0,
+      "category": "routed_expert",
+      "name": "blk.18.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.18.ffn_up_exps.weight",
+      "sha256": "92e0818a8b2bc6c56c89d37b617144d6f6169d7b08d027a1c26d244cb0dc686a",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.19.ffn_down_exps.weight",
+      "sha256": "87b15071b96a0a038c5e9069ff8add4c504f8095f00737c37233a6fe4f16991d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.19.ffn_gate_exps.weight",
+      "sha256": "7e96b0edc3be541bea825f7eba5f73a8e4218fbd78ef4e878921f1e4e21e4f68",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.19.ffn_up_exps.weight",
+      "sha256": "515edc9ed475a89c76067a6500f487bbf6279b1a0272747f6819b68c24df6706",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.2.ffn_down_exps.weight",
+      "sha256": "225c2dc49b648a5d9b48f31919e79bd16baaed3bd4a0a0eb2b8303fa1a1b8994",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.2.ffn_gate_exps.weight",
+      "sha256": "eaeb9e0b3c3ce6407201c94aede4568d6f40923952873362176e56ab7ac06cd0",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.2.ffn_up_exps.weight",
+      "sha256": "1cb2c42c9ddbc2975ba7152f283304d247e021f4d4a8abfdc263121a28116c3f",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.20.ffn_down_exps.weight",
+      "sha256": "f8caf11d6a1c9f3c34786c8e3edd54899070f9712f3f0c34215be21be2b62415",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.20.ffn_gate_exps.weight",
+      "sha256": "248fed7d4683f58f5eb90b44a12dcced1e17cb3b4c8fa229a0ff5d6fc73bcc90",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.20.ffn_up_exps.weight",
+      "sha256": "5587ce281ab1683bf153574dca726b373ae5d92365f6c5577d4d48efa769a16d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.21.ffn_down_exps.weight",
+      "sha256": "b0b71abf7ee1f37a80c8c3fc0d26503ee3a9d0ab03085f63f57bd9293b7261b9",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.21.ffn_gate_exps.weight",
+      "sha256": "d059475ec6aa5422eda661fe3728584af4961820de9de2b61985cf0ddf781e0e",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.21.ffn_up_exps.weight",
+      "sha256": "00a0406fe968391772816c8a198f67542ee31480ca2a5d31dcb3aa94f51a04c3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.22.ffn_down_exps.weight",
+      "sha256": "aa8e33f30617f8388e18f050b9b6996b33d763508b3705516b482eb19fe13bb4",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.22.ffn_gate_exps.weight",
+      "sha256": "6635ffbc0169de13fbbce4f1954c79cff58cafea2e4f52a9ee66f4d9ca5f6a86",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.22.ffn_up_exps.weight",
+      "sha256": "db238ed9e7f0f963e94e0ea66c264fc16a40eee70b31b2b1a8a5d35f35435f5b",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.23.ffn_down_exps.weight",
+      "sha256": "98f311f3c861df299996ecb0ba6dc8bf67649c685da0c53cdc1cf9507c73e6d6",
+      "status": "PASS"
+    },
+    {
+      "bytes": 335544320,
+      "category": "routed_expert",
+      "name": "blk.23.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.23.ffn_up_exps.weight",
+      "sha256": "8f2484c6a3073c9bd3f4e1df969a7db3bfa0ab0a8c99dc027dce9db265d2dfd0",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.24.ffn_down_exps.weight",
+      "sha256": "1b92ec447b838d96325b2e9b27c3e1e32544e7681014f9e5e6aeda15f37e6af5",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.24.ffn_gate_exps.weight",
+      "sha256": "7087d0522e7108b27ddf267e3f43b6b29076d87bf3521c54d693ed69d5c717cd",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.24.ffn_up_exps.weight",
+      "sha256": "b52133a2b190ea46c65ff1bcdc83ce4b4e95d59a968199f3c1e7cf0e4b4c5bcd",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.25.ffn_down_exps.weight",
+      "sha256": "2f379c9343dbdf2b381e9ace154128e8cfbf0523938c57b8645ed83e6593c66c",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.25.ffn_gate_exps.weight",
+      "sha256": "14ed1b7edaefa090764433bec985f454b6b1ed43fb1c07df8f811a0eaa123ddf",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.25.ffn_up_exps.weight",
+      "sha256": "c8cf8306fe43e21dfee4199c4d38a26443f427815a0b73b5f14a4828cd1e64d2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.26.ffn_down_exps.weight",
+      "sha256": "c1581d0f1ab0814845f716f01b0947101acb49984e2ba75c1280f3880939c77f",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.26.ffn_gate_exps.weight",
+      "sha256": "ae2a6ea9ddee167626604d953f44be65a9e8ebd330d43e0a9620874d95518f29",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.26.ffn_up_exps.weight",
+      "sha256": "24e48555b01691682d12bb6a6facb3e3e05a3cb6e719d7cedac842bcf571f3f3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 201326592,
+      "category": "routed_expert",
+      "name": "blk.27.ffn_down_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.27.ffn_gate_exps.weight",
+      "sha256": "9a627ebd9da911bed42b2e5e30f70225525168792e0dad7501f31648cf4ed298",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.27.ffn_up_exps.weight",
+      "sha256": "033e4aaceca6283672ab92e346fa428fd809db817bec834f8acd5f51280c97cb",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.28.ffn_down_exps.weight",
+      "sha256": "c762b4694452aba2fba8177c67f9c167da2925f603551ecc502ba34a2a03478a",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.28.ffn_gate_exps.weight",
+      "sha256": "325de2159c3fbc20760e37d213f9acc4c254b3fb8d6edc6e3f6c985e71ddd969",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.28.ffn_up_exps.weight",
+      "sha256": "65b9bb63d6fa74e5b45e3f29c7863cb098dc8d61bcf702f9d7c9536f34723fbb",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.29.ffn_down_exps.weight",
+      "sha256": "4245d475571cfe992fd78ebed7781d6a52168b5b21713060a7518578977badce",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.29.ffn_gate_exps.weight",
+      "sha256": "7ea909b2d97b0be0d9ea1c9a380cb6daa6ab32227b2b232e68e14b87f76de75d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.29.ffn_up_exps.weight",
+      "sha256": "0070ba01bcd759b0a24a505f18232bda36ef1b155b77f18ebdbf86229eb64f19",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.3.ffn_down_exps.weight",
+      "sha256": "ca837994b204410925b7dcfa80dc4ab590d058deb58c0ba233f233bdc97b5eea",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.3.ffn_gate_exps.weight",
+      "sha256": "5b09a2e3c944a6674a70d143d992c9285ed4772655ff19b3b779308389b40e9c",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.3.ffn_up_exps.weight",
+      "sha256": "1d06367e894fd28f305b2e574ec3812bb1c473342c496d3a8c3dbc9a1ed36af5",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.30.ffn_down_exps.weight",
+      "sha256": "fe1830f77ae94c164d2289e602450e828e26dc682fe09c075d4571779023b82d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 67108864,
+      "category": "routed_expert",
+      "name": "blk.30.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.30.ffn_up_exps.weight",
+      "sha256": "2c44623176aee17060ecd923c1d119a064dc06a01b66f73c829e6a989755aff0",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.31.ffn_down_exps.weight",
+      "sha256": "7c02cb6ce91271baf4c11746930f2d291607f3190acf72a0ce034a011605f352",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.31.ffn_gate_exps.weight",
+      "sha256": "3bf06b84699a640b5dffb3927e7891973b1532633f82e09eab18c2c8e9194080",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.31.ffn_up_exps.weight",
+      "sha256": "28aa92f17dc7aa4ca37b832192b705063eaf1dbc366ec146b00ec7c70f62b740",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.32.ffn_down_exps.weight",
+      "sha256": "45260734d0c2cf233cf0259bf8601dc13533e12fd19b4528a00a4ac94e1425b8",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.32.ffn_gate_exps.weight",
+      "sha256": "474595f9098d58852ae5d8036201f330e18276fc49c4c3689d017a4ff149e674",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.32.ffn_up_exps.weight",
+      "sha256": "578a3d24063e387ce9aca76a343dcbea81bac4ce85895b4b2779ff3a7e9a02ef",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.33.ffn_down_exps.weight",
+      "sha256": "b683e92b81d454e598fb498afd1b3aba7ac77fac4da9498868ed2e061a05121f",
+      "status": "PASS"
+    },
+    {
+      "bytes": 335544320,
+      "category": "routed_expert",
+      "name": "blk.33.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.33.ffn_up_exps.weight",
+      "sha256": "54238e9a3c8de2f934ef1ec9eeac55b1f2d78949698fe9e8776fb1969caac2ce",
+      "status": "PASS"
+    },
+    {
+      "bytes": 67108864,
+      "category": "routed_expert",
+      "name": "blk.34.ffn_down_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.34.ffn_gate_exps.weight",
+      "sha256": "55e44310bf8af91d1fd3552cca1cde99e9700ad5737adbe279dfe42cba99c980",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.34.ffn_up_exps.weight",
+      "sha256": "a4317f8709a7aac46d1cc2a88ead2f40bf524e6a7a6cfd0406482f35633aa60b",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.35.ffn_down_exps.weight",
+      "sha256": "9dbe4fa5c03939325f6956cf76118a563e6554237fcbc2e91c5cabbdb10b56ee",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.35.ffn_gate_exps.weight",
+      "sha256": "d2e02ddeb8235573a50361b2877578b206133763c09051556ad950b08494ffc7",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.35.ffn_up_exps.weight",
+      "sha256": "309902c2ce2a63fa6a67ad3dcb0d2b5927305ac349b1ec8c12aeb1eeebd69445",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.36.ffn_down_exps.weight",
+      "sha256": "3b5dabb36dd2e7fd49b1057f48e6506d9f0f646752f3bc23fff784c2ce3ee17e",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.36.ffn_gate_exps.weight",
+      "sha256": "6cc00290965b3a3c95331fd84dc56b2145ec27f73a0c2da499f2fe3b34e9b7d9",
+      "status": "PASS"
+    },
+    {
+      "bytes": 67108864,
+      "category": "routed_expert",
+      "name": "blk.36.ffn_up_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.37.ffn_down_exps.weight",
+      "sha256": "02ab3638cd31505ceff08a959a7c5bfacb44e2b939a8d50af698ae5646410b37",
+      "status": "PASS"
+    },
+    {
+      "bytes": 201326592,
+      "category": "routed_expert",
+      "name": "blk.37.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.37.ffn_up_exps.weight",
+      "sha256": "c2a0bb3a75aa3bd82dbbe02bb6e9c8f240cb834683e073d10f4b0708625b6343",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.38.ffn_down_exps.weight",
+      "sha256": "12ec3fe2acacd0c69ddfa4db094f84723e94543fa1acb01c64e35c7029ee2539",
+      "status": "PASS"
+    },
+    {
+      "bytes": 67108864,
+      "category": "routed_expert",
+      "name": "blk.38.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 0,
+      "category": "routed_expert",
+      "name": "blk.38.ffn_up_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.39.ffn_down_exps.weight",
+      "sha256": "239c2ebfac6bbd7755b8273c667c01459ec76c66140dbc174e9401c4dcdb29b0",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.39.ffn_gate_exps.weight",
+      "sha256": "8c6419df7bea092b1ec5349fdff30fe2df16387645f3922fe6f39afd997f3d8a",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.39.ffn_up_exps.weight",
+      "sha256": "2985b7aa4d9c45edc65ac673ca8013bf7869f1d70c51862577a24af57247502d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.4.ffn_down_exps.weight",
+      "sha256": "efb17b4626bf9f897303f68506a5d676bd1a3616f3f8ca14b62920849b8f6783",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.4.ffn_gate_exps.weight",
+      "sha256": "6a2b5c9b4db3996b24a47bde586a99cbb780b4cb82aa29ab861eb22692f193be",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.4.ffn_up_exps.weight",
+      "sha256": "ba5404f6cd56948ef8033737202c86d5f541f451ec5d9a416772fc2985d1005b",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.40.ffn_down_exps.weight",
+      "sha256": "bfc109389f8f227c6f97b83ec5d3ebc963fa586b180e2ada05fa6ffb0cb91b4d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.40.ffn_gate_exps.weight",
+      "sha256": "231a5f2defb67599a9ca67d1a98a7786047d7fb871b2dfb00e6d1b30a9ebffb0",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.40.ffn_up_exps.weight",
+      "sha256": "87f320f1a1818465292b3b7ef37ed954cd68c7284ceac69e221fe84bb8fbe1c9",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.41.ffn_down_exps.weight",
+      "sha256": "85447a854ab4b7f5425c0cc4e2cdc978e7f1114d2429b045573ea1a02e861109",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.41.ffn_gate_exps.weight",
+      "sha256": "4df4b8204d530070c4fdb4db8e30fdd6d3d4ab68e83cbec52cfe7640b67e1b52",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.41.ffn_up_exps.weight",
+      "sha256": "1dc384ef47d2663134cd0fe4a86a3df14ae225825f58c3f6e41dd55a47fa5b29",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.42.ffn_down_exps.weight",
+      "sha256": "3e83f2aa1ffece302afec57077ef2d42a9a1c873137e1ae07cd5102677eaf411",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.42.ffn_gate_exps.weight",
+      "sha256": "e949b5de27017da4dfe9ae8ce7cfc717122a7f6f543a72d5070872eee131bbd9",
+      "status": "PASS"
+    },
+    {
+      "bytes": 134217728,
+      "category": "routed_expert",
+      "name": "blk.42.ffn_up_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.5.ffn_down_exps.weight",
+      "sha256": "308378034777e2141f36c1020aa68004fdf859b0f3bfeca4bfd093e81280773b",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.5.ffn_gate_exps.weight",
+      "sha256": "c555f1a4d69a942deb1ffc002479607ece5083f429c7ba1fc0e89685d0d43a49",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.5.ffn_up_exps.weight",
+      "sha256": "8c4b0c6c657693e5d23ddaeb485f16d11cd2d273b0cf2563b9852979590b405a",
+      "status": "PASS"
+    },
+    {
+      "bytes": 67108864,
+      "category": "routed_expert",
+      "name": "blk.6.ffn_down_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.6.ffn_gate_exps.weight",
+      "sha256": "53accc890076100ca0b93b2bd67bb79803042fb9911f2d9596a4350dc905e30e",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.6.ffn_up_exps.weight",
+      "sha256": "495f0f0e76150548dc7e49ef31bd320cc4f3ee33782f4086b5a7ce4b3990b997",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.7.ffn_down_exps.weight",
+      "sha256": "50f387df210ca3797bdf97c9b27aa995a406412d0569023dec8e4950ec0e62d3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.7.ffn_gate_exps.weight",
+      "sha256": "f93ed846370984206b5af6336695b4a63f07a51f55566e0348e5119c6daca663",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.7.ffn_up_exps.weight",
+      "sha256": "1135c84bba27aa87d4ae40bdd092cac54cccf7178c74dff7c5e960ed6872b7b6",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.8.ffn_down_exps.weight",
+      "sha256": "0d8ba684ce005ca30fc690f395e0b1073b973bf9dcf97192617f60e651ad8de5",
+      "status": "PASS"
+    },
+    {
+      "bytes": 335544320,
+      "category": "routed_expert",
+      "name": "blk.8.ffn_gate_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.8.ffn_up_exps.weight",
+      "sha256": "88bb1861d130ab92522fef9a548d259dad77c2d880094c4ad87df8145594ae1e",
+      "status": "PASS"
+    },
+    {
+      "bytes": 201326592,
+      "category": "routed_expert",
+      "name": "blk.9.ffn_down_exps.weight",
+      "sha256": null,
+      "status": "FAIL"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.9.ffn_gate_exps.weight",
+      "sha256": "8fa3371ce7b45db75553b267d5c612259af5e1b0f7c0d6ddd0f4a1ad483bf907",
+      "status": "PASS"
+    },
+    {
+      "bytes": 427819008,
+      "category": "routed_expert",
+      "name": "blk.9.ffn_up_exps.weight",
+      "sha256": "3c86b89a7ce8eef68558164cbafb5d761eda4f464e4b29a2a09e0acb8d169ac9",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.0.ffn_gate_inp.weight",
+      "sha256": "cef237f459d5698ac7d6a44459009b55286384f07a0f5a2b85b4239343bff546",
+      "status": "PASS"
+    },
+    {
+      "bytes": 3102720,
+      "category": "routing",
+      "name": "blk.0.ffn_gate_tid2eid.weight",
+      "sha256": "5446e562ad042f736bd2c5a17ddb69ecbd4674019c1770e72520db83c6af4207",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.1.ffn_gate_inp.weight",
+      "sha256": "e52a0832f962c9f922bf8e346a6d6da05f2dc07cc5d85ef6e0cd98e07984fe0d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 3102720,
+      "category": "routing",
+      "name": "blk.1.ffn_gate_tid2eid.weight",
+      "sha256": "7ede3008da644f2ff0a66bef9e77afbd6e58edf712dd17daf93ffec18e06707f",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.10.ffn_gate_inp.weight",
+      "sha256": "77393003a600917683562556dd70d3b2e0434b653f1efdf2be86a53b8d0fb26a",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.11.ffn_gate_inp.weight",
+      "sha256": "f0a43fc2822077446245159b1fb57e41afd21bd3ad297009a5215e5565a39f6f",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.12.ffn_gate_inp.weight",
+      "sha256": "38f5e55792f94f88a35af9521ab8330ae5ff156462b51e23578375a4f059825a",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.13.ffn_gate_inp.weight",
+      "sha256": "da29313b4fff64e84cb9f6be475f67c6e3e3aa72f68c979d704c262719866805",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.14.ffn_gate_inp.weight",
+      "sha256": "7e47f86e761675bad4baf2a2984ee6f3f364ac779135fae54a9291771f94d751",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.15.ffn_gate_inp.weight",
+      "sha256": "2d3ae9a8d951d2f7c05eab6acad7fd29cfd08f298b17da5fec9d3fdf4eec4e74",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.16.ffn_gate_inp.weight",
+      "sha256": "093ca8cfb3df428f4fb46ddb351e168f729bdd6c858f9ec84c499feea0eaa1cb",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.17.ffn_gate_inp.weight",
+      "sha256": "f71ec5fbc3da3c624f2ab7686f8d585b1ecbaebc10bde6552fced87e0852cd15",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.18.ffn_gate_inp.weight",
+      "sha256": "8de53670cb199733a36581545477a51baea67435c9a13bbba7f48ea0565e4c09",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.19.ffn_gate_inp.weight",
+      "sha256": "fe3e7b376cca871a5d4bd9f7dfc4b893afbbd921bf7d26fbf3a993f8ff9226cb",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.2.ffn_gate_inp.weight",
+      "sha256": "4563302a117bf86122176147663990d5931fd60cfddc7298ef1dbfd8a55fb2d2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 3102720,
+      "category": "routing",
+      "name": "blk.2.ffn_gate_tid2eid.weight",
+      "sha256": "edd99ebd6e55bfa9919b450881df6a2ba3d3020973029d7221467db27511a324",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.20.ffn_gate_inp.weight",
+      "sha256": "864c53925551bb680d1a8b79154cd55a98a89416e7f0352778fd08de2cded624",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.21.ffn_gate_inp.weight",
+      "sha256": "3306b4f4a14a3a78516e8d42253fe660beac8f717365347b66bdaa358602792d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.22.ffn_gate_inp.weight",
+      "sha256": "7d0095b10f5ae4587b13789453e342d3bf46730ee869fece820a1ace653ab2e0",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.23.ffn_gate_inp.weight",
+      "sha256": "4648907fa789aca71b402ac34ae78b0ca9c74c00d715b6fe59d341d1e9d89d47",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.24.ffn_gate_inp.weight",
+      "sha256": "88f58b25653f11cc166694f53f1b6898a80bc757ab9ed7fc4b3ec64d49d2b02c",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.25.ffn_gate_inp.weight",
+      "sha256": "f10c910efddec11e9b2dae296e7aeca53b80f2d3dd30d8e6aed0bddc334e7ed1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.26.ffn_gate_inp.weight",
+      "sha256": "b7e95896c95ffd3fb523f19f46be7020bc532e8be347c3001e29a5ed745c241f",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.27.ffn_gate_inp.weight",
+      "sha256": "ca6b9c864df7b4fb783f95c704ff8d4e9510fcdcb60c5d95a384a7400e6136de",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.28.ffn_gate_inp.weight",
+      "sha256": "4a4787c1025c3217c43a5dece7f0739266a2f7812bb2e42c3cce10a06bb7d09d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.29.ffn_gate_inp.weight",
+      "sha256": "f8b00e720c8f6e3d825227ee5b0dd8580803f9f2da6b7b2b219fcb3278ff631e",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.3.ffn_gate_inp.weight",
+      "sha256": "99a88fb69da6a29109b5c2491b7fcb4ffd7e5ee442c037da99119b3dc6ef18c6",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.30.ffn_gate_inp.weight",
+      "sha256": "9da32f511e9e6d1c2473623d832778b911ca75486d4b543fff59e57b997b7860",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.31.ffn_gate_inp.weight",
+      "sha256": "de01032c61417b8bc5265743aaca8b64f73f967062efe56d19041e597a5fdedc",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.32.ffn_gate_inp.weight",
+      "sha256": "f4b78b78b7bb3afd762682b5add00ceeeb0464a53157e8f1c6b314db5c56fc50",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.33.ffn_gate_inp.weight",
+      "sha256": "ae14456030403f8fc5870cac503f87600a599309d53636bd798a19f6d35e40ae",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.34.ffn_gate_inp.weight",
+      "sha256": "dfd1fbafb9843ecb550f232573f41e98aaff7439ef949f4ef710c21d88ad5d98",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.35.ffn_gate_inp.weight",
+      "sha256": "afc01bf8c22ae325c64388c5a90e2bc75578bc33852dcbfb528d993e78f4287f",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.36.ffn_gate_inp.weight",
+      "sha256": "e183e9bf6eadb98411202d12196fc587b17f689006e546abcbd43702c8b62511",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.37.ffn_gate_inp.weight",
+      "sha256": "22d799f63ed51f2e7aaece1e9b90ed9c878932aa38d5accdfbe452978413aed6",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.38.ffn_gate_inp.weight",
+      "sha256": "099b4aa0473d04cd174fb49dd9468c8ab25de30359744218e07ba26683e3fcd8",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.39.ffn_gate_inp.weight",
+      "sha256": "669cd0fcd23816a5c3a320d66a0b6c99bea9cf42c931a767f9494896e2667988",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.4.ffn_gate_inp.weight",
+      "sha256": "331eeeba577740098f94e52f24dc6bc2cc7c4734fd92f1b0e30c809cf053e1c8",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.40.ffn_gate_inp.weight",
+      "sha256": "27ffc817f1f21b008cd645f002e3cc7dbdb4caebae860d961e18b59b992689f4",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.41.ffn_gate_inp.weight",
+      "sha256": "bda88a83b855575560c72e5adc1b31d84e5ca871065f2d1f5afc60c80bf1aa98",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.42.ffn_gate_inp.weight",
+      "sha256": "002db7ebffa5f7ff92efafa7c1adeb17072d2c2f7198f8d353c0a3844ab355f6",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.5.ffn_gate_inp.weight",
+      "sha256": "56764cfe7b3c246e0ce5965115ed6b4bdf693accba18777afd23046631e5398b",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.6.ffn_gate_inp.weight",
+      "sha256": "94196a16ff726942485cfb6a2d8f55b65beff373fddb639414137122a6bb9592",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.7.ffn_gate_inp.weight",
+      "sha256": "366819b6e8572c407ce7f1d701bd0fa03bd705c096460516524133b59b03759c",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.8.ffn_gate_inp.weight",
+      "sha256": "d566dc851a5ae8f2f124affcec26412c48f29c0c112da9af95da157252ff5fe6",
+      "status": "PASS"
+    },
+    {
+      "bytes": 786432,
+      "category": "routing",
+      "name": "blk.9.ffn_gate_inp.weight",
+      "sha256": "7af8d316c4bcbbf195463b2469c0a5c768fb05ba0ad105e466ccae7cccac90e1",
+      "status": "PASS"
+    }
+  ],
+  "failures": [
+    "routed_expert payload drift: blk.12.ffn_up_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.13.ffn_down_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.13.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.15.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.17.ffn_down_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.17.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.18.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.23.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.27.ffn_down_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.30.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.33.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.34.ffn_down_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.36.ffn_up_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.37.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.38.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.38.ffn_up_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.42.ffn_up_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.6.ffn_down_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.8.ffn_gate_exps.weight: payload mismatch",
+    "routed_expert payload drift: blk.9.ffn_down_exps.weight: payload mismatch"
+  ],
+  "golden": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4.gguf",
+    "size_bytes": 64340873568
+  },
+  "metadata": {
+    "deepseek4.block_count": 43,
+    "deepseek4.expert_count": 96,
+    "deepseek4.expert_used_count": 6,
+    "deepseek4.hash_layer_count": 3,
+    "general.architecture": "deepseek4",
+    "general.file_type": 30,
+    "general.name": "DeepSeek V4 Flash 0731 HERETIC v2 REAP96 noMTP",
+    "tensor_count": 1328
+  },
+  "routed_expert_tensors": 129,
+  "routing_tensors": 46,
+  "schema": "heretic-reap96-iq4xs-acceptance-v1",
+  "status": "FAIL",
+  "tensor_type_counts": {
+    "0": 492,
+    "13": 5,
+    "14": 1,
+    "23": 655,
+    "26": 3,
+    "30": 43,
+    "39": 129
+  }
+}

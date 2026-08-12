@@ -1,0 +1,49 @@
+{
+  "schema": "heretic-reap96-iq4xs-runtime-acceptance-v1",
+  "status": "PASS_WITH_K96_BASELINE_LIMITATION",
+  "artifact": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4exp-IQ4XSbb.gguf",
+    "size_bytes": 59256121472,
+    "odirect_sha256": "845a0b91d17fddd6990068b995c8af031945af55f5bff94acc5a1c08389c63c3",
+    "read_only": true
+  },
+  "runtime": {
+    "llama_cpp_commit": "1e17097be2c19c7ae4ff4f635fef25f24f25dbd2",
+    "context": 65536,
+    "load_mode": "dio",
+    "split_mode": "layer",
+    "fit_target_mib": [3072, 3072],
+    "kv": "F16 in system RAM",
+    "bind": "127.0.0.1:8000",
+    "health": "PASS",
+    "openai_api": "PASS",
+    "gpu_observed_mib": [28537, 28973],
+    "server_memory_peak_bytes": 3279060992,
+    "server_swap_peak_bytes": 0
+  },
+  "behavior": {
+    "raw_france": {
+      "status": "MATCHES_K96_GOLDEN_LIMITATION",
+      "prompt": "The capital of France is",
+      "completion": "', 'France', 'France', '",
+      "first_token_text": "',"
+    },
+    "chinese": "PASS",
+    "json": "PASS",
+    "python": "PASS"
+  },
+  "long_prefill": {
+    "status": "PASS",
+    "prompt_tokens": 32767,
+    "decode_tokens": 8,
+    "truncated": false,
+    "prompt_tokens_per_second": 1000.4133303526814,
+    "decode_tokens_per_second": 28.464888559961288
+  },
+  "host_gate": {
+    "kernel": "7.0.0-28-generic",
+    "model_fault_signatures": 0,
+    "nvidia_xid": 0
+  },
+  "decision": "Independent Profile A release accepted; K132 remains the sole deployment artifact"
+}

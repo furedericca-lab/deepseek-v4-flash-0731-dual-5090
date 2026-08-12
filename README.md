@@ -1,9 +1,18 @@
-# DeepSeek-V4-Flash-0731 HERETIC REAP132 Deployment and REAP96 Consensus
+# DeepSeek-V4-Flash-0731 HERETIC REAP132 Deployment and K96 Releases
 
 This repository contains the completed deterministic no-MTP REAP132 delivery
 and a separate K96 consensus-planning line. REAP132 remains the deployed
 canonical MXFP4 GGUF while K96 is derived only from its survivor universe and
 independently published mask evidence.
+
+The active release work is the independent K96 Profile A IQ4_XS-backbone scope
+under `.scopes/heretic-v2-reap96-iq4xs-backbone/`. It consumes the read-only
+K96 MXFP4 Golden and preserves all 129 routed-expert MXFP4 payloads
+byte-for-byte. Only llama.cpp's default mixed Profile A is allowed; this work
+does not use `--pure`, imatrix, or a second quantization profile. Shared Expert
+and Core Backbone weights are both non-routed inputs to the default IQ4_XS
+mixed policy; router, `tid2eid`, norms, and other structural tensors remain
+unchanged.
 
 ## Current Status
 
@@ -13,6 +22,7 @@ independently published mask evidence.
 | 2. Native HF smoke | Complete with limitation | 1- and 16-token prefills passed; 32-token CSA exposed a reproducible Torch/cuBLAS zero-stride runtime fault on Blackwell |
 | 3. GGUF and runtime | Complete | Canonical MXFP4 GGUF passed provenance, dual-5090 64K load, 32K prefill, API, and behavior probes |
 | 4. REAP96 consensus | Complete; candidate rejected | Native/GGUF provenance and runtime stability passed, but semantic acceptance failed; K132 remains deployed |
+| 5. K96 IQ4_XS non-routed weights | Complete | Profile A passed provenance and runtime gates; K96 MXFP4 Golden remains immutable and K132 remains deployed |
 
 Accepted checkpoint:
 
@@ -60,6 +70,23 @@ an archived diagnostic candidate, not a deployment artifact. Dual-5090 64K and
 of ` Paris` for the raw France prompt. This identifies K96 quality loss rather
 than conversion failure. The frozen plan will not be rescored; K132 remains the
 sole deployed model.
+
+The independent K96 Profile A release is:
+
+```text
+/data/linux-fast/models/DeepSeek-V4-Flash-0731/
+DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4exp-IQ4XSbb.gguf
+```
+
+It is read-only, `59,256,121,472` bytes, and has O_DIRECT SHA256
+`845a0b91d17fddd6990068b995c8af031945af55f5bff94acc5a1c08389c63c3`.
+All 129 routed-expert tensors remain byte-identical MXFP4. Shared Expert and
+Core Backbone weights use llama.cpp's default IQ4_XS mixed policy: 655 tensors
+are IQ4_XS, five early shared-expert down tensors are Q5_K, and
+`output.weight` is Q6_K. Dual-5090 64K/API, Chinese, JSON, Python, and
+32,767-token prefill passed. Its France-prompt behavior still matches the known
+K96 quality limitation, so it is an independent release rather than the K132
+deployment replacement.
 
 ## Checkout
 

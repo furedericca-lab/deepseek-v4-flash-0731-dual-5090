@@ -2,13 +2,15 @@
 
 ## Source of truth
 
-1. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
-2. Archived K96 consensus record under
+1. Current K96 Profile A IQ4_XS release scope under
+   `.scopes/heretic-v2-reap96-iq4xs-backbone/`
+2. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
+3. Archived K96 consensus record under
    `.scopes/archive/heretic-v2-reap96-consensus/`
-3. Archived REAP132 delivery record under
+4. Archived REAP132 delivery record under
    `.scopes/archive/heretic-v2-reap132-build-validation/`
-4. Durable project knowledge under `.wiki/`
-5. `README.md` for operator entry points
+5. Durable project knowledge under `.wiki/`
+6. `README.md` for operator entry points
 
 ## Runtime environment
 
@@ -34,9 +36,10 @@
 
 ## Mission
 
-Keep the accepted REAP132 MXFP4 GGUF deployable. The completed REAP96 consensus
-experiment is archived after runtime semantic rejection and does not replace the
-canonical K132 artifact.
+Keep the accepted REAP132 MXFP4 GGUF deployable while producing one independent
+K96 Profile A IQ4_XS-backbone release candidate from the immutable K96 MXFP4
+Golden. The archived K96 consensus result does not replace the canonical K132
+artifact, and this scope does not modify the K96 Golden.
 
 The deployment baseline uses llama.cpp on dual RTX 5090 with:
 
@@ -61,6 +64,9 @@ The deployment baseline uses llama.cpp on dual RTX 5090 with:
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731/`
 - Final artifact destination:
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf`.
+- The active K96 IQ4_XS scope has one immutable input and one output. It uses
+  Profile A default mixed precision only; `--pure`, Profile B, imatrix, and
+  quantization-profile A/B are forbidden.
 - Do not download, test, or publish puwaer, IQ3, Q2, or other alternative
   quantizations in the REAP132 deployment scope. MXFP4 remains the only
   deployment format. The K96 consensus scope may inspect only the specific
