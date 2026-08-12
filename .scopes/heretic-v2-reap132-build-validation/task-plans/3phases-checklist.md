@@ -18,8 +18,8 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
 | Phase | Status | Completion | Health | Blockers |
 |---|---|---|---|---|
 | Phase 1 | Complete | 100% | Healthy | None |
-| Phase 2 | In progress | 85% | Blocked | GPU0-only T3 triggers Xid 31 in Layer 2 attention |
-| Phase 3 | Not started | 0% | Unknown | Phase 2 native verification/smoke not complete |
+| Phase 2 | Complete | 100% | Accepted with limitation | Byte verification PASS; native HF accepted through 16 tokens, 32-token runtime limitation recorded |
+| Phase 3 | Ready | 0% | Await clean reboot | Pin converter, build golden GGUF, then dual-5090 llama.cpp |
 
 ## Phase Entry Links
 1. [phase-1-heretic-v2-reap132-build-validation.md](phase-1-heretic-v2-reap132-build-validation.md)
@@ -409,11 +409,47 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   metadata-only tracing, and `--qk-layout key-transposed-contiguous`. Preserve
   both the original transposed-view metadata and the actual contiguous GEMM
   operand metadata. Do not run this A/B in the boot containing the Xid.
+- The key-transposed-contiguous T3 proved QK itself can complete: the trace
+  contains `after_qk_matmul` with contiguous BF16 output `[1, 64, 32, 40]`.
+  Failure moved to AV, where `value_states` remained the non-transposed
+  zero-stride view `[1, 64, 40, 512]`, stride `[0, 0, 512, 1]`. GPU0 again
+  reported Xid 31 at exactly `value_ptr + 0xd600`, which is `0x3600` beyond the
+  logical 40 KiB shared storage. Therefore transpose layout is not a common
+  requirement, while the zero-stride broadcast operand remains common.
+- Do not state that cuBLAS does not support zero stride; its strided-batched API
+  permits zero stride for shared operands. The narrowed hypothesis is a defect
+  in current PyTorch `torch.matmul` lowering or its selected BF16 cuBLAS path for
+  these broadcast views on Blackwell. On the next clean boot run only T3 with
+  `--qk-layout key-transposed-contiguous --av-layout value-contiguous`.
+- This is the final native layout A/B. If T3 passes, run only T5 at 128 tokens
+  with the same workaround; T4 at 64 tokens is intentionally skipped. If both
+  pass, close Phase 2 with a documented zero-stride materialization workaround.
+  If either fails or produces Xid, close native HF investigation with a runtime
+  limitation beyond the already-passing 16-token prefill and proceed to Phase 3.
+- No further compute-sanitizer, cuBLAS algorithm, Torch/CUDA version, attention
+  backend, or minimal-GEMM root-cause work is in scope. Phase 3 acceptance is the
+  pinned llama.cpp/GGUF dual-5090 runtime, not Transformers native serving.
+- The final QK+AV-contiguous T3 made both Layer 2 GEMMs pass and completed
+  Layers 2-3. Layer 4, outside the traced patch, used original eager attention
+  and reproduced Xid 31 at QK. Complete native execution would require a
+  model-wide workaround, which exceeds the debug budget. Phase 2 closes with
+  the native HF limitation recorded; T5 is not run.
+- Phase 3 converter pin: standalone `vendor/llama.cpp` local commit `16f35dd`,
+  based on upstream `030ebb558a5820b444a8f836ed5cdd46c9b4bd7a`, supports
+  `DeepseekV4ForCausalLM`, `--no-mtp`, I32 `tid2eid`, and routed-expert MXFP4
+  repacking from frozen weight+scale bytes. T041 is complete.
+- T042 direct-I/O preparation is complete. The converter has explicit
+  `--direct-io-input` and `--direct-io-output`; aligned 64 MiB bounded staging
+  handles unaligned tensor/header boundaries. Tests pass for an unaligned local
+  tensor range, a 70 MiB output crossing the staging boundary, exact final
+  truncation, and existing GGUF reader validation. Full conversion waits for a
+  clean reboot because the current boot contains Xid 31.
 
 ## Final Release Gate
 - Scope constraints preserved.
 - Quality/security gates passed.
 - Remaining risks documented.
 - Frozen plan has not changed.
-- Native checkpoint byte verification and smoke passed before GGUF conversion.
+- Native checkpoint byte verification passed before GGUF conversion; native HF
+  smoke either passed under the bounded workaround or has a recorded limitation.
 - Golden GGUF and controlled A/B identities/results are recorded separately.

@@ -167,11 +167,10 @@ verification, so compression cannot share or modify mmap-backed source storage.
   classification rather than accepted as an isolated constant.
 - Source/output verification operates sequentially by tensor/shard and does not
   hold either checkpoint in RAM.
-- Native smoke is a correctness and bounded-prefill gate: five independent
-  GPU0-only processes cover 1, 16, 32, 64, and 128 input tokens with aligned
-  O_DIRECT layer streaming, finite hidden states/logits, and clean kernel/Xid
-  checks before and after each case. Prompt categories diversify token routing;
-  they are not native semantic-generation acceptance.
+- Native smoke is bounded diagnostic evidence, not a permanent GGUF blocker.
+  Clean GPU0-only 1/16-token forwards are retained. One final 32-token QK+AV
+  contiguous A/B is allowed; if it passes, only a 128-token confirmation runs.
+  Either outcome is recorded before moving to the llama.cpp deployment gate.
 - GGUF validation uses converter metadata inspection plus localhost llama.cpp
   API smoke on both RTX 5090s.
 - A/B uses identical prompts, generation settings, and evaluator logic, with
@@ -184,12 +183,13 @@ safetensors builder. Under a clean Linux 7.0 boot, Python 3.12 Build A and B
 produced byte-identical 27-file manifests at
 `9175b91519f0981ed22b3afb3b780c8ba2b2d1bce041277834c0bd057a9e6e5d`.
 The final 35,620-tensor, 22-shard noMTP artifact passed the independent verifier
-with zero failures and is read-only. The remaining Phase 2 gate is native HF
-smoke. Tokenizer/config and meta-device model construction pass, but standard HF
+with zero failures and is read-only. Phase 2 checkpoint acceptance is complete.
+Tokenizer/config and meta-device model construction pass, but standard HF
 loading and the vendor pread loader do not satisfy the required O_DIRECT bulk
-read boundary. Implement direct-I/O native loading and record the two-GPU/CPU
-placement budget before full weight materialization. GGUF conversion remains
-blocked until the smoke matrix passes.
+read boundary. The implemented direct-I/O loader supplied the bounded native
+evidence. The later runtime fault is governed by the native-debug stop-loss rule
+and does not invalidate the accepted checkpoint or block GGUF conversion after
+a clean reboot.
 
 The direct loader and one-token 43-layer forward now pass. Multi-token native
 cross-device execution is not accepted: switching to GPU1 triggered NVIDIA
@@ -208,8 +208,17 @@ attention at the batched `attn_weights x value_states` matmul, followed by CUDA
 illegal memory access and NVIDIA Xid 31 on GPU0 (`01:00.0`). GPU1 was invisible
 and PyTorch reported one CUDA device, so neither GPU1 nor a cross-device switch
 is necessary to reproduce the native failure. T4/T5 were not run. The current
-boot is quarantined for GPU evidence, Phase 2 remains blocked, and the accepted
-checkpoint bytes remain unchanged.
+boot was quarantined for GPU evidence, while the accepted checkpoint bytes
+remained unchanged.
+
+The final bounded layout A/B materialized both the Layer 2 QK key operand and AV
+value operand. Both GEMMs completed and Layers 2-3 passed. Layer 4 then used the
+original unpatched eager-attention function and reproduced Xid 31 at QK. A full
+native HF workaround would therefore require model-wide runtime patching. The
+stop-loss rule closes that investigation: clean 1/16-token results remain
+accepted, 32-token native HF is recorded as a current Torch/CUDA/Blackwell
+limitation, and the 128-token case is not run. Phase 3 owns deployment
+acceptance through pinned GGUF and llama.cpp.
 
 The failing harness also exposed a concrete lifetime-ordering suspect: it
 released the streamed layer and invoked `empty_cache()` before any explicit

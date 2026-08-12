@@ -40,7 +40,7 @@ The immutable build input is `squanchyzx-puwaer-reap132-mask.json`. Its full fil
 
 Phase 1 freezes the build-code commit, verifies the user-started fixed-revision download, creates source provenance/content manifests, captures clean host baselines, and runs deterministic `--plan --streaming` pruning without calibration or saliency. The native output remains quarantined after writing.
 
-Phase 2 implements direct-safetensors verification. For every layer, output expert `new_id` must equal source expert `kept_experts[new_id]` for `w1/w2/w3.weight` and `.scale`; router rows and three `tid2eid` tables must match; shared experts and layers 10-42 HERETIC `attn.wo_b` must remain source-identical; all MTP/DSpark tensors must be absent. The required report is `post-prune-verification.json`, followed by independent GPU0-only native prefill forwards at 1, 16, 32, 64, and 128 tokens. This is a runtime-correctness gate, not semantic generation scoring.
+Phase 2 implements direct-safetensors verification. For every layer, output expert `new_id` must equal source expert `kept_experts[new_id]` for `w1/w2/w3.weight` and `.scale`; router rows and three `tid2eid` tables must match; shared experts and layers 10-42 HERETIC `attn.wo_b` must remain source-identical; all MTP/DSpark tensors must be absent. The required report is `post-prune-verification.json`. Native GPU0-only prefill is bounded diagnostic evidence: 1/16 tokens already pass, one final 32-token layout A/B is allowed, and a PASS receives one 128-token confirmation. This is not semantic generation scoring and a documented native runtime limitation does not invalidate the checkpoint.
 
 The verifier implementation is `scripts/verify_reap132_checkpoint.py`. It parses
 safetensors headers directly, honors index-selected overlay shards, compares
@@ -187,3 +187,55 @@ The next clean-boot A/B changes only the transposed key operand using
 `--qk-layout key-transposed-contiguous`, while tracing both the original view
 and actual GEMM operand. It keeps launch blocking and value reductions off. No
 further GPU work is admissible in the boot containing this Xid.
+
+The key-transposed-contiguous A/B made QK complete successfully and flush an
+`after_qk_matmul` record. Execution then failed at AV. Its value operand was not
+transposed, but still broadcast one 40 KiB storage region across 64 heads with
+stride `[0, 0, 512, 1]`. The Xid 31 virtual-read address was again exactly
+`0xd600` bytes after that storage pointer, or `0x3600` bytes past its logical
+end. This removes transpose matrix layout as the common trigger and preserves
+zero-stride broadcast lowering as the strongest current hypothesis.
+
+This is not evidence that cuBLAS APIs generally reject zero stride; cuBLAS
+strided-batched GEMM explicitly supports shared operands through zero batch
+stride. The suspected defect is the current PyTorch `torch.matmul` lowering or
+selected BF16 cuBLAS path for these broadcast views on Blackwell. The next
+clean-boot A/B keeps the now-passing QK key contiguous and changes only AV via
+`--av-layout value-contiguous`. The current Xid boot remains quarantined.
+
+This QK+AV-contiguous T3 is the final native layout A/B. A clean PASS permits
+one 128-token confirmation with the same workaround and skips the 64-token
+case. If both pass, Phase 2 records a native zero-stride materialization
+workaround. If either fails, Phase 2 records that the current Torch/CUDA/
+Blackwell native HF path is not accepted beyond the already-passing 16-token
+prefill. In both branches the deterministic checkpoint remains accepted and
+Phase 3 proceeds to the pinned GGUF/llama.cpp dual-5090 runtime. Further
+compute-sanitizer, GEMM algorithm, backend, Torch/CUDA version, or upstream
+root-cause investigation is outside this project scope.
+
+The final A/B materialized both Layer 2 operands. Its trace contains successful
+`after_qk_matmul` and `after_av_matmul` events, and the forward completed Layers
+2 and 3. Layer 4 was outside the traced patch, returned to original eager
+attention, and reproduced Xid 31 at QK. Local materialization therefore avoids
+the targeted operations, but a full native run would require a model-wide
+runtime workaround. That exceeds the stop-loss budget. Phase 2 is complete with
+a documented native HF limitation beyond the clean 16-token prefill; the
+128-token case is skipped. The deterministic checkpoint remains accepted for
+Phase 3 GGUF/llama.cpp conversion after a clean reboot.
+
+Phase 3 pins standalone `vendor/llama.cpp` local commit `16f35dd`, based on
+upstream `030ebb558a5820b444a8f836ed5cdd46c9b4bd7a`. The registered
+`DeepseekV4ForCausalLM` converter supports `--no-mtp`, writes `tid2eid` as I32,
+and deterministically repacks every routed expert's packed weight plus E8M0
+scale into GGUF MXFP4 blocks, marking the result `MOSTLY_MXFP4_MOE`. This is the
+intended golden conversion path rather than a floating-point requantization.
+
+The pinned converter's default local safetensors reader uses `np.memmap`, so it
+must not be used for the full checkpoint on this host. The local checkout now
+adds explicit `--direct-io-input` and `--direct-io-output` modes. Input performs
+aligned bounded 64 MiB reads for arbitrary tensor offsets. Output accepts the
+GGUF writer's small and unaligned logical writes, stages them into aligned
+64 MiB O_DIRECT blocks, and truncates the final padded block to the exact GGUF
+length. Tests pass for an unaligned tensor range, a 70 MiB cross-boundary output
+stream, exact content/length, and existing GGUF reader validation. Full
+conversion starts only after a clean reboot because the current boot has Xid 31.

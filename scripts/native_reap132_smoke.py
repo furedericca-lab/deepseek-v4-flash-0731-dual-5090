@@ -74,6 +74,7 @@ def install_attention_trace(
     *,
     trace_values: bool = False,
     qk_layout: str = "original",
+    av_layout: str = "original",
 ) -> None:
     original = deepseek_v4.eager_attention_forward
 
@@ -107,6 +108,11 @@ def install_attention_trace(
             if qk_layout == "key-transposed-contiguous"
             else key_transposed
         )
+        av_value_operand = (
+            value_states.contiguous()
+            if av_layout == "value-contiguous"
+            else value_states
+        )
         torch.cuda.synchronize(query.device)
         append_trace(
             trace_path,
@@ -115,6 +121,7 @@ def install_attention_trace(
                 "layer": layer_index,
                 "trace_values": trace_values,
                 "qk_layout": qk_layout,
+                "av_layout": av_layout,
                 "query": tensor_metadata(query, trace_values=trace_values),
                 "key_states_original": tensor_metadata(key_states, trace_values=trace_values),
                 "key_states_transposed": tensor_metadata(
@@ -124,6 +131,9 @@ def install_attention_trace(
                     qk_key_operand, trace_values=trace_values
                 ),
                 "value_states": tensor_metadata(value_states, trace_values=trace_values),
+                "av_value_operand": tensor_metadata(
+                    av_value_operand, trace_values=trace_values
+                ),
                 "attention_mask": (
                     tensor_metadata(
                         attention_mask,
@@ -166,12 +176,16 @@ def install_attention_trace(
                 "event": "before_av_matmul",
                 "layer": layer_index,
                 "trace_values": trace_values,
+                "av_layout": av_layout,
                 "attn_weights": tensor_metadata(attn_weights, trace_values=trace_values),
                 "value_states": tensor_metadata(value_states, trace_values=trace_values),
+                "av_value_operand": tensor_metadata(
+                    av_value_operand, trace_values=trace_values
+                ),
             },
         )
         torch.cuda.synchronize(query.device)
-        attn_output = torch.matmul(attn_weights, value_states)
+        attn_output = torch.matmul(attn_weights, av_value_operand)
         torch.cuda.synchronize(query.device)
         append_trace(
             trace_path,
@@ -207,6 +221,12 @@ def main() -> int:
         choices=("original", "key-transposed-contiguous"),
         default="original",
         help="controlled Layer 2 QK key-layout diagnostic",
+    )
+    parser.add_argument(
+        "--av-layout",
+        choices=("original", "value-contiguous"),
+        default="original",
+        help="controlled Layer 2 AV value-layout diagnostic",
     )
     args = parser.parse_args()
 
@@ -251,12 +271,15 @@ def main() -> int:
         raise ValueError("--trace-values requires attention tracing")
     if args.qk_layout != "original" and args.trace_attention_layer is None:
         raise ValueError("non-original --qk-layout requires attention tracing")
+    if args.av_layout != "original" and args.trace_attention_layer is None:
+        raise ValueError("non-original --av-layout requires attention tracing")
     if args.trace_attention_layer is not None:
         install_attention_trace(
             args.trace_attention_layer,
             args.attention_trace.resolve(),
             trace_values=args.trace_values,
             qk_layout=args.qk_layout,
+            av_layout=args.av_layout,
         )
 
     skeleton = build_skeleton(str(checkpoint), device="cpu")
@@ -340,6 +363,7 @@ def main() -> int:
         "trace_attention_layer": args.trace_attention_layer,
         "trace_values": args.trace_values,
         "qk_layout": args.qk_layout,
+        "av_layout": args.av_layout,
         "attention_trace": str(args.attention_trace.resolve()) if args.attention_trace else None,
         "torch_cuda_device_count": torch.cuda.device_count(),
         "device": str(device),

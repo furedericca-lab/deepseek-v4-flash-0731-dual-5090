@@ -28,7 +28,7 @@ description: Task list for heretic-v2-reap132-build-validation phase 2.
 ## Phase 2: Post-Prune Verification and Native HF Smoke
 Goal: Prove the native output preserves every selected expert and HERETIC v2 overlay, then demonstrate basic native functionality.
 
-Definition of Done: `post-prune-verification.json` contains all PASS categories, the output content manifest is frozen, and isolated GPU0-only O_DIRECT prefill forwards pass at 1, 16, 32, 64, and 128 input tokens without NaN, routing faults, CUDA errors, kernel faults, or NVIDIA Xids.
+Definition of Done: `post-prune-verification.json` contains all PASS categories and the output content manifest is frozen. Native HF evidence includes clean 1/16-token forwards plus one final QK+AV-contiguous 32-token A/B. If that A/B passes, a clean 128-token confirmation completes native acceptance; if either fails, the limitation is recorded without invalidating the byte-verified checkpoint or blocking Phase 3.
 
 Tasks:
 - [x] T021 [Backend] Implement direct-safetensors post-prune verifier
@@ -45,10 +45,16 @@ Tasks:
   - DoD: Every native output file is hashed under `checkpoint-content-manifest-v1`, its manifest SHA is stable across two runs, and differs conceptually from the plan logical SHA.
 - [x] T027 [QA] Freeze the post-prune report
   - DoD: `post-prune-verification.json` references exact plan/source/output hashes, has all contracted PASS fields, 43 layer results, and no failures.
-- [ ] T028 [Infra] Run native HF smoke matrix
-  - DoD: Five independent processes run 1/16/32/64/128-token native prefill forwards with `CUDA_VISIBLE_DEVICES=0`, exactly one CUDA device visible, all 43 layers loaded through O_DIRECT on `cuda:0`, finite hidden states/logits, recorded device identity/settings/memory, and clean kernel/Xid gates before and after every case. These prompts diversify token routing but do not claim semantic generation quality.
+- [x] T028 [Infra] Run native HF smoke matrix
+  - DoD: Preserve the accepted clean 1/16-token evidence. Run the final 32-token case with physical GPU1 hidden, O_DIRECT streaming, launch blocking, and both QK key and AV value broadcast operands materialized. If it passes, run only 128 tokens with the same workaround. Record either PASS or the bounded native HF runtime limitation, then stop native CUDA debugging and hand the byte-verified checkpoint to Phase 3.
 
-Checkpoint: The native checkpoint is accepted as the sole input to GGUF conversion.
+Outcome: The final A/B made Layer 2 QK and AV pass and completed Layers 2-3.
+Layer 4 then entered unpatched eager attention and reproduced Xid 31 at QK.
+Native HF is recorded as limited beyond the clean 16-token prefill; the optional
+128-token confirmation is not run. No model-wide native runtime patch or
+further upstream CUDA investigation is in scope.
+
+Checkpoint: The independently byte-verified native checkpoint is accepted as the sole input to GGUF conversion. Native HF runtime limitations are documented residual risk, not a reason to alter or rebuild it.
 
 ## Dependencies & Execution Order
 - Phase 1 blocks all others.

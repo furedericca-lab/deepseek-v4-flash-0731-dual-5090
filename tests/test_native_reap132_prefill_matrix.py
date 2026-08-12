@@ -57,3 +57,4 @@ def test_runner_help_exposes_targeted_diagnostics():
     assert "--trace-attention-layer" in result.stdout
     assert "--trace-values" in result.stdout
     assert "--qk-layout" in result.stdout
+    assert "--av-layout" in result.stdout

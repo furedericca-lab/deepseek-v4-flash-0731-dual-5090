@@ -14,7 +14,8 @@ description: Task list for heretic-v2-reap132-build-validation phase 3.
   - `.scopes/heretic-v2-reap132-build-validation/heretic-v2-reap132-build-validation-contracts.md`
 
 ## Canonical architecture / Key constraints
-- Convert only the Phase 2 accepted native checkpoint.
+- Convert only the Phase 2 byte-verified native checkpoint; a documented native
+  HF runtime limitation does not block this deployment-runtime phase.
 - Pin and record the llama.cpp converter commit and exact command.
 - The first GGUF is the MXFP4-preserving golden baseline; no IQ3/Q2 yet.
 - Runtime binds to localhost and uses both RTX 5090s with existing OOM order.
@@ -32,10 +33,26 @@ Goal: Convert the verified native checkpoint without losing the intended expert 
 Definition of Done: A fully hashed golden GGUF passes metadata and dual-5090 runtime gates, and a reproducible puwaer-versus-HERETIC A/B report is complete.
 
 Tasks:
-- [ ] T041 [Config] Pin and inspect the llama.cpp converter
+- [x] T041 [Config] Pin and inspect the llama.cpp converter
   - DoD: Converter commit, DeepSeek-V4 support, accepted flags, and routed-expert output type are recorded before conversion.
 - [ ] T042 [Infra] Convert the accepted native checkpoint
   - DoD: Exact command converts the Phase 2 artifact to a GGUF under `/data/linux-fast/models/DeepSeek-V4-Flash-0731/` without reading any unverified checkpoint.
+
+T041 outcome: use standalone `vendor/llama.cpp` local commit `16f35dd`, based on
+upstream `030ebb558a5820b444a8f836ed5cdd46c9b4bd7a`. Its converter registers
+`DeepseekV4ForCausalLM`, accepts `--no-mtp`, emits hash routing as I32, combines
+each routed expert's frozen weight+E8M0 scale into GGUF `MXFP4`, and marks the
+file `MOSTLY_MXFP4_MOE`. This is a deterministic repack into the GGML block
+layout, not a floating-point requantization.
+
+T042 preparation: the pinned converter now exposes `--direct-io-input` and
+`--direct-io-output`. Input uses aligned 64 MiB bounded O_DIRECT reads for
+arbitrary tensor offsets. Output stages arbitrary GGUF writes into aligned
+64 MiB O_DIRECT writes, then truncates the final padded block to the exact
+logical length. Small fixtures pass for non-aligned tensor ranges, a 70 MiB
+cross-boundary output stream, and existing GGUF reader validation. The full
+conversion remains pending because the current boot contains Xid 31; start it
+only after reboot and a clean boot gate.
 - [ ] T043 [QA] Verify and freeze the golden GGUF
   - DoD: Full GGUF SHA256, size, metadata, expert count/type, architecture, tokenizer, and source native manifest SHA are recorded; routed experts satisfy the MXFP4 baseline contract.
 - [ ] T044 [Infra] Run dual-5090 llama.cpp smoke
@@ -51,5 +68,6 @@ Checkpoint: Golden MXFP4 GGUF and controlled A/B are complete; further quantizat
 
 ## Dependencies & Execution Order
 - Phase 1 blocks all others.
-- Phase 3 depends on Phases 1-2.
+- Phase 3 depends on the completed Phase 1 artifact and Phase 2 byte-verification
+  acceptance. It does not depend on fixing the upstream native HF CUDA runtime.
 - Tasks marked [P] within this phase may run concurrently only when they do not touch the same files.

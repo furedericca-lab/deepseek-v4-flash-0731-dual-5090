@@ -152,6 +152,12 @@ def main() -> int:
         default="original",
         help="controlled QK key-layout diagnostic for the traced layer",
     )
+    parser.add_argument(
+        "--av-layout",
+        choices=("original", "value-contiguous"),
+        default="original",
+        help="controlled AV value-layout diagnostic for the traced layer",
+    )
     args = parser.parse_args()
 
     checkpoint = args.checkpoint.resolve()
@@ -173,6 +179,7 @@ def main() -> int:
         "trace_attention_layer": args.trace_attention_layer,
         "trace_values": args.trace_values,
         "qk_layout": args.qk_layout,
+        "av_layout": args.av_layout,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "cases": [],
         "status": "RUNNING",
@@ -221,6 +228,8 @@ def main() -> int:
             command.append("--trace-values")
         if args.qk_layout != "original":
             command.extend(["--qk-layout", args.qk_layout])
+        if args.av_layout != "original":
+            command.extend(["--av-layout", args.av_layout])
         print(f"running {case.name}: {case.tokens} tokens", flush=True)
         with log.open("w", encoding="utf-8") as stream:
             result = subprocess.run(

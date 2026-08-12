@@ -187,6 +187,37 @@ on dual RTX 5090 with:
   PyTorch/cuBLAS zero-stride broadcast-view defect, not yet proof. The next
   clean-boot A/B may change only the transposed key operand to contiguous via
   `--qk-layout key-transposed-contiguous`; do not run it in the Xid-tainted boot.
+- The key-transposed-contiguous A/B made QK PASS and produced an `after_qk_matmul`
+  trace. The failure then moved to AV, whose value operand still used zero
+  batch/head strides `[0, 0, 512, 1]` without a transpose. Its Xid fault was
+  again exactly `0xd600` bytes after the shared storage pointer, `0x3600` bytes
+  beyond the logical 40 KiB region. This rejects transpose layout as the common
+  trigger and strongly implicates the current PyTorch matmul lowering/selected
+  cuBLAS path for BF16 zero-stride broadcast operands; cuBLAS API support for
+  zero stride itself is not in question. The next clean-boot A/B must keep QK
+  key contiguous and additionally use `--av-layout value-contiguous`.
+- Native CUDA debugging ends after that final QK+AV-contiguous T3 A/B. If T3
+  passes, run only the 128-token case with the same workaround; skip 64 tokens.
+  If both pass, record Phase 2 native PASS with the zero-stride materialization
+  workaround. If either fails or produces Xid, record the current native HF
+  stack as limited beyond the already-passing 16-token prefill and proceed to
+  Phase 3 with the independently byte-verified checkpoint. Do not continue with
+  compute-sanitizer, alternate GEMM algorithms, Torch/CUDA/backend A/Bs, or
+  further upstream root-cause debugging inside this project.
+- The final QK+AV-contiguous T3 made both Layer 2 GEMMs pass and completed
+  Layers 2-3. Layer 4 then returned to unpatched eager attention and reproduced
+  Xid 31 at QK. A full native run would require model-wide runtime patching,
+  which exceeds the debug budget. Do not run T5. Phase 2 is complete with native
+  HF limited beyond the prior clean 16-token prefill; proceed to Phase 3 with
+  the byte-verified checkpoint after a clean reboot.
+- Phase 3 pins the standalone `vendor/llama.cpp` checkout at
+  local commit `16f35dd` based on upstream
+  `030ebb558a5820b444a8f836ed5cdd46c9b4bd7a`. Its DeepSeek V4 converter repacks
+  routed expert weight+scale into GGUF MXFP4 and supports `--no-mtp`. However,
+  its default local safetensors materializer uses `np.memmap`; never run it over
+  the full checkpoint on this host. The local converter now has fixture-tested
+  `--direct-io-input` and `--direct-io-output` paths with aligned 64 MiB bounded
+  staging. Full conversion must use both flags and start only on a clean boot.
 - Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
   5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
   backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose
