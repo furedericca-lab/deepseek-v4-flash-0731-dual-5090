@@ -1,0 +1,67 @@
+{
+  "schema": "heretic-reap96-gguf-acceptance-v1",
+  "status": "PASS",
+  "artifact": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4.gguf",
+    "size_bytes": 64340873568,
+    "odirect_sha256": "697309d18ada765bdce2a72b52cb1497ed5e374cd5c77edfa7fc0085aa68ff31",
+    "read_only": true
+  },
+  "source": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP",
+    "manifest_sha256": "62e40f7cecc2d1018faa8c386b39268f9d13cb3833c9f82f365e99bfa5f574ed"
+  },
+  "plan": {
+    "path": ".scopes/heretic-v2-reap96-consensus/evidence/heretic-v2-reap96-consensus-plan.json",
+    "file_sha256": "578adbbd4ac13bec75f5ab726e6406f9bec50ec8154f6d773d9c5bd83105be11",
+    "logical_sha256": "e82c3649af2607e798b88e39ac0dd9a4b71dc3b31b5f4f17b60fc12aa74c01cf"
+  },
+  "conversion": {
+    "llama_cpp_commit": "1e17097be2c19c7ae4ff4f635fef25f24f25dbd2",
+    "direct_io_input": true,
+    "direct_io_output": true,
+    "no_mtp": true,
+    "systemd_unit": "reap96-gguf-convert.service",
+    "exit_status": 0,
+    "swap_peak_bytes": 0
+  },
+  "metadata": {
+    "architecture": "deepseek4",
+    "blocks": 43,
+    "routed_experts_per_layer": 96,
+    "active_experts_per_token": 6,
+    "tensors": 1328,
+    "file_type": 38,
+    "file_type_name": "MOSTLY_MXFP4_MOE",
+    "hash_routing_tensors": 3,
+    "routed_expert_mxfp4_tensors": 129
+  },
+  "provenance": {
+    "mxfp4_experts": {
+      "report": "evidence/gguf/reap96-mxfp4-expert-provenance.json",
+      "comparison_count": 108,
+      "report_sha256": "bcba6c76d032d60ae426b1b8984c14e868f5cc2dad18a285674fbb5569a76966",
+      "status": "PASS"
+    },
+    "nonexpert": {
+      "report": "evidence/gguf/reap96-nonexpert-provenance.json",
+      "comparison_count": 7,
+      "report_sha256": "c8cbbc60ff19b76d97232f89e04821c7e83decc2a61f1c90f57e7cb0c952675a",
+      "status": "PASS"
+    },
+    "fp8_backbone": {
+      "report": "evidence/gguf/reap96-fp8-backbone-provenance.json",
+      "comparison_count": 104,
+      "report_sha256": "078d5303ba8bd8dc95c0c911c2830e29ae3522a0d111b76ead9edbd7454ed622",
+      "status": "PASS"
+    }
+  },
+  "host_gate": {
+    "kernel": "7.0.0-28-generic",
+    "kernel_tainted": 4096,
+    "model_fault_signatures": 0,
+    "nvidia_xid": 0
+  },
+  "promotion": "validated GGUF candidate; K132 remains deployed until K96 runtime acceptance passes",
+  "next_gate": "localhost dual-RTX-5090 64K/API/behavior and long-prefill acceptance"
+}

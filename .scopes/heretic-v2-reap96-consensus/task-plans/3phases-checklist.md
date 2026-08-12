@@ -86,8 +86,13 @@ description: Execution and verification checklist for the K96 consensus candidat
   manifest entries matched path/size/SHA256 at `62e40f7c...574ed`, covering
   `63,989,574,313` bytes. Build B is the read-only canonical K96 native source at
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP`;
-  Build A was deleted after A/B acceptance. GGUF conversion/provenance and
-  dual-5090 runtime acceptance remain pending.
+  Build A was deleted after A/B acceptance.
+- GGUF conversion/provenance complete. The read-only K96 MXFP4 candidate is
+  `64,340,873,568` bytes with O_DIRECT SHA256 `697309d1...ff31`; metadata reports
+  `deepseek4`, 43 blocks, 96 experts, six active experts, 1,328 tensors, and
+  `MOSTLY_MXFP4_MOE`. Expert, nonexpert, and FP8-backbone provenance passed
+  108 of 108, 7 of 7, and 104 of 104. Dual-5090 runtime acceptance remains
+  pending.
 
 ## Final Release Gate
 

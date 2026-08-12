@@ -3,8 +3,10 @@ title: Project Wiki Index
 type: wiki-index
 status: current
 generated_by: /home/build/.codex/skills/wiki-note/scripts/wiki_note.py
-updated: 2026-08-12T17:35:47Z
+updated: 2026-08-12T17:58:14Z
 ---
+
+
 
 
 
@@ -88,7 +90,7 @@ updated: 2026-08-12T17:35:47Z
 # Project Wiki Index
 
 <!-- BEGIN AUTO -->
-- Last rebuilt: 2026-08-12T17:35:47Z
+- Last rebuilt: 2026-08-12T17:58:14Z
 - Page count: 9
 
 ## By Type
@@ -109,7 +111,7 @@ updated: 2026-08-12T17:35:47Z
 ### implementation
 
 - [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | status: archived | updated: 2026-08-12T13:45:00+08:00
-- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | status: current | updated: 2026-08-12T16:52:47Z
+- [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | status: current | updated: 2026-08-13T01:58:00+08:00
 - [Model placement and disk strategy](implementation/model-placement-and-disk-strategy.md) | status: current | updated: 2026-08-11T07:17:23Z
 - [REAP-132 plan and checkpoint provenance](implementation/reap132-plan-checkpoint-provenance.md) | status: current | updated: 2026-08-11T07:17:07Z
 
@@ -143,8 +145,8 @@ updated: 2026-08-12T17:35:47Z
 
 ## Recently Updated
 
+- 2026-08-13T01:58:00+08:00 | [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md)
 - 2026-08-12T16:52:47Z | [Derive K96 only as a REAP132 subset](decisions/reap96-k132-subset-consensus.md)
-- 2026-08-12T16:52:47Z | [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md)
 - 2026-08-12T13:45:00+08:00 | [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md)
 - 2026-08-11T12:16:32Z | [HERETIC v2 streaming writer namespace corruption](debugging/heretic-v2-streaming-writer-namespace-corruption.md)
 - 2026-08-11T07:17:23Z | [Model placement and disk strategy](implementation/model-placement-and-disk-strategy.md)

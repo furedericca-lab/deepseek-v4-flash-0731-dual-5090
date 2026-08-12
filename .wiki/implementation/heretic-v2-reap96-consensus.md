@@ -17,15 +17,15 @@ tags:
   - consensus
   - provenance
 last_checked: 2026-08-13
-updated: 2026-08-12T16:52:47Z
+updated: 2026-08-13T01:58:00+08:00
 ---
 
 # HERETIC v2 REAP96 consensus candidate
 
 K96 is a separate candidate derived only from the immutable 43-layer REAP132
 survivor universe. Phases 1 and 2 are complete, and the Phase 3 native A/B build
-and provenance gate has passed. The canonical REAP132 GGUF remains immutable
-and deployed until K96 passes GGUF provenance and runtime acceptance.
+and GGUF provenance gates have passed. The canonical REAP132 GGUF remains
+immutable and deployed until K96 passes runtime acceptance.
 
 ## Evidence matrix
 
@@ -140,6 +140,34 @@ Build B was promoted read-only to
 `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP`.
 Build A was deleted after A/B acceptance to recover disk space.
 
+## GGUF acceptance
+
+The pinned llama.cpp converter at
+`1e17097be2c19c7ae4ff4f635fef25f24f25dbd2` converted the accepted K96 native
+checkpoint with direct input and output I/O. The resulting read-only candidate
+is:
+
+```text
+/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4.gguf
+```
+
+It is `64,340,873,568` bytes with O_DIRECT SHA256
+`697309d18ada765bdce2a72b52cb1497ed5e374cd5c77edfa7fc0085aa68ff31`.
+Header inspection reports `deepseek4`, 43 blocks, 96 routed experts, six active
+experts, 1,328 tensors, file type 38 (`MOSTLY_MXFP4_MOE`), three hash-routing
+tensors, and 129 routed-expert MXFP4 tensors.
+
+Independent aligned direct-I/O payload provenance passed:
+
+| Class | Result | Report SHA256 |
+|---|---:|---|
+| MXFP4 routed experts | 108/108 | `bcba6c76...a76966` |
+| Nonexpert tensors | 7/7 | `c8cbbc60...52675a` |
+| FP8 backbone to runtime Q8_0 | 104/104 | `078d5303...4ed622` |
+
+The compact acceptance record is
+`.scopes/heretic-v2-reap96-consensus/evidence/gguf/reap96-gguf-acceptance.json`.
+
 ## Risk and next gate
 
 This is K132-constrained, 0xSero-dominant, multi-source boundary consensus. It
@@ -149,7 +177,7 @@ layers cross into their score-4 group. Layer 26 is the only strict 4/3 boundary.
 Layers 37, 39, and 41 are quality-sensitive examples. The 21.43%-30.38% static
 hash-route replacement is the largest early-layer semantic risk.
 
-These risks do not invalidate the plan's structural correctness. The native
-build/provenance gate is complete. Phase 3 must next convert and prove the MXFP4
-GGUF, then run dual-5090 semantic/runtime acceptance. Any failure leaves the
-deployed K132 GGUF canonical.
+These risks do not invalidate the plan's structural correctness. The native and
+GGUF provenance gates are complete. Phase 3 must next run dual-5090
+semantic/runtime acceptance. Any failure leaves the deployed K132 GGUF
+canonical.

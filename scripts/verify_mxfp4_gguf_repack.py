@@ -12,6 +12,7 @@ import argparse
 import json
 import mmap
 import os
+import re
 import struct
 from dataclasses import dataclass
 from pathlib import Path
@@ -209,13 +210,33 @@ def repack_source_row(source: bytes, scales: bytes) -> bytes:
     return bytes(output)
 
 
-def verify(source_root: Path, gguf_path: Path, layers: list[int], experts: list[int], rows: int) -> dict:
+def expert_ids_for_layer(source: dict[str, SourceTensor], layer: int) -> list[int]:
+    pattern = re.compile(rf"^layers\.{layer}\.ffn\.experts\.(\d+)\.w1\.weight$")
+    expert_ids = sorted(int(match.group(1)) for name in source if (match := pattern.match(name)))
+    if expert_ids != list(range(len(expert_ids))):
+        raise ValueError(f"layer {layer}: expert IDs must be contiguous from zero: {expert_ids[:8]}")
+    if not expert_ids:
+        raise ValueError(f"layer {layer}: no routed experts found")
+    return expert_ids
+
+
+def sampled_experts(expert_ids: list[int]) -> list[int]:
+    return sorted({expert_ids[0], expert_ids[len(expert_ids) // 2], expert_ids[-1]})
+
+
+def verify(source_root: Path, gguf_path: Path, layers: list[int], experts: list[int] | None, rows: int) -> dict:
     source = source_tensors(source_root)
     gguf = gguf_expert_tensors(gguf_path)
     comparisons = []
     failures = []
     for layer in layers:
-        for expert in experts:
+        layer_experts = expert_ids_for_layer(source, layer)
+        selected_experts = sampled_experts(layer_experts) if experts is None else experts
+        invalid_experts = sorted(set(selected_experts) - set(layer_experts))
+        if invalid_experts:
+            failures.append(f"layer {layer}: requested experts are absent: {invalid_experts}")
+            continue
+        for expert in selected_experts:
             for projection, gguf_projection in PROJECTIONS.items():
                 weight_name = f"layers.{layer}.ffn.experts.{expert}.{projection}.weight"
                 scale_name = f"layers.{layer}.ffn.experts.{expert}.{projection}.scale"
@@ -231,7 +252,7 @@ def verify(source_root: Path, gguf_path: Path, layers: list[int], experts: list[
                 if scale_rows != out_features or blocks != packed_cols // 16:
                     failures.append(f"invalid source shapes for {weight_name}: {weight.shape}, {scale.shape}")
                     continue
-                if target.shape != (132, out_features, packed_cols * 2):
+                if target.shape != (len(layer_experts), out_features, packed_cols * 2):
                     failures.append(f"unexpected GGUF shape for {gguf_name}: {target.shape}")
                     continue
                 sampled_rows = min(rows, out_features)
@@ -413,7 +434,10 @@ def main() -> None:
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--gguf", type=Path, required=True)
     parser.add_argument("--layers", default="0,1,2")
-    parser.add_argument("--experts", default="0,65,131")
+    parser.add_argument(
+        "--experts",
+        help="comma-separated compact expert IDs; default samples first/middle/last from the source",
+    )
     parser.add_argument("--rows", type=int, default=4)
     parser.add_argument("--nonexpert", action="store_true", help="verify BF16 embedding, output norm, and LM head")
     parser.add_argument("--fp8", action="store_true", help="verify dequantized FP8 backbone payloads against GGML Q8_0")
@@ -427,7 +451,7 @@ def main() -> None:
     report = verify_nonexpert(args.source, args.gguf, args.sample_bytes) if args.nonexpert else (
         verify_fp8(args.source, args.gguf, [int(x) for x in args.layers.split(",")], args.rows)
         if args.fp8 else verify(args.source, args.gguf, [int(x) for x in args.layers.split(",")],
-                                [int(x) for x in args.experts.split(",")], args.rows)
+                                [int(x) for x in args.experts.split(",")] if args.experts else None, args.rows)
     )
     encoded = json.dumps(report, sort_keys=True, indent=2) + "\n"
     if args.report:

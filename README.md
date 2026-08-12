@@ -12,7 +12,7 @@ independently published mask evidence.
 | 1. Checkpoint build | Complete | Deterministic Python 3.12 A/B builds and independent byte-provenance verification passed |
 | 2. Native HF smoke | Complete with limitation | 1- and 16-token prefills passed; 32-token CSA exposed a reproducible Torch/cuBLAS zero-stride runtime fault on Blackwell |
 | 3. GGUF and runtime | Complete | Canonical MXFP4 GGUF passed provenance, dual-5090 64K load, 32K prefill, API, and behavior probes |
-| 4. REAP96 consensus | Native accepted; Phase 3 in progress | Frozen cosine plan and deterministic native A/B provenance passed; K96 GGUF/runtime gates remain |
+| 4. REAP96 consensus | GGUF validated; runtime pending | Frozen cosine plan, deterministic native A/B, and K96 GGUF provenance passed; dual-5090 acceptance remains |
 
 Accepted checkpoint:
 
@@ -44,7 +44,18 @@ Accepted K96 native source checkpoint:
 It is read-only, contains 26,332 tensors in 17 shards, and has O_DIRECT content
 manifest SHA256
 `62e40f7cecc2d1018faa8c386b39268f9d13cb3833c9f82f365e99bfa5f574ed`.
-It is a conversion source, not yet a deployed GGUF release.
+The validated K96 GGUF candidate is:
+
+```text
+/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4.gguf
+```
+
+It is read-only, `64,340,873,568` bytes, and has O_DIRECT SHA256
+`697309d18ada765bdce2a72b52cb1497ed5e374cd5c77edfa7fc0085aa68ff31`.
+Its metadata reports `deepseek4`, 43 blocks, 96 routed experts, six active
+experts, 1,328 tensors, and `MOSTLY_MXFP4_MOE`. Payload provenance passed
+108 routed-expert, 7 nonexpert, and 104 FP8-backbone comparisons. It remains a
+candidate until the dual-5090 runtime gate passes; K132 is still deployed.
 
 ## Checkout
 

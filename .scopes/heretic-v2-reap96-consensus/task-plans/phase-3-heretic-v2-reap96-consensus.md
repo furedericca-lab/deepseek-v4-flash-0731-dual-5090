@@ -41,17 +41,22 @@ Tasks:
     `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP`;
     Build A was deleted after acceptance. See
     `evidence/reap96-phase3-native-acceptance.json`.
-- [ ] T043 [Infra] Convert K96 native checkpoint with the pinned direct-I/O
+- [x] T043 [Infra] Convert K96 native checkpoint with the pinned direct-I/O
   llama.cpp converter and validate GGUF provenance.
   - DoD: MXFP4, nonexpert, and FP8-backbone provenance reports pass before
     runtime promotion.
+  - Evidence: the read-only `64,340,873,568`-byte GGUF has O_DIRECT SHA256
+    `697309d1...ff31`, 1,328 tensors, 43 blocks, 96 routed experts, six active
+    experts, and `MOSTLY_MXFP4_MOE` file type. Routed-expert, nonexpert, and
+    FP8-backbone provenance passed 108 of 108, 7 of 7, and 104 of 104; see
+    `evidence/gguf/reap96-gguf-acceptance.json`.
 - [ ] T044 [QA] Run localhost dual-5090 64K/API/behavior and long-prefill gates.
   - DoD: No kernel/NVIDIA faults, raw/chat/JSON/Chinese/Python probes pass, and
     K96 is promoted only with recorded SHA256 and read-only status.
 
-Checkpoint: the canonical K96 native source artifact is accepted and read-only.
-It is not yet a deployment release. T043 GGUF conversion/provenance and T044
-dual-5090 runtime acceptance remain required; K132 remains the deployed model.
+Checkpoint: the canonical K96 native source and validated K96 GGUF candidate are
+accepted and read-only. The GGUF is not yet a deployment release. T044
+dual-5090 runtime acceptance remains required; K132 remains the deployed model.
 
 ## Dependencies & Execution Order
 

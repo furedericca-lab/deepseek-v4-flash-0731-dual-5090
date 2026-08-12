@@ -1,0 +1,7 @@
+{
+  "comparison_count": 104,
+  "failures": [],
+  "gguf": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4.gguf",
+  "source": "/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP",
+  "status": "PASS"
+}

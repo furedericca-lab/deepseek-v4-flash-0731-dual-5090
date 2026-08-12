@@ -75,7 +75,12 @@ deployment artifact and the failure is recorded without altering it.
 
 Native sub-gate: complete. Deterministic Builds A/B matched all 22 manifest
 entries and passed independent verification. Build B is the read-only canonical
-K96 native source; GGUF and runtime sub-gates remain open.
+K96 native source.
+
+GGUF sub-gate: complete. The pinned direct-I/O converter produced a read-only
+`64,340,873,568`-byte MXFP4 candidate at O_DIRECT SHA256 `697309d1...ff31`.
+Metadata and all three payload-provenance classes passed. The runtime sub-gate
+remains open, so K132 is still the deployed artifact.
 
 ## Dependencies
 
