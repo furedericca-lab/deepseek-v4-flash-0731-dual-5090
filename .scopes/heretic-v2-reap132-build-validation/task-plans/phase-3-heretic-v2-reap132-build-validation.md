@@ -38,8 +38,9 @@ Tasks:
 - [ ] T042 [Infra] Convert the accepted native checkpoint
   - DoD: Exact command converts the Phase 2 artifact to a GGUF under `/data/linux-fast/models/DeepSeek-V4-Flash-0731/` without reading any unverified checkpoint.
 
-T041 outcome: use standalone `vendor/llama.cpp` local commit `16f35dd`, based on
-upstream `030ebb558a5820b444a8f836ed5cdd46c9b4bd7a`. Its converter registers
+T041 outcome: use the `vendor/llama.cpp` submodule from the project fork at
+commit `9d368bc`, based on upstream
+`89e0aa6fd362617d9073e0dafc18e41241521572`. Its converter registers
 `DeepseekV4ForCausalLM`, accepts `--no-mtp`, emits hash routing as I32, combines
 each routed expert's frozen weight+E8M0 scale into GGUF `MXFP4`, and marks the
 file `MOSTLY_MXFP4_MOE`. This is a deterministic repack into the GGML block

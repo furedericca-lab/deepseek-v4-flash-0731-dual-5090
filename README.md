@@ -1,41 +1,123 @@
-# DeepSeek-V4-Flash-0731 Dual 5090
+# DeepSeek-V4-Flash-0731 HERETIC REAP132 on Dual RTX 5090
 
-Local llama.cpp CUDA deployment project for DeepSeek-V4-Flash-0731 REAP-150B
-artifacts on 2x RTX 5090.
+This repository builds and validates a deterministic no-MTP REAP132 checkpoint,
+converts it to a golden MXFP4 GGUF, and deploys it with llama.cpp on two RTX
+5090 GPUs.
 
-on 2× RTX 5090 with layer split, full GPU weights, and F16 KV cache in system RAM.
+## Current Status
 
-## Model Artifacts
+| Phase | Status | Result |
+|---|---|---|
+| 1. Checkpoint build | Complete | Deterministic Python 3.12 A/B builds and independent byte-provenance verification passed |
+| 2. Native HF smoke | Complete with limitation | 1- and 16-token prefills passed; 32-token CSA exposed a reproducible Torch/cuBLAS zero-stride runtime fault on Blackwell |
+| 3. GGUF and runtime | In progress | Direct-I/O llama.cpp converter is pinned; golden GGUF conversion is next |
 
-| Item | Value |
-|---|---|
-| GPUs | 2× RTX 5090 32GB |
-| Model | DeepSeek-V4-Flash-0731 REAP-150B |
-| Verified baseline | `Q2_K` |
-| Current candidate | `IQ3_XXS` |
-| Runtime directory | `/data/linux-fast/models/DeepSeek-V4-Flash-0731/` |
-| Split | `-sm layer -ts 1,1` |
-| Weights | `-ngl all` |
-| KV | `--no-kv-offload -ctk f16 -ctv f16` |
-| Context start | `-c 65536` |
-| Parallel | `-np 1` |
-| Batch start | `-b 1024 -ub 256` |
-| API | `http://127.0.0.1:8000/v1` |
+Accepted checkpoint:
 
-## Why the model should move off Toshiba
+```text
+/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/
+```
 
-For large GGUF files, the preferred runtime store is the NVMe ext4 mount:
+Acceptance facts:
 
-`/data/linux-fast/models/DeepSeek-V4-Flash-0731/`
+- 35,620 tensors in 22 safetensors shards
+- 43 layers and 132 routed experts per layer
+- zero MTP/DSpark tensors and `num_nextn_predict_layers=0`
+- byte-identical Build A/B manifest:
+  `9175b91519f0981ed22b3afb3b780c8ba2b2d1bce041277834c0bd057a9e6e5d`
+- independent aligned `O_DIRECT` verifier: zero failures
+- checkpoint directory is read-only
 
-Do not use a deleted Toshiba source copy as a verification source; compare local
-SHA256 with the Hugging Face metadata recorded in `AGENTS.md`.
+The frozen survivor plan is
+`squanchyzx-puwaer-reap132-mask.json`. Do not edit or recalculate it.
 
-## First-boot command
+## Checkout
+
+### Runtime dependencies
+
+The project-local `.venv` is the only Python runtime for this repository. Its
+PyTorch stack comes from locally built wheels under `/home/build/torch/dist`,
+not PyPI and not `/home/build/torch/.venv`:
+
+```text
+/home/build/torch/dist/torch-2.14.0a0.post20260719-cp313-cp313-linux_x86_64.whl
+/home/build/torch/dist/pytorch_triton-3.8.0+git694c0c3b.post20260719-cp313-cp313-linux_x86_64.whl
+```
+
+These wheel paths are pinned in `pyproject.toml` and `uv.lock`. Other locally
+built CUDA packages, such as torchvision, torchaudio, xFormers, Flash Attention,
+or SageAttention, must also come from `/home/build/torch/dist` if a future
+project dependency explicitly requires them. Do not install replacement Torch
+or Triton packages from PyPI into this environment.
+
+Clone with submodules:
+
+```bash
+git clone --recurse-submodules \
+  https://github.com/furedericca-lab/deepseek-v4-flash-0731-dual-5090.git
+cd deepseek-v4-flash-0731-dual-5090
+test -f /home/build/torch/dist/torch-2.14.0a0.post20260719-cp313-cp313-linux_x86_64.whl
+test -f /home/build/torch/dist/pytorch_triton-3.8.0+git694c0c3b.post20260719-cp313-cp313-linux_x86_64.whl
+uv sync
+```
+
+Verify the effective environment after syncing:
+
+```bash
+uv run python -c 'import torch, triton; print(torch.__version__, triton.__version__, torch.__file__)'
+```
+
+For an existing checkout:
+
+```bash
+git submodule sync --recursive
+git submodule update --init --recursive
+```
+
+`vendor/llama.cpp` tracks the project fork at
+`https://github.com/furedericca-lab/llama.cpp.git` and is pinned by the parent
+repository gitlink. Do not update it independently without also validating and
+committing the new parent pin.
+
+## Golden GGUF Conversion
+
+The pinned converter supports DeepSeek V4, `--no-mtp`, I32 `tid2eid`, routed
+expert MXFP4 repacking, and aligned direct I/O. The conversion is a packed-format
+repack, not floating-point requantization.
+
+Full conversion must run only after the clean-boot gate passes:
+
+```bash
+uname -r
+cat /proc/sys/kernel/tainted
+journalctl -k -b --no-pager | \
+  rg -i 'BAD_PAGE|compound_head|corrupted mapping in tail page|Oops|general protection|NVRM: Xid|Xid \('
+```
+
+Then use both direct-I/O paths:
+
+```bash
+uv run python vendor/llama.cpp/convert_hf_to_gguf.py \
+  /data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP \
+  --outfile /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf \
+  --outtype auto \
+  --no-mtp \
+  --direct-io-input \
+  --direct-io-output
+```
+
+Never run a full buffered hash, manifest, mmap-based conversion, or tensor scan
+over the checkpoint on this host. The production workflow uses aligned
+`O_DIRECT` for checkpoint reads, output writes, hashing, and provenance checks.
+
+## Dual-5090 Runtime Baseline
+
+After the golden GGUF passes metadata and direct-I/O SHA256 verification, start
+the localhost-only runtime with this initial profile:
 
 ```bash
 llama-server \
-  -m /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf \
+  -m /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf \
   -ngl all \
   -sm layer \
   -ts 1,1 \
@@ -52,32 +134,18 @@ llama-server \
   --port 8000
 ```
 
-## Active scope
+If startup OOMs, lower `-b/-ub`, then context to `-c 32768`, and only then
+consider limited expert CPU offload. A 64K context remains a runtime acceptance
+target until the new golden GGUF proves it on this host.
 
-Current HERETIC v2 REAP132 build and validation work is tracked in:
+## Project Sources
 
-`.scopes/heretic-v2-reap132-build-validation/`
+- Active build scope: `.scopes/heretic-v2-reap132-build-validation/`
+- Deployment scope: `.scopes/deepseek-v4-flash-0731-dual-5090/`
+- Durable implementation record: `.wiki/implementation/heretic-v2-reap132-build-validation.md`
+- Operator and safety rules: `AGENTS.md`
+- Frozen-plan details: `docs/puwaer-reap132-mask-README.md`
 
-The original dual-5090 deployment scope remains active for serving operations:
-
-`.scopes/deepseek-v4-flash-0731-dual-5090/`
-
-## REAP-132 reproduction
-
-The exact squanchyzx v2 + puwaer plan is stored at
-`squanchyzx-puwaer-reap132-mask.json`. Its current logical SHA256 is
-`082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17`.
-See `docs/puwaer-reap132-mask-README.md` for extraction, checkpoint manifest,
-and streaming compression commands.
-
-Durable notes live in:
-
-`.wiki/`
-
-## Important residual risk
-
-The ~46 GiB system RAM figure is not treated as an automatic 64K blocker: current DeepSeek V4 measurements suggest roughly 0.59 GiB F16 KV at 64K, though this is not host-boot evidence. The first suspected limit is the roughly 5.9 GiB GPU headroom for compute/graph and temporary buffers. Keep `-np 1`; prove 64K at first boot, then test 128K/256K only with measured VRAM/RAM behavior. If startup fails, lower `-b/-ub` first, then `-c 32768`, before considering CPU offload.
-
-## Operator docs for agents
-
-See `AGENTS.md` and `.wiki/index.md`.
+The native HF CSA fault is documented and closed under the Phase 2 stop-loss
+rule. Phase 3 acceptance is based on the pinned llama.cpp/GGUF deployment path;
+do not reopen Torch/cuBLAS root-cause debugging as a prerequisite.

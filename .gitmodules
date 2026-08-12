@@ -1,3 +1,7 @@
 [submodule "vendor/moe-expert-compress"]
 	path = vendor/moe-expert-compress
 	url = https://github.com/furedericca-lab/moe-expert-compress.git
+[submodule "vendor/llama.cpp"]
+	path = vendor/llama.cpp
+	url = https://github.com/furedericca-lab/llama.cpp.git
+	branch = master

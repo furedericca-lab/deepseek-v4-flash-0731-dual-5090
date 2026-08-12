@@ -223,8 +223,8 @@ a documented native HF limitation beyond the clean 16-token prefill; the
 128-token case is skipped. The deterministic checkpoint remains accepted for
 Phase 3 GGUF/llama.cpp conversion after a clean reboot.
 
-Phase 3 pins standalone `vendor/llama.cpp` local commit `16f35dd`, based on
-upstream `030ebb558a5820b444a8f836ed5cdd46c9b4bd7a`. The registered
+Phase 3 pins the `vendor/llama.cpp` submodule from the project fork at commit
+`9d368bc`, based on upstream `89e0aa6fd362617d9073e0dafc18e41241521572`. The registered
 `DeepseekV4ForCausalLM` converter supports `--no-mtp`, writes `tid2eid` as I32,
 and deterministically repacks every routed expert's packed weight plus E8M0
 scale into GGUF MXFP4 blocks, marking the result `MOSTLY_MXFP4_MOE`. This is the

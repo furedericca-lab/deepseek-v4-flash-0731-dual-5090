@@ -434,8 +434,8 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   and reproduced Xid 31 at QK. Complete native execution would require a
   model-wide workaround, which exceeds the debug budget. Phase 2 closes with
   the native HF limitation recorded; T5 is not run.
-- Phase 3 converter pin: standalone `vendor/llama.cpp` local commit `16f35dd`,
-  based on upstream `030ebb558a5820b444a8f836ed5cdd46c9b4bd7a`, supports
+- Phase 3 converter pin: `vendor/llama.cpp` submodule commit `9d368bc` from the
+  project fork, based on upstream `89e0aa6fd362617d9073e0dafc18e41241521572`, supports
   `DeepseekV4ForCausalLM`, `--no-mtp`, I32 `tid2eid`, and routed-expert MXFP4
   repacking from frozen weight+scale bytes. T041 is complete.
 - T042 direct-I/O preparation is complete. The converter has explicit

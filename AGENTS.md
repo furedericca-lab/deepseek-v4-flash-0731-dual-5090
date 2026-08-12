@@ -17,12 +17,18 @@
 - Install all missing runtime or test dependencies into this `.venv`; never
   redirect them to `/home/build/torch/.venv`, a user-global Python, or the
   system Python.
-- `/home/build/torch/.venv` is only the build project's environment. Its local
-  Torch wheel may be consumed by this project, but packages must be installed
-  into this project's `.venv`.
-- The current Torch dependency is the locally built wheel referenced in
-  `pyproject.toml` and `uv.lock`; verify it with `uv run python` before runtime
-  tests.
+- `/home/build/torch/.venv` is only the build project's environment. This
+  project consumes locally built wheels from `/home/build/torch/dist`, but all
+  packages must be installed into this project's `.venv`.
+- `torch` and `pytorch-triton` are pinned in `pyproject.toml` and `uv.lock` to
+  the exact CPython 3.13 wheels under `/home/build/torch/dist`. Do not resolve
+  replacement Torch/Triton packages from PyPI. If torchvision, torchaudio,
+  xFormers, Flash Attention, SageAttention, or another local CUDA extension is
+  later added as a project dependency, install its matching wheel from the same
+  `/home/build/torch/dist` build set rather than borrowing
+  `/home/build/torch/.venv`.
+- Before runtime tests, use `uv run python` to verify the effective Torch and
+  Triton versions and that imports resolve inside this repository's `.venv`.
 
 ## Mission
 
@@ -210,9 +216,9 @@ on dual RTX 5090 with:
   which exceeds the debug budget. Do not run T5. Phase 2 is complete with native
   HF limited beyond the prior clean 16-token prefill; proceed to Phase 3 with
   the byte-verified checkpoint after a clean reboot.
-- Phase 3 pins the standalone `vendor/llama.cpp` checkout at
-  local commit `16f35dd` based on upstream
-  `030ebb558a5820b444a8f836ed5cdd46c9b4bd7a`. Its DeepSeek V4 converter repacks
+- Phase 3 pins the `vendor/llama.cpp` submodule from
+  `https://github.com/furedericca-lab/llama.cpp.git` at commit `9d368bc`, based
+  on upstream `89e0aa6fd362617d9073e0dafc18e41241521572`. Its DeepSeek V4 converter repacks
   routed expert weight+scale into GGUF MXFP4 and supports `--no-mtp`. However,
   its default local safetensors materializer uses `np.memmap`; never run it over
   the full checkpoint on this host. The local converter now has fixture-tested
