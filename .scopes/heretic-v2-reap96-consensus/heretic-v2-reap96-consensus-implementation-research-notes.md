@@ -60,8 +60,11 @@ must expose every selected/deleted expert's score and evidence vector.
 
 For Layers 0-2, derive a new `tid2eid` table from the trusted base/router data
 and the final keep set. Preserve direct surviving assignments; map deleted K132
-compact IDs by squared L2 distance between K132 router rows, resolve equal
-distances by compact ID, and exclude row-local duplicates.
+compact IDs by normalized cosine similarity between K132 router rows, resolve
+equal similarity by compact ID, and exclude row-local duplicates. This matches
+the vendor fallback. Raw L2 was superseded after the sensitivity audit; a global
+assignment was rejected because its cosine objective improvement was only
+0.0225% over deterministic greedy collision repair.
 
 ## Validation Plan
 

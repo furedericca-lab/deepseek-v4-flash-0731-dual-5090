@@ -7,7 +7,7 @@ description: Build and accept a separate K96 candidate only after the plan passe
 ## Input
 
 - Frozen Phase 2 K96 plan and reports
-- Existing read-only HERETIC v2 source checkpoint
+- Existing read-only accepted K132 no-MTP checkpoint
 - Existing production O_DIRECT builder, verifier, converter, and runtime gate
 
 ## Canonical Architecture / Key Constraints
@@ -26,14 +26,21 @@ dual-5090 runtime pass; otherwise record the failed gate and retain K132.
 
 Tasks:
 
-- [ ] T041 [Infra] Run clean-boot gate and deterministic Python 3.12 O_DIRECT
+- [x] T041 [Infra] Run clean-boot gate and deterministic Python 3.12 O_DIRECT
   K96 native build.
   - DoD: K96 output is a new path, no frozen K132 artifact changes, and build
     logs/manifests are complete.
-- [ ] T042 [QA] Run independent K96 O_DIRECT structural and byte provenance
+- [x] T042 [QA] Run independent K96 O_DIRECT structural and byte provenance
   verification.
   - DoD: Every retained expert/raw tensor, router, new hash routing, no-MTP
     config, and manifest contract passes.
+  - Evidence: Builds A and B each produced 17 shards and 26,332 tensors. Both
+    independent reports passed nine verification groups with zero failures;
+    their 22 manifest entries were path/size/SHA256 identical at manifest SHA
+    `62e40f7c...574ed`. Build B was promoted read-only to
+    `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP`;
+    Build A was deleted after acceptance. See
+    `evidence/reap96-phase3-native-acceptance.json`.
 - [ ] T043 [Infra] Convert K96 native checkpoint with the pinned direct-I/O
   llama.cpp converter and validate GGUF provenance.
   - DoD: MXFP4, nonexpert, and FP8-backbone provenance reports pass before
@@ -42,8 +49,9 @@ Tasks:
   - DoD: No kernel/NVIDIA faults, raw/chat/JSON/Chinese/Python probes pass, and
     K96 is promoted only with recorded SHA256 and read-only status.
 
-Checkpoint: Phase 3 completion may add a new canonical K96 deployment artifact;
-any failed gate leaves K132 as the only canonical deployment.
+Checkpoint: the canonical K96 native source artifact is accepted and read-only.
+It is not yet a deployment release. T043 GGUF conversion/provenance and T044
+dual-5090 runtime acceptance remain required; K132 remains the deployed model.
 
 ## Dependencies & Execution Order
 

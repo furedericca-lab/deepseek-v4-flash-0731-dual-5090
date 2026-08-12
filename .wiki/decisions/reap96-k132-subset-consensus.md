@@ -41,11 +41,16 @@ frozen result uses K216 rank in 39 layers and never uses expert ID at an actual
 
 The plan contains 4,128 selected experts, exactly 96 per layer, and is a strict
 K132 subset. Its file SHA256 is
-`2890f1cfebc53e0a4c4b9f391af84789e6289d9a40800182a97ca91c190c3934`;
+`578adbbd4ac13bec75f5ab726e6406f9bec50ec8154f6d773d9c5bd83105be11`;
 its logical SHA256 is
-`7d69d87208e2d2776adc291e68db7c15ff09ff78665798b2828d66ea536a822a`.
+`e82c3649af2607e798b88e39ac0dd9a4b71dc3b31b5f4f17b60fc12aa74c01cf`.
 Independent verification passes subset, source digest, score histogram, and all
 three regenerated hash-routing invariants.
+
+Hash routing preserves direct survivors and uses normalized cosine similarity,
+the vendor-aligned fallback, with deterministic row-local greedy collision
+repair. The raw-L2 plan is retained only as superseded audit evidence. Global
+assignment is rejected because it improved cosine cost by only 0.0225%.
 
 ## Consequence
 

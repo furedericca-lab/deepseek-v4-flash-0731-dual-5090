@@ -42,6 +42,12 @@ Tasks:
   K96 keep sets.
   - DoD: Tables are `[129280, 6]`, compact IDs `0..95`, and contain no duplicate
     IDs per row.
+  - Result: Direct survivors remain unchanged. Deleted assignments use the
+    vendor-aligned normalized-cosine router-row fallback plus deterministic
+    row-local greedy collision repair. The sensitivity audit found 89/108
+    primary replacements and 481,044 slots differed from raw L2, while a global
+    assignment improved cosine cost by only 0.0225%; raw L2 is superseded and
+    no global assignment was adopted.
 - [x] T023 [QA] Validate plan subset, count, source digest, score-boundary, and
   routing invariants.
   - DoD: New focused tests pass and malformed plan variants fail.
@@ -50,9 +56,10 @@ Tasks:
     checksums are documented without changing K132 records.
 
 Checkpoint: `evidence/heretic-v2-reap96-consensus-plan.json` is frozen at file
-SHA `2890f1cf...c3934` and logical SHA `7d69d872...a822a`. Independent
-verification is PASS and a second generation was byte-identical. Phase 3 may
-start only after a clean-boot build gate; no large artifact has been created.
+SHA `578adbbd...e11` and logical SHA `e82c3649...c01cf`. Independent
+verification is PASS and a second generation was byte-identical. The prior
+raw-L2 plan remains as `heretic-v2-reap96-consensus-plan.raw-l2-superseded.json`
+for audit history and is not a build input. Phase 2 is closed.
 
 ## Dependencies & Execution Order
 

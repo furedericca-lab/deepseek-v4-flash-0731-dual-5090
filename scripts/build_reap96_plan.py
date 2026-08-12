@@ -92,11 +92,17 @@ def decode_tid(item: dict[str, Any]) -> np.ndarray:
 
 
 def candidate_order(router: np.ndarray, selected_old_ids: list[int]) -> dict[int, list[int]]:
-    selected = router[selected_old_ids]
+    values = router.astype(np.float64)
+    norms = np.linalg.norm(values, axis=1, keepdims=True)
+    normalized = values / np.maximum(norms, np.finfo(np.float64).tiny)
+    selected = normalized[selected_old_ids]
     orders = {}
     for old_id in range(router.shape[0]):
-        distances = np.sum((selected - router[old_id]) ** 2, axis=1, dtype=np.float64)
-        orders[old_id] = [selected_old_ids[index] for index in np.lexsort((selected_old_ids, distances))]
+        similarity = selected @ normalized[old_id]
+        orders[old_id] = [
+            selected_old_ids[index]
+            for index in np.lexsort((selected_old_ids, -similarity))
+        ]
     return orders
 
 
@@ -179,7 +185,7 @@ def build_plan(k132_path: Path, score_path: Path, checkpoint: Path) -> dict[str,
             "tensor_name": f"layers.{layer}.ffn.gate.tid2eid",
             "source_router_tensor": tensor_name,
             "source_router_dtype": dtype,
-            "replacement": "squared-L2 nearest K96 router row; preserve direct survivors; exclude row-local duplicates",
+            "replacement": "normalized-cosine nearest K96 router row; preserve direct survivors; exclude row-local duplicates",
             "stats": stats,
             **compressed_blob(remapped),
         }

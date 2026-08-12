@@ -113,7 +113,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("checkpoint_dir", type=Path)
     parser.add_argument(
-        "--artifact-role", required=True, choices=("source", "native-reap132")
+        "--artifact-role", required=True, choices=("source", "native-reap132", "native-reap96")
     )
     parser.add_argument(
         "--check", action="store_true", help="verify the existing manifest without rewriting it"

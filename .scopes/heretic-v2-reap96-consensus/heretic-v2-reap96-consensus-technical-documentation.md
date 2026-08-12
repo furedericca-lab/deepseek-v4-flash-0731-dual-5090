@@ -66,10 +66,20 @@ by K216 semantic rank. No boundary reaches expert ID. K216 rank is a secondary
 ordering from the existing 0xSero lineage, not an additional vote.
 
 The Layer 0-2 routing generator preserves surviving assignments and replaces a
-deleted K132 compact expert with the nearest available K96 router row by squared
-L2 distance, excluding IDs already present in the same token row. The resulting
-tables are `[129280, 6]` int64, range `0..95`, row-wise distinct, and cover all
-96 compact experts.
+deleted K132 compact expert with the nearest available K96 router row by
+normalized cosine similarity, matching the vendor DeepSeek-V4 fallback. It
+excludes IDs already present in the same token row and keeps deterministic
+greedy collision repair. The resulting tables are `[129280, 6]` int64, range
+`0..95`, row-wise distinct, and cover all 96 compact experts. A sensitivity
+audit rejected raw L2 after 481,044 slot assignments differed; global assignment
+was also rejected because it improved cosine cost by only 0.0225%.
+
+The Phase 3 native builder maps each frozen original expert ID through the K132
+parent plan and performs byte-exact O_DIRECT slicing from the accepted K132
+checkpoint. Independent verification proves expert weight/scale, router,
+`tid2eid`, unchanged backbone/shared/HERETIC tensors, no-MTP, and manifest
+provenance. Two builds matched file-for-file; Build B is the read-only canonical
+native source and Build A was deleted after acceptance.
 
 ## Interfaces and Contracts
 

@@ -23,7 +23,12 @@ def test_remap_preserves_survivors_and_avoids_replacement_collision():
     assert stats["replacements"] == 3
 
 
-def test_candidate_order_breaks_equal_distance_by_compact_id():
-    router = np.array([[0.0], [2.0], [4.0]], dtype=np.float32)
+def test_candidate_order_breaks_equal_similarity_by_compact_id():
+    router = np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]], dtype=np.float32)
     orders = MODULE.candidate_order(router, [0, 2])
     assert orders[1] == [0, 2]
+
+
+def test_candidate_order_matches_normalized_cosine_not_raw_l2():
+    router = np.asarray([[10.0, 0.0], [0.0, 1.0], [1.0, 0.1]], dtype=np.float32)
+    assert MODULE.candidate_order(router, [0, 1])[2][0] == 0

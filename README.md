@@ -12,7 +12,7 @@ independently published mask evidence.
 | 1. Checkpoint build | Complete | Deterministic Python 3.12 A/B builds and independent byte-provenance verification passed |
 | 2. Native HF smoke | Complete with limitation | 1- and 16-token prefills passed; 32-token CSA exposed a reproducible Torch/cuBLAS zero-stride runtime fault on Blackwell |
 | 3. GGUF and runtime | Complete | Canonical MXFP4 GGUF passed provenance, dual-5090 64K load, 32K prefill, API, and behavior probes |
-| 4. REAP96 consensus | Plan frozen | Phase 1 evidence and Phase 2 deterministic K96 plan passed; no K96 checkpoint exists yet and Phase 3 has not started |
+| 4. REAP96 consensus | Native accepted; Phase 3 in progress | Frozen cosine plan and deterministic native A/B provenance passed; K96 GGUF/runtime gates remain |
 
 Accepted checkpoint:
 
@@ -34,6 +34,17 @@ Acceptance facts:
 not edit or recalculate it. The K96 scope may select only a 96-expert subset of
 each existing 132-expert layer and must write a new plan plus new hash-routing
 tables; it never changes the REAP132 plan or artifacts.
+
+Accepted K96 native source checkpoint:
+
+```text
+/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP/
+```
+
+It is read-only, contains 26,332 tensors in 17 shards, and has O_DIRECT content
+manifest SHA256
+`62e40f7cecc2d1018faa8c386b39268f9d13cb3833c9f82f365e99bfa5f574ed`.
+It is a conversion source, not yet a deployed GGUF release.
 
 ## Checkout
 

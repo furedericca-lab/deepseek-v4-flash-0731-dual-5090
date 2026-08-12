@@ -22,7 +22,7 @@ description: Execution and verification checklist for the K96 consensus candidat
 |---|---|---:|---|---|
 | Phase 1 | Complete | 100% | Healthy | Six normalized sources; REAP25 map recovered from its linked ds4 source branch |
 | Phase 2 | Complete | 100% | Healthy | Frozen deterministic plan and independently verified hash routing |
-| Phase 3 | Not started | 0% | Ready | Requires clean-boot large-build gate |
+| Phase 3 | In progress | 50% | Healthy | Native A/B accepted; GGUF and runtime gates remain |
 
 ## Phase Entry Links
 
@@ -62,8 +62,8 @@ description: Execution and verification checklist for the K96 consensus candidat
   the evidence vector and 39 through K216's complete published semantic rank.
   No actual boundary uses expert ID.
 - Frozen plan: `evidence/heretic-v2-reap96-consensus-plan.json`, file SHA
-  `2890f1cfebc53e0a4c4b9f391af84789e6289d9a40800182a97ca91c190c3934`,
-  logical SHA `7d69d87208e2d2776adc291e68db7c15ff09ff78665798b2828d66ea536a822a`.
+  `578adbbd4ac13bec75f5ab726e6406f9bec50ec8154f6d773d9c5bd83105be11`,
+  logical SHA `e82c3649af2607e798b88e39ac0dd9a4b71dc3b31b5f4f17b60fc12aa74c01cf`.
 - New Layer 0-2 routing tables are `[129280,6]` int64, range `0..95`, use all
   96 experts, and all 129,280 token rows contain six distinct IDs. Independent report
   `evidence/reap96-phase2-plan-verification.json` is PASS; a second generation
@@ -74,12 +74,20 @@ description: Execution and verification checklist for the K96 consensus candidat
   bug that counted one boundary row per layer twice; the frozen JSON and plan
   were not changed. All three hash tables pass shape, dtype, range, row-wise
   six-ID distinctness, and 96/96 coverage gates.
+- Routing closeout: normalized cosine is canonical and raw L2 is preserved only
+  as superseded audit evidence. Raw L2 versus cosine changed 89/108 primary
+  replacements and 481,044 actual slots. Cosine global assignment improved the
+  deterministic greedy objective by only 0.0225%, so greedy remains frozen.
 
 ### Phase 3
 
-- Not started. The Phase 2 K96 plan is frozen and structurally accepted. Phase
-  3 begins only from that exact plan after this documentation/code batch is
-  committed and a fresh clean-boot large-build gate passes.
+- Native build/provenance complete. The accepted K132 manifest re-check passed
+  at `9175b915...e5d`. Builds A and B were independently verified and their 22
+  manifest entries matched path/size/SHA256 at `62e40f7c...574ed`, covering
+  `63,989,574,313` bytes. Build B is the read-only canonical K96 native source at
+  `/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP`;
+  Build A was deleted after A/B acceptance. GGUF conversion/provenance and
+  dual-5090 runtime acceptance remain pending.
 
 ## Final Release Gate
 

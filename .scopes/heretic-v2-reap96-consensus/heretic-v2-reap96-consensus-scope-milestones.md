@@ -29,7 +29,7 @@ description: Scope boundaries and milestones for heretic-v2-reap96-consensus.
 | K160/K216 are one lineage | 43/43 exact K160 recovery plus pinned K216 plan | 5 | None | 5 | K160 is a K216 subset in all layers | Accepted |
 | K132/K178 are ordinal puwaer tiers | 43/43 exact K178 recovery plus frozen K132 plan | 5 | None | 5 | K132 is a K178 subset in all layers | Accepted |
 | Frozen K96 provenance | Phase 2 score and plan reports | 5 | 0xSero is deliberately dominant | 5 | K132 is the hard universe; 0xSero supplies ordinal evidence; independent sources resolve boundaries | Accepted |
-| K132 remains deployment baseline | Existing passed release gates | 5 | None | 5 | K96 has no artifact yet | Accepted |
+| K132 remains deployment baseline | Existing passed release gates | 5 | None | 5 | K96 native is accepted, but GGUF/runtime gates are pending | Accepted |
 
 ## Milestones
 
@@ -62,7 +62,7 @@ with deterministic score and tie-breaking. Regenerate and validate all three
 hash-layer routing tables.
 
 Exit: a reviewable K96 plan passes structural, subset, source-digest, and
-tid2eid legality checks; no checkpoint construction has started.
+tid2eid legality checks. This milestone is complete and immutable.
 
 ### M3 - Candidate release gates
 
@@ -72,6 +72,10 @@ acceptance suite.
 
 Exit: K96 is promoted only if every gate passes; otherwise K132 remains sole
 deployment artifact and the failure is recorded without altering it.
+
+Native sub-gate: complete. Deterministic Builds A/B matched all 22 manifest
+entries and passed independent verification. Build B is the read-only canonical
+K96 native source; GGUF and runtime sub-gates remain open.
 
 ## Dependencies
 

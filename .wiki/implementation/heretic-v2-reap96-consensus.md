@@ -23,9 +23,9 @@ updated: 2026-08-12T16:52:47Z
 # HERETIC v2 REAP96 consensus candidate
 
 K96 is a separate candidate derived only from the immutable 43-layer REAP132
-survivor universe. Phases 1 and 2 are complete. The canonical REAP132
-checkpoint and GGUF remain immutable and deployed until a separate K96 artifact
-passes every Phase 3 gate.
+survivor universe. Phases 1 and 2 are complete, and the Phase 3 native A/B build
+and provenance gate has passed. The canonical REAP132 GGUF remains immutable
+and deployed until K96 passes GGUF provenance and runtime acceptance.
 
 ## Evidence matrix
 
@@ -90,10 +90,10 @@ Frozen artifacts:
 
 ```text
 plan file SHA256:
-2890f1cfebc53e0a4c4b9f391af84789e6289d9a40800182a97ca91c190c3934
+578adbbd4ac13bec75f5ab726e6406f9bec50ec8154f6d773d9c5bd83105be11
 
 plan logical SHA256:
-7d69d87208e2d2776adc291e68db7c15ff09ff78665798b2828d66ea536a822a
+e82c3649af2607e798b88e39ac0dd9a4b71dc3b31b5f4f17b60fc12aa74c01cf
 
 score report SHA256:
 ae090c1b70b476d7f116827d9342f8d2a7ff68ee36996912ce33a42735c47bfa
@@ -106,18 +106,39 @@ reports `PASS` with zero failures.
 
 The K132 `tid2eid` tables cannot be reused because they contain compact IDs for
 132 experts. For Layers 0-2, direct K96 survivors are preserved. Deleted K132
-assignments map to the nearest available K96 router row by squared L2 distance;
-equal distances use K132 compact ID and IDs already used in the token row are
-excluded.
+assignments map to the nearest available K96 router row by normalized cosine
+similarity; equal similarity uses K132 compact ID and IDs already used in the
+token row are excluded. This is the vendor-aligned fallback.
 
 | Layer | Direct | Replaced | Replacement rate | Collision avoids |
 |---:|---:|---:|---:|---:|
-| 0 | 609,445 | 166,235 | 21.43% | 16,364 |
-| 1 | 580,282 | 195,398 | 25.19% | 31,338 |
-| 2 | 540,025 | 235,655 | 30.38% | 21,787 |
+| 0 | 609,445 | 166,235 | 21.43% | 10,513 |
+| 1 | 580,282 | 195,398 | 25.19% | 13,768 |
+| 2 | 540,025 | 235,655 | 30.38% | 35,979 |
 
 Every table is `[129280, 6]` int64, has values `0..95`, uses all 96 experts,
 and every token row contains six distinct expert IDs.
+
+The routing audit compared all 108 deleted hash experts. Raw L2 and cosine chose
+different primary replacements for 89 and changed 481,044 actual slots, so raw
+L2 is superseded. A row-global assignment changed 12,169 rows but improved the
+cosine cost by only 0.0225%; deterministic greedy collision repair remains
+canonical.
+
+## Native acceptance
+
+The accepted K132 manifest was rechecked at
+`9175b91519f0981ed22b3afb3b780c8ba2b2d1bce041277834c0bd057a9e6e5d`.
+Two clean-boot O_DIRECT K96 builds each produced 17 shards and 26,332 tensors.
+Independent verification passed expert weight/scale, router, `tid2eid`, shared
+expert, HERETIC overlay, no-MTP, and dangling-ID checks with zero failures.
+
+Both builds had 22 identical manifest entries totaling `63,989,574,313` bytes
+at manifest SHA
+`62e40f7cecc2d1018faa8c386b39268f9d13cb3833c9f82f365e99bfa5f574ed`.
+Build B was promoted read-only to
+`/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP`.
+Build A was deleted after A/B acceptance to recover disk space.
 
 ## Risk and next gate
 
@@ -128,7 +149,7 @@ layers cross into their score-4 group. Layer 26 is the only strict 4/3 boundary.
 Layers 37, 39, and 41 are quality-sensitive examples. The 21.43%-30.38% static
 hash-route replacement is the largest early-layer semantic risk.
 
-These risks do not invalidate the plan's structural correctness. Phase 3 must
-build a separate no-MTP checkpoint with the existing aligned O_DIRECT path,
-independently verify it, convert and prove the MXFP4 GGUF, then run dual-5090
-semantic/runtime acceptance. Any failure leaves K132 canonical.
+These risks do not invalidate the plan's structural correctness. The native
+build/provenance gate is complete. Phase 3 must next convert and prove the MXFP4
+GGUF, then run dual-5090 semantic/runtime acceptance. Any failure leaves the
+deployed K132 GGUF canonical.

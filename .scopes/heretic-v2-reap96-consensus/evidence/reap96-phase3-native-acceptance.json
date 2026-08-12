@@ -1,0 +1,68 @@
+{
+  "schema": "heretic-reap96-native-acceptance-v1",
+  "status": "PASS",
+  "source": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP",
+    "manifest_sha256": "9175b91519f0981ed22b3afb3b780c8ba2b2d1bce041277834c0bd057a9e6e5d",
+    "files": 27,
+    "read_only": true
+  },
+  "plan": {
+    "path": ".scopes/heretic-v2-reap96-consensus/evidence/heretic-v2-reap96-consensus-plan.json",
+    "file_sha256": "578adbbd4ac13bec75f5ab726e6406f9bec50ec8154f6d773d9c5bd83105be11",
+    "logical_sha256": "e82c3649af2607e798b88e39ac0dd9a4b71dc3b31b5f4f17b60fc12aa74c01cf",
+    "routing_metric": "normalized cosine similarity",
+    "collision_repair": "deterministic greedy with direct survivors preserved"
+  },
+  "builds": {
+    "a": {
+      "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-build-a",
+      "manifest_sha256": "62e40f7cecc2d1018faa8c386b39268f9d13cb3833c9f82f365e99bfa5f574ed",
+      "verifier_failures": 0,
+      "disposition": "deleted after deterministic A/B acceptance"
+    },
+    "b": {
+      "build_path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-build-b",
+      "canonical_path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP",
+      "manifest_sha256": "62e40f7cecc2d1018faa8c386b39268f9d13cb3833c9f82f365e99bfa5f574ed",
+      "verifier_failures": 0,
+      "read_only": true,
+      "disposition": "promoted as canonical K96 native checkpoint"
+    },
+    "comparison": {
+      "manifest_entries": 22,
+      "manifest_file_bytes": 63989574313,
+      "paths_sizes_sha256_identical": true
+    }
+  },
+  "checkpoint": {
+    "shards": 17,
+    "tensors": 26332,
+    "expected_tensors": 26332,
+    "routed_expert_tensors": 24768,
+    "layers": 43,
+    "routed_experts_per_layer": 96,
+    "active_experts_per_token": 6,
+    "num_nextn_predict_layers": 0,
+    "mtp_dspark_tensors": 0
+  },
+  "independent_verification": {
+    "layers": "PASS",
+    "router": "PASS",
+    "experts": "PASS",
+    "scales": "PASS",
+    "shared_experts": "PASS",
+    "tid2eid": "PASS",
+    "heretic_overlay": "PASS",
+    "mtp_dspark_absent": "PASS",
+    "dangling_expert_ids": "PASS"
+  },
+  "host_gate": {
+    "kernel": "7.0.0-28-generic",
+    "kernel_tainted": 4096,
+    "model_fault_signatures": 0,
+    "nvidia_xid": 0,
+    "swap_peak_bytes": 0
+  },
+  "next_gate": "K96 MXFP4 GGUF conversion and provenance"
+}
