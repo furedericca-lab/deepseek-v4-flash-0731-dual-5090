@@ -214,6 +214,31 @@
   {
     "anchor_count": 0,
     "code_anchors": [],
+    "excerpt": "# K132 fixed-ratio mixed expert quantization Active fixed-ratio K132 heterogeneous routed-expert quantization experiment. ## Immutable baseline The sole model input is the read-only canonical K132 MXFP4 GGUF with size `85,049,305,696` bytes and SHA256 `f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b`. It remains the deployed and rollback artifact. ## Fixed experiment - Preserve 43 layers, 132 routed experts per layer, top-k 6, router, and `tid2eid`. - Exactly 17 protected/hig...",
+    "path": ".wiki/implementation/k132-fixed-ratio-mixed-expert-quantization.md",
+    "related_files": [
+      {
+        "path": ".scopes/heretic-v2-reap132-mixed-expert-quant",
+        "role": "related"
+      },
+      {
+        "path": "vendor/llama.cpp/src/llama-quant.cpp",
+        "role": "related"
+      },
+      {
+        "path": "vendor/llama.cpp/tools/imatrix/imatrix.cpp",
+        "role": "related"
+      }
+    ],
+    "scope": "heretic-v2-reap132-mixed-expert-quant",
+    "search_text": "K132 fixed-ratio mixed expert quantization\nimplementation\ncurrent\nheretic-v2-reap132-mixed-expert-quant\n{\"title\": \"K132 fixed-ratio mixed expert quantization\", \"type\": \"implementation\", \"status\": \"current\", \"scope\": \"heretic-v2-reap132-mixed-expert-quant\", \"related_scopes\": [\"heretic-v2-reap96-consensus\", \"heretic-v2-reap96-iq4xs-backbone\"], \"related_files\": [\".scopes/heretic-v2-reap132-mixed-expert-quant\", \"vendor/llama.cpp/src/llama-quant.cpp\", \"vendor/llama.cpp/tools/imatrix/imatrix.cpp\"], \"source_docs\": [\".scopes/heretic-v2-reap132-mixed-expert-quant/heretic-v2-reap132-mixed-expert-quant-technical-documentation.md\"], \"tags\": [\"reap132\", \"imatrix\", \"iq3-xxs\", \"q2-k\"], \"last_checked\": \"2026-08-13\", \"updated\": \"2026-08-12T23:37:18Z\"}\n.scopes/heretic-v2-reap132-mixed-expert-quant related vendor/llama.cpp/src/llama-quant.cpp related vendor/llama.cpp/tools/imatrix/imatrix.cpp related\n\n\n# K132 fixed-ratio mixed expert quantization\n\nActive fixed-ratio K132 heterogeneous routed-expert quantization experiment.\n\n## Immutable baseline\n\nThe sole model input is the read-only canonical K132 MXFP4 GGUF with size\n`85,049,305,696` bytes and SHA256\n`f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b`.\nIt remains the deployed and rollback artifact.\n\n## Fixed experiment\n\n- Preserve 43 layers, 132 routed experts per layer, top-k 6, router, and\n  `tid2eid`.\n- Exactly 17 protected/high-priority layers use IQ3_XXS.\n- Exactly 26 ordinary layers use Q2_K.\n- The ratio is fixed independently of output size. There is no 60GB gate and\n  no all-IQ3 comparison artifact in this scope.\n- `Q2_K_S` is only a policy description; per-tensor overrides use Q2_K.\n\nOnly the 129 routed-expert packed tensors receive manual overrides. Shared\nExpert, Core Backbone, attention, indexer, embedding, output, and other eligible\nnon-routed weights use the same default non-pure IQ4_XS mixed policy as the\narchived K96 Profile A release, including llama.cpp's automatic Q5/Q6 choices.\n\n## Layer evidence\n\nThe structural prior is fixed as:\n\n```text\nR_l = 0.50 * consensus_mass\n    + 0.20 * rank97_normalized_score\n    + 0.15 * (high_score_count / 132)\n    + 0.10 * (deleted_high_count / 36)\n    + 0.05 * boundary_tie\n```\n\nThe activation score first normalizes each gate/up/down imatrix entry by route\ncount and activation width, averages the three projections per expert, then\nforms a route-count-weighted mean over all 132 experts. The 43 raw layer values\nbecome `I_l` through ascending mid-rank percentile normalization. Zero-count or\nprojection-count-mismatched experts block plan generation.\n\n```text\nP_l = 0.4 * R_l + 0.6 * I_l\n```\n\nRanks 1-17 become IQ3_XXS; ranks 18-43 become Q2_K. Imatrix is activation\nimportance evidence, not a direct per-layer quantization-sensitivity test.\n\n## Current gate\n\nPhase 1 must implement and verify structural extraction, freeze calibration\ncorpus identity, collect K132 imatrix through `--load-mode dio`, and pass finite\nper-expert coverage before the 17-layer list is generated.\n",
+    "status": "current",
+    "title": "K132 fixed-ratio mixed expert quantization",
+    "type": "implementation"
+  },
+  {
+    "anchor_count": 0,
+    "code_anchors": [],
     "excerpt": "# K96 Profile A IQ4_XS non-routed release This independent release consumes the immutable K96 MXFP4 Golden. It does not reopen consensus scoring and does not replace the deployed K132 artifact. Its completed scope is archived under `.scopes/archive/heretic-v2-reap96-iq4xs-backbone/`. ## Tensor contract | Class | Treatment | |---|---| | Routed Experts | 129 gate/up/down tensors remain MXFP4 and byte-identical | | Shared Expert | llama.cpp default IQ4_XS mixed policy | | Core Backbone | llama.c...",
     "path": ".wiki/implementation/k96-profile-a-iq4xs-non-routed-release.md",
     "related_files": [

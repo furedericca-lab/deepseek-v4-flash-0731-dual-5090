@@ -113,3 +113,10 @@ Append-only history for wiki updates caused by scope work, implementation closeo
 - Pages: implementation/k96-profile-a-iq4xs-non-routed-release.md
 - Verification: repo-task-driven archive; wiki-note rebuild/lint/doctor
 - Residual risk: K96 semantic limitation remains; K132 remains deployed.
+
+## 2026-08-12T23:38:30Z [heretic-v2-reap132-mixed-expert-quant]
+
+- Summary: Opened fixed 17/26 K132 mixed routed-expert quantization scope and froze structural and activation score formulas.
+- Pages: implementation/k132-fixed-ratio-mixed-expert-quantization.md
+- Verification: repo-task-driven scaffold/check; wiki-note rebuild/lint/doctor
+- Residual risk: Phase 1 imatrix coverage has not run; no layer assignment or quantized artifact exists yet.

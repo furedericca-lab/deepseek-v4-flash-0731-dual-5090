@@ -2,15 +2,17 @@
 
 ## Source of truth
 
-1. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
-2. Archived K96 Profile A IQ4_XS release under
+1. Active K132 fixed-ratio mixed expert quantization scope under
+   `.scopes/heretic-v2-reap132-mixed-expert-quant/`
+2. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
+3. Archived K96 Profile A IQ4_XS release under
    `.scopes/archive/heretic-v2-reap96-iq4xs-backbone/`
-3. Archived K96 consensus record under
+4. Archived K96 consensus record under
    `.scopes/archive/heretic-v2-reap96-consensus/`
-4. Archived REAP132 delivery record under
+5. Archived REAP132 delivery record under
    `.scopes/archive/heretic-v2-reap132-build-validation/`
-5. Durable project knowledge under `.wiki/`
-6. `README.md` for operator entry points
+6. Durable project knowledge under `.wiki/`
+7. `README.md` for operator entry points
 
 ## Runtime environment
 
@@ -36,10 +38,10 @@
 
 ## Mission
 
-Keep the accepted REAP132 MXFP4 GGUF deployable. The independent K96 Profile A
-IQ4_XS-backbone release and its upstream K96 consensus are completed archival
-records; neither replaces the canonical K132 artifact or modifies the K96
-Golden.
+Keep the accepted REAP132 MXFP4 GGUF deployable while evaluating one independent
+fixed-ratio K132 candidate: 17 routed-expert layers use IQ3_XXS, 26 use Q2_K,
+and all eligible non-routed weights reuse the archived K96 Profile A default
+non-pure IQ4_XS mixed policy. The K132 Golden remains immutable and deployed.
 
 The deployment baseline uses llama.cpp on dual RTX 5090 with:
 
@@ -67,6 +69,12 @@ The deployment baseline uses llama.cpp on dual RTX 5090 with:
 - The archived K96 IQ4_XS release used one immutable input and one output with
   Profile A default mixed precision only. Do not reopen it for `--pure`, Profile
   B, imatrix, or quantization-profile A/B experiments.
+- The active `.scopes/heretic-v2-reap132-mixed-expert-quant/` scope is the sole
+  exception permitting IQ3/Q2 work from the read-only K132 Golden. It fixes the
+  ratio at 17 IQ3_XXS layers and 26 Q2_K layers, has no 60GB size gate, and may
+  add only routed-expert tensor overrides. Shared Expert, Core Backbone,
+  attention, indexer, embedding, and output remain under llama.cpp's default
+  non-pure IQ4_XS mixed policy.
 - Do not download, test, or publish puwaer, IQ3, Q2, or other alternative
   quantizations in the REAP132 deployment scope. MXFP4 remains the only
   deployment format. The K96 consensus scope may inspect only the specific

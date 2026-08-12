@@ -5,6 +5,14 @@ and a separate K96 consensus-planning line. REAP132 remains the deployed
 canonical MXFP4 GGUF while K96 is derived only from its survivor universe and
 independently published mask evidence.
 
+The active experiment is
+`.scopes/heretic-v2-reap132-mixed-expert-quant/`. It keeps all 132 routed
+experts and top-k 6, assigns exactly 17 protected layers to IQ3_XXS and 26
+ordinary layers to Q2_K, and reuses the archived K96 Profile A default
+non-pure IQ4_XS mixed policy for all eligible non-routed weights. The ratio is
+fixed independently of output size; the canonical K132 Golden remains read-only
+and deployed.
+
 The completed independent K96 Profile A IQ4_XS-backbone release is archived
 under `.scopes/archive/heretic-v2-reap96-iq4xs-backbone/`. It consumed the
 read-only K96 MXFP4 Golden and preserved all 129 routed-expert MXFP4 payloads
@@ -23,6 +31,7 @@ unchanged.
 | 3. GGUF and runtime | Complete | Canonical MXFP4 GGUF passed provenance, dual-5090 64K load, 32K prefill, API, and behavior probes |
 | 4. REAP96 consensus | Complete; candidate rejected | Native/GGUF provenance and runtime stability passed, but semantic acceptance failed; K132 remains deployed |
 | 5. K96 IQ4_XS non-routed weights | Complete | Profile A passed provenance and runtime gates; K96 MXFP4 Golden remains immutable and K132 remains deployed |
+| 6. K132 mixed routed-expert quantization | In progress | Phase 1 freezes structural and activation-importance evidence before the fixed 17/26 plan |
 
 Accepted checkpoint:
 

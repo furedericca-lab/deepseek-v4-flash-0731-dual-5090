@@ -24,6 +24,14 @@
     ],
     "symbols": {}
   },
+  ".scopes/heretic-v2-reap132-mixed-expert-quant": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/k132-fixed-ratio-mixed-expert-quantization.md"
+    ],
+    "symbols": {}
+  },
   ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md": {
     "anchors": [],
     "definition_pages": [],
@@ -185,7 +193,16 @@
     "anchors": [],
     "definition_pages": [],
     "pages": [
+      ".wiki/implementation/k132-fixed-ratio-mixed-expert-quantization.md",
       ".wiki/implementation/k96-profile-a-iq4xs-non-routed-release.md"
+    ],
+    "symbols": {}
+  },
+  "vendor/llama.cpp/tools/imatrix/imatrix.cpp": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/implementation/k132-fixed-ratio-mixed-expert-quantization.md"
     ],
     "symbols": {}
   },
