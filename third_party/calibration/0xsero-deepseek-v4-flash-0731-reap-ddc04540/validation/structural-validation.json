@@ -1,0 +1,16 @@
+{
+  "comparisons": {
+    "protected_tensors": 12,
+    "router_tensors": 92,
+    "selected_expert_tensors": 552
+  },
+  "failures": [],
+  "kept_experts_per_layer": 160,
+  "scopes": 46,
+  "shard_count": 48,
+  "source_model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+  "source_revision": "9e165c30e2704aec5d9d593cce3eebd58bbef1cb",
+  "status": "pass",
+  "tensor_bytes": 107803320952,
+  "tensor_count": 45821
+}
