@@ -85,3 +85,10 @@ Append-only history for wiki updates caused by scope work, implementation closeo
 - Pages: debugging/heretic-v2-streaming-writer-namespace-corruption.md, implementation/heretic-v2-reap132-build-validation.md
 - Verification: 23 tests passed; 32 GiB x4 native memory patterns passed; 16 GiB O_DIRECT source/copy SHA256 matched; AER/NVMe/MCE counters clean
 - Residual risk: Exact invalid-PyObject corruptor remains unproven; reboot before the Python 3.12 config-correct full rebuild.
+
+## 2026-08-12T09:05:39Z [heretic-v2-reap132-build-validation]
+
+- Summary: Identified and fixed direct GGUF output zeroing lazy ordinary tensors; quarantined the first full GGUF and retained MXFP4 as the sole deployment target.
+- Pages: implementation/heretic-v2-reap132-build-validation.md
+- Verification: 7 direct-I/O writer tests passed; 90 MXFP4 samples passed; 9 nonexpert provenance samples failed on quarantined artifact
+- Residual risk: Replacement full GGUF must complete direct provenance and dual-5090 semantic runtime acceptance.

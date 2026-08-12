@@ -10,7 +10,7 @@ converts it to a golden MXFP4 GGUF, and deploys it with llama.cpp on two RTX
 |---|---|---|
 | 1. Checkpoint build | Complete | Deterministic Python 3.12 A/B builds and independent byte-provenance verification passed |
 | 2. Native HF smoke | Complete with limitation | 1- and 16-token prefills passed; 32-token CSA exposed a reproducible Torch/cuBLAS zero-stride runtime fault on Blackwell |
-| 3. GGUF and runtime | In progress | Direct-I/O llama.cpp converter is pinned; golden GGUF conversion is next |
+| 3. GGUF and runtime | In progress | Initial 80 GiB GGUF is quarantined: direct output zeroed lazy ordinary tensors; corrected converter is under validation |
 
 Accepted checkpoint:
 
@@ -83,7 +83,11 @@ committing the new parent pin.
 
 The pinned converter supports DeepSeek V4, `--no-mtp`, I32 `tid2eid`, routed
 expert MXFP4 repacking, and aligned direct I/O. The conversion is a packed-format
-repack, not floating-point requantization.
+repack, not floating-point requantization. The first full output is quarantined,
+not golden: it has the expected structure and correct MXFP4 expert bytes, but
+ordinary lazy BF16/F32 tensors were serialized as zeroes by the direct-output
+writer. Do not serve or overwrite it. Regenerate only after the writer fix and
+small direct-payload verification pass.
 
 Full conversion must run only after the clean-boot gate passes:
 

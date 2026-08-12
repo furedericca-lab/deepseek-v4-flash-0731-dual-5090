@@ -17,7 +17,7 @@ description: Task list for heretic-v2-reap132-build-validation phase 3.
 - Convert only the Phase 2 byte-verified native checkpoint; a documented native
   HF runtime limitation does not block this deployment-runtime phase.
 - Pin and record the llama.cpp converter commit and exact command.
-- The first GGUF is the MXFP4-preserving golden baseline; no IQ3/Q2 yet.
+- MXFP4 is the final deployment format; puwaer A/B and IQ3/Q2 are cancelled.
 - Runtime binds to localhost and uses both RTX 5090s with existing OOM order.
 - A/B prompts, flags, and scoring must be identical between artifacts.
 
@@ -27,10 +27,10 @@ description: Task list for heretic-v2-reap132-build-validation phase 3.
 - Valid components: Backend, Frontend, Agentic, Docs, Config, QA, Security, Infra.
 - Every task must have a clear DoD.
 
-## Phase 3: Golden GGUF, Dual-5090 Runtime, and Controlled A/B
-Goal: Convert the verified native checkpoint without losing the intended expert representation, validate it locally, and measure the HERETIC overlay as the controlled variable.
+## Phase 3: Golden GGUF and Dual-5090 Runtime
+Goal: Convert the verified native checkpoint without losing any tensor payload, then validate the final MXFP4 deployment artifact locally.
 
-Definition of Done: A fully hashed golden GGUF passes metadata and dual-5090 runtime gates, and a reproducible puwaer-versus-HERETIC A/B report is complete.
+Definition of Done: A fully hashed MXFP4 GGUF passes direct payload provenance, metadata, and dual-5090 runtime gates.
 
 Tasks:
 - [x] T041 [Config] Pin and inspect the llama.cpp converter
@@ -62,18 +62,26 @@ immediately into a same-filesystem O_DIRECT temporary payload and release its
 array; dry-run records metadata without retaining payloads. The full 43-layer
 dry-run now passes with 1,328 tensors, an estimated 85.0 GB output, 1.67 GiB peak
 RSS, zero process swaps, and no kernel fault.
+
+The first 80 GiB full output is quarantined after successful structure/load
+checks but failed semantic output (`D` repetition). Native HF returns ` Paris`
+for the same raw prompt. Direct provenance shows all sampled MXFP4 expert blocks
+pass while nonexpert embedding, output norm, and head samples fail. Root cause:
+the direct writer called `np.ascontiguousarray()` on `LazyNumpyTensor`, which
+uses a zero-valued metadata array without evaluating the deferred payload.
+The repair materializes lazy tensors in `write_array()` and is covered by small
+GGUF payload tests. Do not start a replacement full conversion until those tests
+and a tiny direct conversion prove ordinary payload equality.
 - [ ] T043 [QA] Verify and freeze the golden GGUF
   - DoD: Full GGUF SHA256, size, metadata, expert count/type, architecture, tokenizer, and source native manifest SHA are recorded; routed experts satisfy the MXFP4 baseline contract.
 - [ ] T044 [Infra] Run dual-5090 llama.cpp smoke
   - DoD: `--list-devices`, localhost boot, `/v1/models`, one completion, VRAM/RAM snapshots, 64K start or documented 32K fallback, and shutdown all pass.
 - [ ] T045 [QA] Run GGUF behavior probes
   - DoD: Chat, reasoning, coding, tool-call, and longer-context checks show no routing errors, NaN, or obvious repetition degeneration.
-- [ ] T046 [QA] Run controlled puwaer/HERETIC A/B
-  - DoD: Both artifacts use identical prompts, seeds/settings, runtime flags, and evaluator; report embeds both artifact hashes and isolates the attention overlay as the intended variable.
 - [ ] T047 [Docs] Close scope evidence and define next quantization scope
-  - DoD: Scope/wiki contain all hashes, commands, PASS/fail evidence, residual risks, and a separate follow-up boundary for IQ3/Q2 experiments.
+  - DoD: Scope/wiki contain all hashes, commands, PASS/fail evidence, and residual risks; puwaer A/B and IQ3/Q2 remain out of scope.
 
-Checkpoint: Golden MXFP4 GGUF and controlled A/B are complete; further quantization may begin only under an explicit follow-up scope.
+Cancelled: T046 puwaer/HERETIC A/B by user decision. Further quantization is out of scope.
 
 ## Dependencies & Execution Order
 - Phase 1 blocks all others.

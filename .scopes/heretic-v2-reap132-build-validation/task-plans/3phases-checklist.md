@@ -450,6 +450,12 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   file and releases the ndarray; dry-run retains metadata only. The complete
   43-layer plan passed at 1,328 tensors / 85.0 GB with 1.67 GiB peak RSS, zero
   process swaps, and a clean kernel gate.
+- The first full 80 GiB output is quarantined. Its metadata and 90 sampled MXFP4
+  expert blocks pass, but sampled `token_embd`, `output_norm`, and `output`
+  payloads fail direct provenance and llama.cpp repeats `D`. `write_array()`
+  passed a `LazyNumpyTensor` metadata placeholder to `np.ascontiguousarray()`;
+  the direct path therefore wrote zeroes for ordinary tensors. Fix and prove
+  small direct payload conversion before replacing the artifact.
 
 ## Final Release Gate
 - Scope constraints preserved.

@@ -32,11 +32,8 @@
 
 ## Mission
 
-Deploy and operate local llama.cpp CUDA serving for the locally copied
-DeepSeek-V4-Flash-0731 REAP artifacts:
-
-- `DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf` (legacy diagnostic artifact)
-- `DeepSeek-V4-Flash-0731-reap-150b-IQ3_XXS.gguf` (current candidate)
+Produce and deploy one verified MXFP4 GGUF from the accepted
+`DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP` checkpoint with llama.cpp.
 
 on dual RTX 5090 with:
 
@@ -59,20 +56,13 @@ on dual RTX 5090 with:
 - Do not load the runtime model from `/data/toshiba-1tb` if the NVMe copy exists or can be created.
 - Preferred runtime directory:
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731/`
-- Current IQ3 destination:
-  `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-reap-150b-IQ3_XXS.gguf`
-- Hugging Face remote artifact metadata is the source of truth for these files:
-  - Q2_K: size `62.4 GB`, SHA256
-    `2e8ab70acda6d9ce4813a8b580d402c30d837d7bd8bf6119d6e84de38aa42d48`,
-    Xet hash `63773380bafc18dcffbb9c36f4b6db523433c08a095a66ab4e0dc791baac19e7`.
-  - IQ3_XXS: size `67 GB`, SHA256
-    `98e448d678760ef50f0e02c9318cfcac94a50d8901dd373e9acdf5d71e668585`,
-    Xet hash `d8b2dc5aca12a6e3919bc20f408fe26686c5417794456a762f7002743c7738f3`.
-- The previous local copies are deleted. Their observed hashes were different
-  from the remote metadata, so they must not be treated as verified artifacts.
-- A newly downloaded GGUF may be served only after its local SHA256 matches the
-  corresponding remote SHA256 above. Xet hash is an artifact identity hint,
-  not a replacement for local SHA256 verification.
+- Final artifact destination:
+  `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf`.
+- Do not download, test, or publish puwaer, IQ3, Q2, or other alternative
+  quantizations in this scope. MXFP4 is the final deployment format.
+- The existing 80 GiB GGUF with SHA256
+  `e6dd3c1235e0b0ea6a2efbe13f2f06cc2015e8d6c135025aa3c5d8e75bfff84d` is
+  quarantined diagnostic output, not a golden or deployable model.
 - Prefer full GPU offload. Expert CPU offload is last resort only.
 - OOM order:
   1. lower `-b/-ub`
@@ -80,8 +70,6 @@ on dual RTX 5090 with:
   3. only then consider limited CPU offload
 - Do not jump straight to 128K+ context.
 - Default bind is `127.0.0.1` unless Master explicitly approves broader exposure.
-- Do not launch IQ3 automatically after copying; serving/testing requires an
-  explicit request.
 - Before runtime tests, verify no `wiki_nav.py`/doctor scan is reading large
   external files and record a clean RAM/Swap baseline.
 - Use `ok-skill` / `repo-task-driven` / `wiki-note` for durable scope and knowledge updates.
@@ -227,7 +215,12 @@ on dual RTX 5090 with:
   to a same-filesystem O_DIRECT temporary file instead of retaining every array
   in RAM. A real 1,328-tensor dry-run planned an 85.0 GB GGUF with 1.67 GiB peak
   RSS and zero process swaps. Full conversion must use both flags and start only
-  on a clean boot.
+  on a clean boot. Commit `8704e31` has a direct-output correctness defect:
+  `np.ascontiguousarray(LazyNumpyTensor)` serializes zero-valued metadata rather
+  than payload bytes. MXFP4 experts are unaffected because they are eager before
+  writing; ordinary BF16/F32 tensors are zeroed. The next converter commit must
+  materialize `LazyNumpyTensor` in `write_array()` and pass direct GGUF payload
+  tests before a replacement full conversion.
 - Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
   5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
   backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose

@@ -205,6 +205,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("checkpoint", type=Path)
     parser.add_argument("--prompt", default="Hello")
+    parser.add_argument(
+        "--top-k",
+        type=int,
+        default=0,
+        help="include the top-k final logits in the report; 0 disables it",
+    )
     parser.add_argument("--max-input-tokens", type=int, default=512)
     parser.add_argument("--require-input-tokens", type=int)
     parser.add_argument("--device", default="cuda:0")
@@ -229,6 +235,9 @@ def main() -> int:
         help="controlled Layer 2 AV value-layout diagnostic",
     )
     args = parser.parse_args()
+
+    if args.top_k < 0:
+        raise ValueError("--top-k must be non-negative")
 
     if not torch.cuda.is_available():
         raise RuntimeError("native smoke requires CUDA")
@@ -352,6 +361,18 @@ def main() -> int:
         if not torch.isfinite(logits).all():
             raise ValueError("non-finite final logits")
         next_token = int(torch.argmax(logits[0, -1]).item())
+        top_logits = []
+        if args.top_k:
+            count = min(args.top_k, logits.shape[-1])
+            values, token_ids = torch.topk(logits[0, -1], count)
+            top_logits = [
+                {
+                    "token": int(token_id),
+                    "text": tokenizer.decode([int(token_id)]),
+                    "logit": float(value),
+                }
+                for value, token_id in zip(values.cpu(), token_ids.cpu())
+            ]
         torch.cuda.synchronize(device)
 
     report = {
@@ -373,6 +394,7 @@ def main() -> int:
         "input_token_count": int(input_ids.shape[1]),
         "next_token": next_token,
         "next_token_text": tokenizer.decode([next_token]),
+        "top_logits": top_logits,
         "placements": placements,
         "layers_completed": len(streamer.layer_indices),
         "rss_peak_gib": rss_gib(),

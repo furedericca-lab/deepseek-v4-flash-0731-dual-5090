@@ -248,3 +248,16 @@ immediately into a same-filesystem O_DIRECT temporary file and release the
 array; dry-run retains metadata only. The complete 43-layer dry-run then passed
 with 1,328 output tensors, an estimated 85.0 GB GGUF, 1.67 GiB peak RSS, zero
 process swaps, and no kernel fault.
+
+The first full output is quarantined rather than accepted: its 80 GiB GGUF
+loads on dual RTX 5090 but repeats `D`, while the accepted native checkpoint
+returns ` Paris` for the same raw prompt. Direct O_DIRECT provenance confirms
+90 sampled MXFP4 expert blocks are correct and the `tid2eid` tables are valid;
+embedding, output norm, and LM head payload samples fail. The cause is precise:
+the direct writer passed `LazyNumpyTensor` to `np.ascontiguousarray()`, which
+materializes the zero-valued metadata placeholder instead of the deferred array.
+MXFP4 experts bypassed this because their repacker created eager arrays. The
+writer must materialize lazy arrays in `write_array()` before direct staging;
+its small direct GGUF payload regression must pass before a replacement full
+conversion. The user cancelled puwaer A/B and further IQ3/Q2 work: the repaired
+MXFP4 GGUF is the sole deployment target.
