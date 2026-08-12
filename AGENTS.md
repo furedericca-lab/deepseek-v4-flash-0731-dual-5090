@@ -2,11 +2,12 @@
 
 ## Source of truth
 
-1. Current build/verification scope under
-   `.scopes/heretic-v2-reap132-build-validation/`
+1. Active K96 consensus scope under `.scopes/heretic-v2-reap96-consensus/`
 2. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
-3. Durable project knowledge under `.wiki/`
-4. `README.md` for operator entry points
+3. Archived REAP132 delivery record under
+   `.scopes/archive/heretic-v2-reap132-build-validation/`
+4. Durable project knowledge under `.wiki/`
+5. `README.md` for operator entry points
 
 ## Runtime environment
 
@@ -32,10 +33,12 @@
 
 ## Mission
 
-Produce and deploy one verified MXFP4 GGUF from the accepted
-`DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP` checkpoint with llama.cpp.
+Keep the accepted REAP132 MXFP4 GGUF deployable while deriving a separate,
+evidence-backed REAP96 candidate from the immutable K132 survivor universe.
+Do not replace the canonical K132 artifact until the K96 candidate independently
+passes the same O_DIRECT provenance and dual-RTX-5090 runtime gates.
 
-on dual RTX 5090 with:
+The deployment baseline uses llama.cpp on dual RTX 5090 with:
 
 - layer split 1:1
 - full GPU weights
@@ -59,10 +62,17 @@ on dual RTX 5090 with:
 - Final artifact destination:
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf`.
 - Do not download, test, or publish puwaer, IQ3, Q2, or other alternative
-  quantizations in this scope. MXFP4 is the final deployment format.
+  quantizations in the REAP132 deployment scope. MXFP4 remains the only
+  deployment format. The K96 consensus scope may inspect only the specific
+  small external plan/mask/manifest evidence listed in its contracts; it must
+  not download external model-weight or GGUF payloads.
 - The existing 80 GiB GGUF with SHA256
   `e6dd3c1235e0b0ea6a2efbe13f2f06cc2015e8d6c135025aa3c5d8e75bfff84d` is
   quarantined diagnostic output, not a golden or deployable model.
+- `squanchyzx-puwaer-reap132-mask.json`, the accepted REAP132 native
+  checkpoint, and the canonical REAP132 GGUF are immutable baselines. K96 is a
+  new plan and artifact line; never edit, overwrite, or reinterpret K132 data
+  to make a K96 plan fit.
 - Prefer full GPU offload. Expert CPU offload is last resort only.
 - OOM order:
   1. lower `-b/-ub`

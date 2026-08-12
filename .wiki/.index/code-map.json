@@ -1,9 +1,18 @@
 {
-  ".scopes/heretic-v2-reap132-build-validation": {
+  ".scopes/archive/heretic-v2-reap132-build-validation": {
     "anchors": [],
     "definition_pages": [],
     "pages": [
       ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+    ],
+    "symbols": {}
+  },
+  ".scopes/heretic-v2-reap96-consensus": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/decisions/reap96-k132-subset-consensus.md",
+      ".wiki/implementation/heretic-v2-reap96-consensus.md"
     ],
     "symbols": {}
   },
@@ -27,7 +36,8 @@
     "anchors": [],
     "definition_pages": [],
     "pages": [
-      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md",
+      ".wiki/implementation/heretic-v2-reap96-consensus.md"
     ],
     "symbols": {}
   },
@@ -35,7 +45,8 @@
     "anchors": [],
     "definition_pages": [],
     "pages": [
-      ".wiki/implementation/heretic-v2-reap132-build-validation.md"
+      ".wiki/implementation/heretic-v2-reap132-build-validation.md",
+      ".wiki/implementation/heretic-v2-reap96-consensus.md"
     ],
     "symbols": {}
   },
@@ -105,7 +116,9 @@
     ],
     "pages": [
       ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md",
+      ".wiki/decisions/reap96-k132-subset-consensus.md",
       ".wiki/implementation/heretic-v2-reap132-build-validation.md",
+      ".wiki/implementation/heretic-v2-reap96-consensus.md",
       ".wiki/implementation/reap132-plan-checkpoint-provenance.md"
     ],
     "symbols": {}

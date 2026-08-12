@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Extract the exact original-expert survivor map used by
-puwaer/DeepSeek-V4-Flash-0731-reap-150b without downloading either full model.
+Extract the exact original-expert survivor map used by a puwaer REAP checkpoint
+without downloading either full model.
 
 The script exploits a property of puwaer's REAP implementation: pruning is a
 bit-exact slice along the expert axis. It compares router tensors from the base
@@ -125,7 +125,13 @@ class HFRangeSafetensors:
                     raise HFError(
                         f"requested Range is too large ({expected} bytes) for {filename}"
                     )
-                with self.fs.open(self._url(filename), "rb", revision=self.revision) as stream:
+                # Avoid fsspec's default multi-megabyte read-ahead. This
+                # extractor seeks to bounded safetensors ranges; caching must
+                # not turn those into unrelated Xet payload requests.
+                with self.fs.open(
+                    self._url(filename), "rb", revision=self.revision,
+                    block_size=1, cache_type="none",
+                ) as stream:
                     stream.seek(start)
                     data = stream.read(expected)
                 if len(data) != expected:
@@ -319,9 +325,52 @@ def recover_layer_map(base: HFRangeSafetensors, pruned: HFRangeSafetensors,
     return exact_row_map(bi, br, pi, pr), "gate.weight-row-sha256-exact"
 
 
+def fragment_path(directory: Path, layer: int) -> Path:
+    return directory / f"layer-{layer:02d}.json"
+
+
+def validate_fragment(payload: dict, *, layer: int, base_sha: str, pruned_sha: str,
+                      expected_kept: int) -> tuple[List[int], str]:
+    if payload.get("schema") != "reap-expert-mask-fragment-v1":
+        raise ValueError(f"layer {layer}: unsupported fragment schema")
+    if payload.get("layer") != layer:
+        raise ValueError(f"layer {layer}: fragment layer identity mismatch")
+    if payload.get("base_revision_sha") != base_sha or payload.get("pruned_revision_sha") != pruned_sha:
+        raise ValueError(f"layer {layer}: fragment revision identity mismatch")
+    if payload.get("expected_kept") != expected_kept:
+        raise ValueError(f"layer {layer}: fragment expert-count identity mismatch")
+    kept = payload.get("kept_experts")
+    evidence = payload.get("mapping_evidence")
+    if not isinstance(kept, list) or not isinstance(evidence, str):
+        raise ValueError(f"layer {layer}: malformed fragment payload")
+    if len(kept) != expected_kept or kept != sorted(kept) or len(set(kept)) != expected_kept:
+        raise ValueError(f"layer {layer}: invalid fragment survivor set")
+    if any(not isinstance(expert, int) or expert < 0 or expert >= 256 for expert in kept):
+        raise ValueError(f"layer {layer}: fragment expert outside 0..255")
+    return kept, evidence
+
+
+def write_fragment(directory: Path, *, layer: int, base_sha: str, pruned_sha: str,
+                   expected_kept: int, kept: List[int], evidence: str) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "schema": "reap-expert-mask-fragment-v1",
+        "layer": layer,
+        "base_revision_sha": base_sha,
+        "pruned_revision_sha": pruned_sha,
+        "expected_kept": expected_kept,
+        "kept_experts": kept,
+        "mapping_evidence": evidence,
+    }
+    target = fragment_path(directory, layer)
+    temporary = target.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
+    temporary.replace(target)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Recover puwaer's exact DeepSeek-V4 REAP-132 expert mask using bounded HfFileSystem reads."
+        description="Recover puwaer's exact DeepSeek-V4 REAP survivor mask using bounded HfFileSystem reads."
     )
     ap.add_argument("--base", default=DEFAULT_BASE, help=f"base HF repo (default: {DEFAULT_BASE})")
     ap.add_argument("--pruned", default=DEFAULT_PRUNED, help=f"pruned HF repo (default: {DEFAULT_PRUNED})")
@@ -329,6 +378,16 @@ def main() -> int:
                     help="Hugging Face branch or immutable commit SHA")
     ap.add_argument("--pruned-revision", default=DEFAULT_PRUNED_REVISION,
                     help="Hugging Face branch or immutable commit SHA")
+    ap.add_argument("--expected-kept", type=int, default=132,
+                    help="expected routed-expert count in the pruned checkpoint (default: 132)")
+    ap.add_argument("--fragments-dir", type=Path,
+                    help="directory for atomic per-layer recovery fragments")
+    ap.add_argument("--resume", action="store_true",
+                    help="reuse validated fragments from --fragments-dir")
+    ap.add_argument("--start-layer", type=int, default=0,
+                    help="first layer to recover, inclusive (default: 0)")
+    ap.add_argument("--end-layer", type=int, default=42,
+                    help="last layer to recover, inclusive (default: 42)")
     ap.add_argument("-o", "--output", default=DEFAULT_OUTPUT)
     ap.add_argument("--token", default=os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN"))
     ap.add_argument("--no-tid2eid", action="store_true",
@@ -344,11 +403,15 @@ def main() -> int:
     pruned_e = cfg_int(pruned.config, "n_routed_experts", 132)
     n_layers = cfg_int(pruned.config, "num_hidden_layers", 43)
     hash_layers = cfg_int(pruned.config, "num_hash_layers", 3)
-    if base_e != 256 or pruned_e != 132 or n_layers != 43 or hash_layers != 3:
+    if base_e != 256 or pruned_e != args.expected_kept or n_layers != 43 or hash_layers != 3:
         raise HFError(
             f"unexpected model geometry: base experts={base_e}, pruned experts={pruned_e}, "
-            f"layers={n_layers}, hash_layers={hash_layers}; refusing to label this REAP-132"
+            f"layers={n_layers}, hash_layers={hash_layers}; expected kept={args.expected_kept}"
         )
+    if not 0 <= args.start_layer <= args.end_layer < n_layers:
+        raise ValueError(f"invalid layer range {args.start_layer}..{args.end_layer} for {n_layers} layers")
+    if args.resume and args.fragments_dir is None:
+        raise ValueError("--resume requires --fragments-dir")
 
     result = {
         "schema": "puwaer-reap-mask-v1",
@@ -380,8 +443,20 @@ def main() -> int:
         "hash_routing": {},
     }
 
-    print(f"[2/4] Recovering exact survivor IDs for {n_layers} layers...")
-    for layer in range(n_layers):
+    print(f"[2/4] Recovering exact survivor IDs for layers {args.start_layer}..{args.end_layer}...")
+    recovered_layers: Dict[int, Tuple[List[int], str]] = {}
+    for layer in range(args.start_layer, args.end_layer + 1):
+        existing = fragment_path(args.fragments_dir, layer) if args.fragments_dir is not None else None
+        if args.resume and existing is not None and existing.exists():
+            mapping, evidence = validate_fragment(
+                json.loads(existing.read_text(encoding="utf-8")), layer=layer,
+                base_sha=base.resolved_sha, pruned_sha=pruned.resolved_sha,
+                expected_kept=pruned_e,
+            )
+            recovered_layers[layer] = (mapping, evidence)
+            print(f"  layer {layer:02d}: resumed  [{evidence}]")
+            continue
+        print(f"  layer {layer:02d}: reading router tensors...", flush=True)
         mapping, evidence = recover_layer_map(base, pruned, layer, hash_layers)
         if len(mapping) != pruned_e:
             raise ValueError(f"layer {layer}: expected {pruned_e} survivors, got {len(mapping)}")
@@ -389,11 +464,31 @@ def main() -> int:
             raise ValueError(f"layer {layer}: expert id outside 0..{base_e-1}")
         if len(set(mapping)) != pruned_e:
             raise ValueError(f"layer {layer}: duplicate original expert ids")
-        result["layers"][str(layer)] = {
-            "kept_experts": mapping,
-            "mapping_evidence": evidence,
-        }
+        recovered_layers[layer] = (mapping, evidence)
+        if args.fragments_dir is not None:
+            write_fragment(
+                args.fragments_dir, layer=layer, base_sha=base.resolved_sha,
+                pruned_sha=pruned.resolved_sha, expected_kept=pruned_e,
+                kept=mapping, evidence=evidence,
+            )
         print(f"  layer {layer:02d}: {mapping[0]:3d}..{mapping[-1]:3d}  [{evidence}]")
+
+    if args.fragments_dir is not None:
+        for layer in range(n_layers):
+            existing = fragment_path(args.fragments_dir, layer)
+            if existing.exists():
+                recovered_layers[layer] = validate_fragment(
+                    json.loads(existing.read_text(encoding="utf-8")), layer=layer,
+                    base_sha=base.resolved_sha, pruned_sha=pruned.resolved_sha,
+                    expected_kept=pruned_e,
+                )
+    missing_layers = [layer for layer in range(n_layers) if layer not in recovered_layers]
+    if missing_layers:
+        print(f"[3/4] Fragment checkpoint updated; final mask withheld. Missing layers: {missing_layers}")
+        return 0
+    for layer in range(n_layers):
+        mapping, evidence = recovered_layers[layer]
+        result["layers"][str(layer)] = {"kept_experts": mapping, "mapping_evidence": evidence}
 
     if not args.no_tid2eid:
         print(f"[3/4] Embedding final tid2eid tables for hash layers 0..{hash_layers-1}...")

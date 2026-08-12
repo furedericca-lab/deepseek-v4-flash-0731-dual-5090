@@ -1,8 +1,9 @@
-# DeepSeek-V4-Flash-0731 HERETIC REAP132 on Dual RTX 5090
+# DeepSeek-V4-Flash-0731 HERETIC REAP132 Deployment and REAP96 Consensus
 
-This repository builds and validates a deterministic no-MTP REAP132 checkpoint,
-converts it to a golden MXFP4 GGUF, and deploys it with llama.cpp on two RTX
-5090 GPUs.
+This repository contains the completed deterministic no-MTP REAP132 delivery
+and a separate K96 consensus-planning line. REAP132 remains the deployed
+canonical MXFP4 GGUF while K96 is derived only from its survivor universe and
+independently published mask evidence.
 
 ## Current Status
 
@@ -11,6 +12,7 @@ converts it to a golden MXFP4 GGUF, and deploys it with llama.cpp on two RTX
 | 1. Checkpoint build | Complete | Deterministic Python 3.12 A/B builds and independent byte-provenance verification passed |
 | 2. Native HF smoke | Complete with limitation | 1- and 16-token prefills passed; 32-token CSA exposed a reproducible Torch/cuBLAS zero-stride runtime fault on Blackwell |
 | 3. GGUF and runtime | Complete | Canonical MXFP4 GGUF passed provenance, dual-5090 64K load, 32K prefill, API, and behavior probes |
+| 4. REAP96 consensus | Plan frozen | Phase 1 evidence and Phase 2 deterministic K96 plan passed; no K96 checkpoint exists yet and Phase 3 has not started |
 
 Accepted checkpoint:
 
@@ -28,8 +30,10 @@ Acceptance facts:
 - independent aligned `O_DIRECT` verifier: zero failures
 - checkpoint directory is read-only
 
-The frozen survivor plan is
-`squanchyzx-puwaer-reap132-mask.json`. Do not edit or recalculate it.
+`squanchyzx-puwaer-reap132-mask.json` is the frozen REAP132 survivor plan. Do
+not edit or recalculate it. The K96 scope may select only a 96-expert subset of
+each existing 132-expert layer and must write a new plan plus new hash-routing
+tables; it never changes the REAP132 plan or artifacts.
 
 ## Checkout
 
@@ -164,12 +168,18 @@ a+b`, both native HF and the GGUF emit a newline as the first greedy token.
 
 ## Project Sources
 
-- Active build scope: `.scopes/heretic-v2-reap132-build-validation/`
+- Active K96 build-candidate scope: `.scopes/heretic-v2-reap96-consensus/`
 - Deployment scope: `.scopes/deepseek-v4-flash-0731-dual-5090/`
-- Durable implementation record: `.wiki/implementation/heretic-v2-reap132-build-validation.md`
+- Archived REAP132 delivery scope:
+  `.scopes/archive/heretic-v2-reap132-build-validation/`
+- Durable implementation records:
+  `.wiki/implementation/heretic-v2-reap132-build-validation.md` and
+  `.wiki/implementation/heretic-v2-reap96-consensus.md`
 - Operator and safety rules: `AGENTS.md`
 - Frozen-plan details: `docs/puwaer-reap132-mask-README.md`
 
 The native HF CSA fault is documented and closed under the Phase 2 stop-loss
 rule. Phase 3 acceptance is based on the pinned llama.cpp/GGUF deployment path;
-do not reopen Torch/cuBLAS root-cause debugging as a prerequisite.
+do not reopen Torch/cuBLAS root-cause debugging as a prerequisite. The K96
+scope does not download puwaer or other external weights, and it does not
+replace the canonical K132 deployment until its own release gates pass.

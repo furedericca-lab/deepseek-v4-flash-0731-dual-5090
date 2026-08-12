@@ -1,10 +1,11 @@
 ---
 title: HERETIC v2 streaming writer namespace corruption
 type: debugging
-status: current
-scope: heretic-v2-reap132-build-validation
+status: historical
+scope: deepseek-v4-flash-0731-dual-5090
 related_scopes:
   - deepseek-v4-flash-0731-dual-5090
+  - heretic-v2-reap96-consensus
 related_files:
   - path: vendor/moe-expert-compress/src/moe_compress/streaming/naming.py
     role: owner
@@ -35,7 +36,7 @@ code_anchors:
     symbol: StreamingCheckpointWriter.finalize
     role: defines
 source_docs:
-  - .scopes/heretic-v2-reap132-build-validation/task-plans/3phases-checklist.md
+  - .scopes/archive/heretic-v2-reap132-build-validation/task-plans/3phases-checklist.md
 tags:
   - deepseek-v4
   - fp4

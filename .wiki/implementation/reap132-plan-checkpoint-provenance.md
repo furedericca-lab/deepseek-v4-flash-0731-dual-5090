@@ -30,7 +30,10 @@ The active mapped reproduction artifact is `squanchyzx-puwaer-reap132-mask.json`
 
 All 43 router mappings were recovered byte-exact. The artifact contains 132 sorted survivor IDs per layer and three byte-exact `[129280, 6]` `int64` `tid2eid` tables. Independent validation confirmed zlib/base64 decoding, blob SHA256, byte length, shape, dtype, expert range, and distinct IDs in every row. The survivor maps and routing blobs are byte-identical to the prior puwaer plan; only base provenance and the logical hash differ.
 
-This is a mapped puwaer survivor plan, not a fresh REAP saliency calibration on squanchyzx v2 hidden states. It is intended to preserve the same expert set for an abliterated-versus-puwaer A/B.
+This is a mapped puwaer survivor plan, not a fresh REAP saliency calibration on
+squanchyzx v2 hidden states. It is the immutable REAP132 release baseline. The
+active K96 consensus scope may only select a new per-layer subset of these 132
+survivors; it does not reopen a puwaer-versus-HERETIC A/B.
 
 Exact-plan compression accepts only a local checkpoint directory with `.checkpoint-source.json`. The manifest repo and revision must match `base_repo` and `base_revision_sha` in the plan. Before model loading, `moe-compress` recomputes SHA256 for local `config.json` and `model.safetensors.index.json`. Generate the manifest through `scripts/write_checkpoint_source_manifest.py` after downloading the fixed v2 revision with the logged-in `hf` CLI.
 

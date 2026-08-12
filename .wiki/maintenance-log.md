@@ -92,3 +92,17 @@ Append-only history for wiki updates caused by scope work, implementation closeo
 - Pages: implementation/heretic-v2-reap132-build-validation.md
 - Verification: 7 direct-I/O writer tests passed; 90 MXFP4 samples passed; 9 nonexpert provenance samples failed on quarantined artifact
 - Residual risk: Replacement full GGUF must complete direct provenance and dual-5090 semantic runtime acceptance.
+
+## 2026-08-12T14:20:26Z [heretic-v2-reap96-consensus]
+
+- Summary: Archived completed REAP132 delivery, created the isolated K96 consensus scope, and aligned entry points with immutable K132 release policy.
+- Pages: implementation/heretic-v2-reap96-consensus.md, implementation/heretic-v2-reap132-build-validation.md, decisions/reap96-k132-subset-consensus.md
+- Verification: repo-task-driven archive/scaffold; wiki-note rebuild/lint/doctor
+- Residual risk: External mask schemas and immutable revisions must be verified before any K96 plan is generated.
+
+## 2026-08-12T16:51:48Z [heretic-v2-reap96-consensus]
+
+- Summary: Expanded the frozen K96 plan record with source provenance, scoring and tie-break semantics, corrected histograms, semantic-rank boundary statistics, plan hashes, regenerated hash-routing invariants, and Phase 3 quality risks.
+- Pages: implementation/heretic-v2-reap96-consensus.md, decisions/reap96-k132-subset-consensus.md
+- Verification: uv run python scripts/verify_reap96_plan.py
+- Residual risk: K96 remains an unbuilt aggressive pruning candidate; K132 stays canonical until all Phase 3 O_DIRECT, provenance, GGUF, and dual-5090 semantic gates pass.

@@ -1,0 +1,97 @@
+{
+  "schema": "reap96-evidence-lock-v1",
+  "retrieval_policy": "hf-cli small files only; no external model shard or GGUF payload",
+  "candidate_universe": {
+    "path": "squanchyzx-puwaer-reap132-mask.json",
+    "declared_k": 132,
+    "status": "accepted-local"
+  },
+  "sources": [
+    {
+      "id": "heath0xff-k216",
+      "repo": "heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF",
+      "revision_sha": "9f8c8a7abcd5f02d598f5b6c194bab804e87b837",
+      "source_path": "metadata/REAP_K216_PLAN.json",
+      "source_sha256": "cc2bdaf189ebdaa98178e35abac4b1b336808c4f86b11e9b8eccde6cb3e44001",
+      "normalized_path": "evidence/normalized/heath0xFF-k216.json",
+      "declared_k": 216,
+      "layers": "0-42",
+      "lineage": "0xSero",
+      "accepted_for_scoring": true
+    },
+    {
+      "id": "blivion-k192",
+      "repo": "BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B",
+      "revision_sha": "eb6e3479ab5d15de38f6379bccd31a58fc3b8630",
+      "source_path": "reap_saliency.json",
+      "source_sha256": "47b4149ebb1d9a270e0090ca79c2c8a0c029fcb8ab7e9e865ae0806ff17633f3",
+      "normalized_path": "evidence/normalized/blivion-k192.json",
+      "declared_k": 192,
+      "layers": "0-42",
+      "lineage": "Blivion",
+      "accepted_for_scoring": true
+    },
+    {
+      "id": "true2456-k163",
+      "repo": "True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX",
+      "revision_sha": "1697a22c352d113837bf2729066fee3217ea4625",
+      "source_path": "reap-plan.json",
+      "source_sha256": "804d70a1e263e6a9d4e4e2c799bd4496458084094d8f407aa585200aef7201e1",
+      "normalized_path": "evidence/normalized/true2456-k163-l3-42.json",
+      "declared_k": 163,
+      "layers": "3-42",
+      "lineage": "REAP37",
+      "accepted_for_scoring": true
+    },
+    {
+      "id": "0xsero-k160",
+      "repo": "0xSero/DeepSeek-V4-Flash-0731-REAP",
+      "revision_sha": "ddc04540efda3d2a0788b129f1fad828ddc19b60",
+      "source_paths": ["REAP_MANIFEST.json", "reap_plan.json"],
+      "source_sha256": {
+        "REAP_MANIFEST.json": "30d3370bd283c8b3a5e32374487d04eb7679aa37997878fe52b23048ac1b0027",
+        "reap_plan.json": "ec2febad1c3f0bc7025d4632849aef6d9a7affaae84f7ff7826cfa5c9dbeacbb"
+      },
+      "declared_k": 160,
+      "lineage": "0xSero",
+      "exact_mask_path": "evidence/0xsero-k160-exact-mask.json",
+      "exact_mask_logical_sha256": "ccb46a9f1144b923ad600a98fbae922e00efe2061ffb995b1c6f437105325596",
+      "normalized_path": "evidence/normalized/0xsero-k160.json",
+      "normalized_source_sha256": "c498a8d48fa9ffd297b26a4949e499c022d0c95aa4d75a269abf320784f69d34",
+      "base_revision_sha": "9e165c30e2704aec5d9d593cce3eebd58bbef1cb",
+      "accepted_for_scoring": true,
+      "original_id_proof": "43/43 byte-exact base-to-pruned router bias or row-SHA256 recovery"
+    },
+    {
+      "id": "puwaer-k178",
+      "repo": "puwaer/DeepSeek-V4-Flash-0731-reap-200b",
+      "revision_sha": "c1dd22d2c41d6b7ec12089d7f7de33f7a05c96cf",
+      "source_paths": ["README.md", "config.json", "model.safetensors.index.json"],
+      "declared_k": 178,
+      "lineage": "puwaer",
+      "exact_mask_path": "evidence/puwaer-k178-exact-mask.json",
+      "exact_mask_logical_sha256": "09f66d74a93c18c39e0ea065d08e7ec7e80e0e69e9f5408ff99228c6ed882200",
+      "normalized_path": "evidence/normalized/puwaer-k178.json",
+      "normalized_source_sha256": "90c55ec44362f85200c029e0b7000cbfc8601a909fd41e0487d383aff17cc516",
+      "base_revision_sha": "9e165c30e2704aec5d9d593cce3eebd58bbef1cb",
+      "accepted_for_scoring": true,
+      "original_id_proof": "43/43 byte-exact base-to-pruned router bias or row-SHA256 recovery"
+    },
+    {
+      "id": "reap25-k192",
+      "repo": "ljubomirj/ds4",
+      "revision_sha": "01bdc35a30cade02ca9800e5b241419cae2ba6ca",
+      "source_path": "tools/reap25-prune/keep_map_bexact.json",
+      "source_sha256": "ee095012a79bddc2af633032a011625799d67cff354e4b8eb1c9b3cbbb6d56c4",
+      "documentation_path": "docs/REAP25-REPRODUCE.md",
+      "documentation_sha256": "2deef99bf3a9f4bf7b14a2ccd0e55f0a6ec4a763126fb1794b49f3efe4e3ab37",
+      "normalized_path": "evidence/normalized/ljupco-reap25-k192-l3-42.json",
+      "declared_k": 192,
+      "layers": "3-42",
+      "lineage": "REAP25",
+      "accepted_for_scoring": true,
+      "original_id_proof": "published B-exact four-part recovery, 192/192 agreement in all 40 scored layers"
+    }
+  ],
+  "overlap_report": "evidence/reap96-phase1-overlap.json"
+}

@@ -1,0 +1,2103 @@
+{
+  "schema": "reap-mask-overlap-report-v1",
+  "k132": {
+    "repo": "puwaer/DeepSeek-V4-Flash-0731-reap-150b",
+    "revision_sha": "868fa38e2f2964699ad065dc8d9382c136cc60b8",
+    "path": "squanchyzx-puwaer-reap132-mask.json",
+    "sha256": "b43a1078f905157cbdbe976530d96b6c41730ccd3ef6feac4d598a15a9d84b04",
+    "lineage": "puwaer",
+    "original_id_proof": "existing-43-layer-byte-exact-router-recovery"
+  },
+  "sources": [
+    {
+      "repo": "heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF",
+      "revision_sha": "9f8c8a7abcd5f02d598f5b6c194bab804e87b837",
+      "path": ".scopes/heretic-v2-reap96-consensus/evidence/upstream/heath0xFF-k216/metadata/REAP_K216_PLAN.json",
+      "sha256": "cc2bdaf189ebdaa98178e35abac4b1b336808c4f86b11e9b8eccde6cb3e44001",
+      "lineage": "0xSero",
+      "original_id_proof": "published K216 original-ID keep_by_layer plan"
+    },
+    {
+      "repo": "BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B",
+      "revision_sha": "eb6e3479ab5d15de38f6379bccd31a58fc3b8630",
+      "path": ".scopes/heretic-v2-reap96-consensus/evidence/upstream/blivion-k192/reap_saliency.json",
+      "sha256": "47b4149ebb1d9a270e0090ca79c2c8a0c029fcb8ab7e9e865ae0806ff17633f3",
+      "lineage": "Blivion",
+      "original_id_proof": "published per-layer kept_expert_ids in original 0..255 space"
+    },
+    {
+      "repo": "True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX",
+      "revision_sha": "1697a22c352d113837bf2729066fee3217ea4625",
+      "path": ".scopes/heretic-v2-reap96-consensus/evidence/upstream/true2456-k163/reap-plan.json",
+      "sha256": "804d70a1e263e6a9d4e4e2c799bd4496458084094d8f407aa585200aef7201e1",
+      "lineage": "REAP37",
+      "original_id_proof": "published per-layer original-ID keep lists; hash layers excluded by policy"
+    },
+    {
+      "repo": "0xSero/DeepSeek-V4-Flash-0731-REAP",
+      "revision_sha": "ddc04540efda3d2a0788b129f1fad828ddc19b60",
+      "path": ".scopes/heretic-v2-reap96-consensus/evidence/0xsero-k160-exact-mask.json",
+      "sha256": "c498a8d48fa9ffd297b26a4949e499c022d0c95aa4d75a269abf320784f69d34",
+      "lineage": "0xSero",
+      "original_id_proof": "43-layer base-to-pruned router recovery; byte-exact bias or row SHA256 matching"
+    },
+    {
+      "repo": "puwaer/DeepSeek-V4-Flash-0731-reap-200b",
+      "revision_sha": "c1dd22d2c41d6b7ec12089d7f7de33f7a05c96cf",
+      "path": ".scopes/heretic-v2-reap96-consensus/evidence/puwaer-k178-exact-mask.json",
+      "sha256": "90c55ec44362f85200c029e0b7000cbfc8601a909fd41e0487d383aff17cc516",
+      "lineage": "puwaer",
+      "original_id_proof": "43-layer base-to-pruned router recovery; byte-exact bias or row SHA256 matching"
+    },
+    {
+      "repo": "ljubomirj/ds4",
+      "revision_sha": "01bdc35a30cade02ca9800e5b241419cae2ba6ca",
+      "path": ".scopes/heretic-v2-reap96-consensus/evidence/upstream/ljupco-reap25-ds4/keep_map_bexact.json",
+      "sha256": "ee095012a79bddc2af633032a011625799d67cff354e4b8eb1c9b3cbbb6d56c4",
+      "lineage": "REAP25",
+      "original_id_proof": "published B-exact four-part recovery from compact MLX IDs to original 0..255 IDs"
+    }
+  ],
+  "layers": [
+    {
+      "layer": 0,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 98,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43362832
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": false
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": false
+        }
+      }
+    },
+    {
+      "layer": 1,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 130,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.59633028
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 100,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44642857
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": false
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": false
+        }
+      }
+    },
+    {
+      "layer": 2,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 107,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.49308756
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": false
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 124,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.73809524
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": false
+        }
+      }
+    },
+    {
+      "layer": 3,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 120,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.58823529
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.48241206
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 106,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.48623853
+        }
+      }
+    },
+    {
+      "layer": 4,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 128,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.58181818
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 90,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43902439
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 120,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.69767442
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        }
+      }
+    },
+    {
+      "layer": 5,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 102,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.45945946
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 93,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46039604
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 122,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.71764706
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 101,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.4529148
+        }
+      }
+    },
+    {
+      "layer": 6,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 100,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44642857
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 100,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.51282051
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 101,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.4529148
+        }
+      }
+    },
+    {
+      "layer": 7,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 87,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.36708861
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 99,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.50510204
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 122,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.71764706
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 84,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.35
+        }
+      }
+    },
+    {
+      "layer": 8,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 99,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.50510204
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 126,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.75903614
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 87,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.36708861
+        }
+      }
+    },
+    {
+      "layer": 9,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 90,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.38461538
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 93,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46039604
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 125,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.74850299
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 94,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.40869565
+        }
+      }
+    },
+    {
+      "layer": 10,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 93,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46039604
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 121,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.70760234
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 104,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47272727
+        }
+      }
+    },
+    {
+      "layer": 11,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 88,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.37288136
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 92,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.45320197
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 122,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.71764706
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        }
+      }
+    },
+    {
+      "layer": 12,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 87,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.36708861
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 92,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.45320197
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 120,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.69767442
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 94,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.40869565
+        }
+      }
+    },
+    {
+      "layer": 13,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 91,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.39055794
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 90,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43902439
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 125,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.74850299
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        }
+      }
+    },
+    {
+      "layer": 14,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 88,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.37288136
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 94,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46766169
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 102,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.45945946
+        }
+      }
+    },
+    {
+      "layer": 15,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 86,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.36134454
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 90,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43902439
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 125,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.74850299
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 105,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47945205
+        }
+      }
+    },
+    {
+      "layer": 16,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 130,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.59633028
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 84,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.35
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 86,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.41148325
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 123,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.72781065
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 111,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.52112676
+        }
+      }
+    },
+    {
+      "layer": 17,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 95,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.41484716
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 84,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.39810427
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 122,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.71764706
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 103,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46606335
+        }
+      }
+    },
+    {
+      "layer": 18,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 88,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.37288136
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 89,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43203883
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 122,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.71764706
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 106,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.48623853
+        }
+      }
+    },
+    {
+      "layer": 19,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 95,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.41484716
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 98,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.49746193
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 125,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.74850299
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 108,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5
+        }
+      }
+    },
+    {
+      "layer": 20,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 130,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.59633028
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 104,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47272727
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 89,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43203883
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 117,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.66857143
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 104,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47272727
+        }
+      }
+    },
+    {
+      "layer": 21,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 100,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44642857
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 92,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.45320197
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 122,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.71764706
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 105,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47945205
+        }
+      }
+    },
+    {
+      "layer": 22,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 101,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.4529148
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 89,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43203883
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 127,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.76969697
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 104,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47272727
+        }
+      }
+    },
+    {
+      "layer": 23,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 130,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.59633028
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 102,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.45945946
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 92,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.45320197
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 117,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.66857143
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 99,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44
+        }
+      }
+    },
+    {
+      "layer": 24,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 126,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.56756757
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 98,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43362832
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 92,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.45320197
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 116,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.65909091
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 93,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.4025974
+        }
+      }
+    },
+    {
+      "layer": 25,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 101,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.4529148
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 91,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44607843
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 118,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.67816092
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 88,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.37288136
+        }
+      }
+    },
+    {
+      "layer": 26,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 91,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44607843
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 117,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.66857143
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 91,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.39055794
+        }
+      }
+    },
+    {
+      "layer": 27,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 130,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.59633028
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 102,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.45945946
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 95,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.475
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 91,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.39055794
+        }
+      }
+    },
+    {
+      "layer": 28,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 91,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44607843
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        }
+      }
+    },
+    {
+      "layer": 29,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 107,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.49308756
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 95,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.475
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 99,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44
+        }
+      }
+    },
+    {
+      "layer": 30,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 93,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46039604
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 120,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.69767442
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 99,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44
+        }
+      }
+    },
+    {
+      "layer": 31,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 108,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 93,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46039604
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 106,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.48623853
+        }
+      }
+    },
+    {
+      "layer": 32,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 96,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.42105263
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 94,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46766169
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 124,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.73809524
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 98,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43362832
+        }
+      }
+    },
+    {
+      "layer": 33,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 104,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47272727
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 93,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46039604
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 100,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44642857
+        }
+      }
+    },
+    {
+      "layer": 34,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 98,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43362832
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 94,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46766169
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 118,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.67816092
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 95,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.41484716
+        }
+      }
+    },
+    {
+      "layer": 35,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 111,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.52112676
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 103,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.53645833
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 121,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.70760234
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 109,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.50697674
+        }
+      }
+    },
+    {
+      "layer": 36,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 129,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5890411
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 99,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 91,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44607843
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 119,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.68786127
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 92,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.39655172
+        }
+      }
+    },
+    {
+      "layer": 37,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 130,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.59633028
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 115,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.55023923
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 93,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46039604
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 121,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.70760234
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 104,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47272727
+        }
+      }
+    },
+    {
+      "layer": 38,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 131,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.60368664
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 95,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.41484716
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 91,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44607843
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 120,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.69767442
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 100,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44642857
+        }
+      }
+    },
+    {
+      "layer": 39,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 108,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 103,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.53645833
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 124,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.73809524
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 104,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47272727
+        }
+      }
+    },
+    {
+      "layer": 40,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 130,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.59633028
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 100,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.44642857
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 90,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.43902439
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 120,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.69767442
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 103,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.46606335
+        }
+      }
+    },
+    {
+      "layer": 41,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 108,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.5
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 98,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.49746193
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 127,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.76969697
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 104,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.47272727
+        }
+      }
+    },
+    {
+      "layer": 42,
+      "k132_count": 132,
+      "sources": {
+        "0xSero:heath0xFF/DeepSeek-V4-Flash-0731-REAP-K216-GGUF@9f8c8a7abcd5": {
+          "covered": true,
+          "declared_k": 216,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.61111111
+        },
+        "Blivion:BlivionIaG/DeepSeek-V4-Flash-0731-Int4-FP8-REAP-216B@eb6e3479ab5d": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 95,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.41484716
+        },
+        "REAP37:True2456/DeepSeek-V4-Flash-0731-REAP37-native-MLX@1697a22c352d": {
+          "covered": true,
+          "declared_k": 163,
+          "intersection_with_k132": 97,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.48989899
+        },
+        "0xSero:0xSero/DeepSeek-V4-Flash-0731-REAP@ddc04540efda": {
+          "covered": true,
+          "declared_k": 160,
+          "intersection_with_k132": 127,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.76969697
+        },
+        "puwaer:puwaer/DeepSeek-V4-Flash-0731-reap-200b@c1dd22d2c41d": {
+          "covered": true,
+          "declared_k": 178,
+          "intersection_with_k132": 132,
+          "k132_subset_of_source": true,
+          "jaccard_with_k132": 0.74157303
+        },
+        "REAP25:ljubomirj/ds4@01bdc35a30ca": {
+          "covered": true,
+          "declared_k": 192,
+          "intersection_with_k132": 109,
+          "k132_subset_of_source": false,
+          "jaccard_with_k132": 0.50697674
+        }
+      }
+    }
+  ]
+}

@@ -1,12 +1,13 @@
 ---
 title: HERETIC v2 REAP132 build and validation
 type: implementation
-status: current
-scope: heretic-v2-reap132-build-validation
+status: archived
+scope: deepseek-v4-flash-0731-dual-5090
 related_scopes:
   - deepseek-v4-flash-0731-dual-5090
+  - heretic-v2-reap96-consensus
 related_files:
-  - .scopes/heretic-v2-reap132-build-validation
+  - .scopes/archive/heretic-v2-reap132-build-validation
   - squanchyzx-puwaer-reap132-mask.json
   - scripts/checkpoint_content_manifest.py
   - scripts/derive_reap132_inventory.py
@@ -22,7 +23,7 @@ related_files:
   - README.md
   - AGENTS.md
 source_docs:
-  - .scopes/heretic-v2-reap132-build-validation/heretic-v2-reap132-build-validation-technical-documentation.md
+  - .scopes/archive/heretic-v2-reap132-build-validation/heretic-v2-reap132-build-validation-technical-documentation.md
 tags:
   - reap132
   - heretic-v2
@@ -34,7 +35,11 @@ updated: 2026-08-12T13:45:00+08:00
 
 # HERETIC v2 REAP132 build and validation
 
-The current execution scope is `.scopes/heretic-v2-reap132-build-validation/`. It turns the frozen mapped plan into a native checkpoint, proves the output byte-by-byte, runs native HF smoke, then creates and validates one MXFP4-preserving golden GGUF before any IQ3/Q2 work.
+This completed delivery is archived under
+`.scopes/archive/heretic-v2-reap132-build-validation/`. It produced and
+validated the immutable REAP132 checkpoint and canonical MXFP4 GGUF. New K96
+work is isolated in `.scopes/heretic-v2-reap96-consensus/`; it cannot change
+the frozen REAP132 plan or artifacts.
 
 The immutable build input is `squanchyzx-puwaer-reap132-mask.json`. Its full file SHA256 is `b43a1078f905157cbdbe976530d96b6c41730ccd3ef6feac4d598a15a9d84b04`; its logical SHA256 is `082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17`. The base is squanchyzx HERETIC v2 commit `e7efd043c5e072da4d40f0f98ade554c5713bad9`; the mapped target is puwaer REAP-150B commit `868fa38e2f2964699ad065dc8d9382c136cc60b8`. The extractor proved 43/43 exact router mappings and three exact `[129280, 6]` `tid2eid` tables. The plan must not be regenerated or edited.
 
