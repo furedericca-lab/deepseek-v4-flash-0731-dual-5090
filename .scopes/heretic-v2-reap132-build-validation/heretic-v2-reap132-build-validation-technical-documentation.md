@@ -167,7 +167,11 @@ verification, so compression cannot share or modify mmap-backed source storage.
   classification rather than accepted as an isolated constant.
 - Source/output verification operates sequentially by tensor/shard and does not
   hold either checkpoint in RAM.
-- Native smoke covers chat, reasoning, coding, tool call, and longer context.
+- Native smoke is a correctness and bounded-prefill gate: five independent
+  GPU0-only processes cover 1, 16, 32, 64, and 128 input tokens with aligned
+  O_DIRECT layer streaming, finite hidden states/logits, and clean kernel/Xid
+  checks before and after each case. Prompt categories diversify token routing;
+  they are not native semantic-generation acceptance.
 - GGUF validation uses converter metadata inspection plus localhost llama.cpp
   API smoke on both RTX 5090s.
 - A/B uses identical prompts, generation settings, and evaluator logic, with
@@ -190,5 +194,32 @@ blocked until the smoke matrix passes.
 The direct loader and one-token 43-layer forward now pass. Multi-token native
 cross-device execution is not accepted: switching to GPU1 triggered NVIDIA
 `Xid 31` and an MMU virtual-read fault. Native correctness smoke therefore uses
-one GPU per process with per-layer streaming after a clean reboot. Dual-GPU
-execution remains in the llama.cpp runtime gate.
+one GPU per process with `CUDA_VISIBLE_DEVICES=0`, requires exactly one visible
+CUDA device, and runs independent 1/16/32/64/128-token prefill cases with
+per-layer streaming after a clean reboot. Each case synchronizes CUDA and must
+leave the boot free of BAD_PAGE, Oops, GPF, and NVIDIA Xid events before the
+next begins. Dual-GPU and semantic generation acceptance remain in the llama.cpp
+runtime gate.
+
+The first isolated matrix run refined the runtime failure boundary. T1 at one
+token and T2 at 16 tokens completed all 43 layers on physical GPU0 with finite
+logits and clean post-case kernel gates. T3 at 32 tokens failed in Layer 2 eager
+attention at the batched `attn_weights x value_states` matmul, followed by CUDA
+illegal memory access and NVIDIA Xid 31 on GPU0 (`01:00.0`). GPU1 was invisible
+and PyTorch reported one CUDA device, so neither GPU1 nor a cross-device switch
+is necessary to reproduce the native failure. T4/T5 were not run. The current
+boot is quarantined for GPU evidence, Phase 2 remains blocked, and the accepted
+checkpoint bytes remain unchanged.
+
+The failing harness also exposed a concrete lifetime-ordering suspect: it
+released the streamed layer and invoked `empty_cache()` before any explicit
+per-layer CUDA synchronization. The next A/B synchronizes the target device
+immediately after each layer forward, then frees that layer. An exception no
+longer runs cleanup that can mask the original CUDA error. This ordering change
+must be validated on a new clean boot and is not yet a proven Xid root cause.
+
+Layer-type resolution adds a second live hypothesis: Layers 0-1 are sliding
+attention, while Layer 2 is the first compressed sparse attention layer. The
+failure may therefore be specific to the 32-token CSA/eager cuBLAS path. A
+clean-boot rerun with corrected synchronization is required to distinguish the
+two explanations.

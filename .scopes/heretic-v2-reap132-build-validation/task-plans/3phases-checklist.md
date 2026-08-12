@@ -18,7 +18,7 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
 | Phase | Status | Completion | Health | Blockers |
 |---|---|---|---|---|
 | Phase 1 | Complete | 100% | Healthy | None |
-| Phase 2 | In progress | 85% | Healthy | Native HF smoke matrix remains |
+| Phase 2 | In progress | 85% | Blocked | GPU0-only T3 triggers Xid 31 in Layer 2 attention |
 | Phase 3 | Not started | 0% | Unknown | Phase 2 native verification/smoke not complete |
 
 ## Phase Entry Links
@@ -332,6 +332,44 @@ description: Execution and verification checklist for heretic-v2-reap132-build-v
   it is a native multi-device runtime failure. After reboot, rerun the matrix
   with single-GPU, per-layer O_DIRECT streaming on GPU0. Dual-GPU acceptance is
   deferred to llama.cpp unless a separate native multi-device fix is proven.
+- Phase 2 native acceptance is now explicitly a forward-correctness and bounded
+  prefill gate, not a semantic generation evaluation. Run five independent
+  processes at 1, 16, 32, 64, and 128 input tokens with
+  `CUDA_VISIBLE_DEVICES=0`; require exactly one visible CUDA device, all 43
+  layers, finite hidden states/logits, CUDA synchronization, and clean
+  kernel/Xid gates before and after each case. Chat/reasoning/code/tool/long
+  generation quality remains a Phase 3 llama.cpp responsibility.
+
+### 2026-08-12 GPU0-only bounded-prefill result
+
+- The rebooted `7.0.0-28-generic` boot entered the matrix with taint `4096` and
+  no BAD_PAGE, Oops, GPF, machine-check hardware error, or NVIDIA Xid.
+- Every case ran in a separate process with `CUDA_VISIBLE_DEVICES=0`; PyTorch
+  saw exactly one RTX 5090, physical GPU0 UUID
+  `GPU-615615a7-d90c-ab22-2f6e-42918048179c`.
+- T1 (1 token) passed all 43 layers with finite logits, peak RSS 6.103 GiB and
+  peak allocated VRAM 4.061 GiB. Its post-case kernel gate passed.
+- T2 (16 tokens) passed all 43 layers with finite logits, peak RSS 6.162 GiB
+  and peak allocated VRAM 4.064 GiB. Its post-case kernel gate passed.
+- T3 (32 tokens) passed Layers 0 and 1, then failed in Layer 2 eager attention
+  at `torch.matmul(attn_weights, value_states)` with
+  `CUBLAS_STATUS_INTERNAL_ERROR`. Cleanup observed CUDA illegal memory access,
+  and the kernel recorded Xid 31 on physical GPU0, PCI `01:00.0`, with an MMU
+  virtual-read fault. The fail-fast runner stopped before T4/T5.
+- This excludes GPU1 visibility and cross-device switching as necessary
+  conditions for the Xid. It does not invalidate the byte-verified checkpoint,
+  but Phase 2 native prefill acceptance remains blocked and this boot is no
+  longer admissible for GPU validation.
+- The smoke implementation released each streamed layer and called
+  `empty_cache()` before an explicit per-layer CUDA synchronization. That is a
+  high-value software lifecycle suspect because asynchronous kernels may still
+  reference the layer weights. The next clean-boot A/B synchronizes immediately
+  after every layer forward and only then frees the layer; this is a candidate
+  fix, not a proven root cause until the 32/64/128-token cases pass without Xid.
+- Runtime config resolution shows Layers 0-1 are `sliding_attention` and Layer 2
+  is the first `compressed_sparse_attention` layer. Keep two hypotheses open:
+  unsafe asynchronous layer release ordering and a 32-token CSA/eager batched
+  matmul runtime defect.
 
 ## Final Release Gate
 - Scope constraints preserved.

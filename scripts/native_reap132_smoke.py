@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import resource
 from pathlib import Path
 
@@ -28,12 +29,21 @@ def main() -> int:
     parser.add_argument("checkpoint", type=Path)
     parser.add_argument("--prompt", default="Hello")
     parser.add_argument("--max-input-tokens", type=int, default=512)
+    parser.add_argument("--require-input-tokens", type=int)
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
 
     if not torch.cuda.is_available():
         raise RuntimeError("native smoke requires CUDA")
+    cuda_visible_devices = os.environ.get("CUDA_VISIBLE_DEVICES")
+    if cuda_visible_devices != "0":
+        raise RuntimeError("native smoke requires CUDA_VISIBLE_DEVICES=0")
+    if torch.cuda.device_count() != 1:
+        raise RuntimeError(
+            "native smoke requires exactly one visible CUDA device, got "
+            f"{torch.cuda.device_count()}"
+        )
     device = torch.device(args.device)
     if device.type != "cuda" or device.index is None or device.index >= torch.cuda.device_count():
         raise ValueError(f"invalid CUDA smoke device: {args.device}")
@@ -46,6 +56,19 @@ def main() -> int:
     input_ids = encoded.input_ids[:, : args.max_input_tokens]
     if input_ids.numel() < 1:
         raise ValueError("the bounded smoke requires at least one input token")
+    if args.require_input_tokens is not None and input_ids.shape[1] < args.require_input_tokens:
+        repeats = (args.require_input_tokens + input_ids.shape[1] - 1) // input_ids.shape[1]
+        input_ids = input_ids.repeat(1, repeats)[:, : args.require_input_tokens]
+    if (
+        args.require_input_tokens is not None
+        and input_ids.shape[1] != args.require_input_tokens
+    ):
+        raise ValueError(
+            f"expected {args.require_input_tokens} input tokens, got {input_ids.shape[1]}"
+        )
+
+    torch.cuda.set_device(device)
+    torch.cuda.reset_peak_memory_stats(device)
 
     skeleton = build_skeleton(str(checkpoint), device="cpu")
     streamer = LayerStreamer(
@@ -93,17 +116,16 @@ def main() -> int:
                 }
                 current = target
             layer = streamer.load_layer(layer_index, device=str(target))
-            try:
-                hidden_states = layer(
-                    hidden_states,
-                    position_embeddings=position_embeddings,
-                    position_ids=position_ids,
-                    attention_mask=causal_mask,
-                    input_ids=ids,
-                    past_key_values=None,
-                )
-            finally:
-                streamer.free_layer(layer_index)
+            hidden_states = layer(
+                hidden_states,
+                position_embeddings=position_embeddings,
+                position_ids=position_ids,
+                attention_mask=causal_mask,
+                input_ids=ids,
+                past_key_values=None,
+            )
+            torch.cuda.synchronize(target)
+            streamer.free_layer(layer_index)
             if not torch.isfinite(hidden_states).all():
                 raise ValueError(f"non-finite hidden state after layer {layer_index}")
             print(
@@ -118,16 +140,23 @@ def main() -> int:
         if not torch.isfinite(logits).all():
             raise ValueError("non-finite final logits")
         next_token = int(torch.argmax(logits[0, -1]).item())
+        torch.cuda.synchronize(device)
 
     report = {
-        "schema": "native-reap132-direct-smoke-v1",
+        "schema": "native-reap132-direct-prefill-smoke-v2",
         "checkpoint": str(checkpoint),
         "io_backend": "direct",
+        "cuda_visible_devices": cuda_visible_devices,
+        "torch_cuda_device_count": torch.cuda.device_count(),
+        "device": str(device),
+        "device_name": torch.cuda.get_device_name(device),
+        "device_uuid": str(torch.cuda.get_device_properties(device).uuid),
         "input_tokens": [int(token) for token in input_ids[0].tolist()],
         "input_token_count": int(input_ids.shape[1]),
         "next_token": next_token,
         "next_token_text": tokenizer.decode([next_token]),
         "placements": placements,
+        "layers_completed": len(streamer.layer_indices),
         "rss_peak_gib": rss_gib(),
         "gpu_peak_gib": {str(device.index): gib(torch.cuda.max_memory_allocated(device))},
         "finite_logits": True,

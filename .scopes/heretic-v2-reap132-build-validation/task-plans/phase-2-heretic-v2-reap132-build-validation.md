@@ -28,7 +28,7 @@ description: Task list for heretic-v2-reap132-build-validation phase 2.
 ## Phase 2: Post-Prune Verification and Native HF Smoke
 Goal: Prove the native output preserves every selected expert and HERETIC v2 overlay, then demonstrate basic native functionality.
 
-Definition of Done: `post-prune-verification.json` contains all PASS categories, the output content manifest is frozen, and all five native smoke classes pass without NaN, routing faults, or obvious degeneration.
+Definition of Done: `post-prune-verification.json` contains all PASS categories, the output content manifest is frozen, and isolated GPU0-only O_DIRECT prefill forwards pass at 1, 16, 32, 64, and 128 input tokens without NaN, routing faults, CUDA errors, kernel faults, or NVIDIA Xids.
 
 Tasks:
 - [x] T021 [Backend] Implement direct-safetensors post-prune verifier
@@ -46,7 +46,7 @@ Tasks:
 - [x] T027 [QA] Freeze the post-prune report
   - DoD: `post-prune-verification.json` references exact plan/source/output hashes, has all contracted PASS fields, 43 layer results, and no failures.
 - [ ] T028 [Infra] Run native HF smoke matrix
-  - DoD: Local checkpoint passes chat, reasoning, coding, tool-call, and longer-context probes with recorded placement/settings/memory and no NaN, tokenizer/config, routing, or obvious repetition failure.
+  - DoD: Five independent processes run 1/16/32/64/128-token native prefill forwards with `CUDA_VISIBLE_DEVICES=0`, exactly one CUDA device visible, all 43 layers loaded through O_DIRECT on `cuda:0`, finite hidden states/logits, recorded device identity/settings/memory, and clean kernel/Xid gates before and after every case. These prompts diversify token routing but do not claim semantic generation quality.
 
 Checkpoint: The native checkpoint is accepted as the sole input to GGUF conversion.
 

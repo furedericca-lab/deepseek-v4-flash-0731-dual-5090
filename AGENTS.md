@@ -145,6 +145,26 @@ on dual RTX 5090 with:
   virtual read; do not treat the earlier one-token cross-device PASS as a valid
   multi-device acceptance. Keep dual-GPU validation in the later llama.cpp
   runtime gate unless a separate clean-boot native multi-device fix is proven.
+- Phase 2 native acceptance is bounded prefill correctness, not semantic
+  generation quality. Run independent 1/16/32/64/128-token cases with physical
+  GPU1 isolation (`CUDA_VISIBLE_DEVICES=0`), require
+  `torch.cuda.device_count() == 1`, synchronize CUDA before PASS, and run the
+  clean kernel/Xid gate before and after every case. Evaluate actual chat,
+  reasoning, coding, tool-call, and long-context generation in Phase 3 on the
+  deployed llama.cpp GGUF path.
+- The first GPU0-only matrix passed 1 and 16 input tokens, then reproduced Xid
+  31 on physical GPU0 at the 32-token Layer 2 eager-attention batched matmul.
+  GPU1 was invisible, so neither GPU1 nor cross-device switching is a necessary
+  condition. Do not continue T4/T5 or any other GPU validation in that boot;
+  preserve the checkpoint acceptance and treat this as a native CUDA runtime
+  blocker.
+- A streamed CUDA layer must be synchronized after its forward and before
+  `free_layer()` replaces parameters or invokes `empty_cache()`. The first
+  isolated matrix freed layers before explicit synchronization; treat the new
+  ordering as an unproven lifecycle fix until it passes on a clean boot.
+- Layer 2 is the first compressed sparse attention layer, so keep a 32-token
+  CSA/eager-cuBLAS defect as a parallel hypothesis. Do not assign the Xid solely
+  to layer-release ordering before a clean-boot rerun with synchronization.
 - Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
   5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
   backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose

@@ -40,7 +40,7 @@ The immutable build input is `squanchyzx-puwaer-reap132-mask.json`. Its full fil
 
 Phase 1 freezes the build-code commit, verifies the user-started fixed-revision download, creates source provenance/content manifests, captures clean host baselines, and runs deterministic `--plan --streaming` pruning without calibration or saliency. The native output remains quarantined after writing.
 
-Phase 2 implements direct-safetensors verification. For every layer, output expert `new_id` must equal source expert `kept_experts[new_id]` for `w1/w2/w3.weight` and `.scale`; router rows and three `tid2eid` tables must match; shared experts and layers 10-42 HERETIC `attn.wo_b` must remain source-identical; all MTP/DSpark tensors must be absent. The required report is `post-prune-verification.json`, followed by chat, reasoning, coding, tool-call, and longer-context native smoke.
+Phase 2 implements direct-safetensors verification. For every layer, output expert `new_id` must equal source expert `kept_experts[new_id]` for `w1/w2/w3.weight` and `.scale`; router rows and three `tid2eid` tables must match; shared experts and layers 10-42 HERETIC `attn.wo_b` must remain source-identical; all MTP/DSpark tensors must be absent. The required report is `post-prune-verification.json`, followed by independent GPU0-only native prefill forwards at 1, 16, 32, 64, and 128 tokens. This is a runtime-correctness gate, not semantic generation scoring.
 
 The verifier implementation is `scripts/verify_reap132_checkpoint.py`. It parses
 safetensors headers directly, honors index-selected overlay shards, compares
@@ -100,8 +100,7 @@ Transformers 5.15: 43 layers, 132 routed experts, 129,280 tokenizer entries, and
 zero MTP modules. Full native weight loading has not started because standard HF
 loading is mmap/buffered, while the existing vendor `pread` backend is not
 `O_DIRECT`; either path would violate the production bulk-read constraint. The
-remaining Phase 2 work is an aligned direct-I/O native loader, an explicit
-dual-GPU/CPU placement budget, and the five-class generation smoke before GGUF.
+remaining Phase 2 work is the bounded native prefill matrix before GGUF.
 
 The aligned direct-I/O native loader is now implemented and proven against a
 tiny resident checkpoint plus the real shared/Layer 0 FP8 payloads. A full
@@ -113,3 +112,36 @@ multi-token run that switched from GPU0 to GPU1 triggered NVIDIA `Xid 31` on PCI
 stopped and the current boot is not admissible for more GPU evidence. After
 reboot, native correctness smoke uses GPU0-only per-layer streaming; dual-GPU
 acceptance remains a llama.cpp Phase 3 gate unless separately fixed.
+
+The accepted Phase 2 matrix physically hides GPU1 with
+`CUDA_VISIBLE_DEVICES=0` and hard-fails unless PyTorch sees exactly one CUDA
+device. Five separate processes execute 1/16/32/64/128-token prefill forwards;
+each records the GPU identity, placement, input tokens, RSS and VRAM peaks, then
+synchronizes CUDA. The runner checks the current boot before and after every
+case and stops immediately on a nonzero exit, missing report, BAD_PAGE, Oops,
+GPF, machine-check hardware error, or NVIDIA Xid. Real chat, reasoning, coding,
+tool-call, and long-context generation are Phase 3 llama.cpp acceptance tests.
+
+The first clean-boot isolated matrix passed T1 (1 token) and T2 (16 tokens)
+through all 43 layers with finite logits and clean post-case kernel gates. T3
+(32 tokens) failed in Layer 2 eager attention at the batched
+`attn_weights x value_states` matmul with `CUBLAS_STATUS_INTERNAL_ERROR`, then
+CUDA illegal memory access. The kernel recorded Xid 31 and an MMU virtual-read
+fault on physical GPU0 (`01:00.0`). GPU1 was hidden and PyTorch saw exactly one
+CUDA device, proving that GPU1 and cross-device switching are not necessary
+conditions. The runner correctly stopped before T4/T5. This is a native CUDA
+runtime blocker, not new evidence of checkpoint corruption; the boot is now
+inadmissible for further GPU validation.
+
+The harness previously freed each streamed layer and called `empty_cache()`
+before an explicit per-layer CUDA synchronization. Because CUDA execution is
+asynchronous, this is now the leading software-lifecycle A/B: synchronize the
+target GPU immediately after each layer forward, then release its weights. The
+exception path also preserves the original forward error instead of triggering
+secondary cleanup errors. This remains a candidate explanation until a new
+clean boot passes the 32/64/128-token cases without Xid.
+
+Layer 2 is also the first `compressed_sparse_attention` layer after two sliding
+attention layers. The next clean-boot rerun therefore distinguishes two live
+hypotheses: premature asynchronous weight release versus a 32-token CSA/eager
+cuBLAS defect. Current evidence does not select between them.
