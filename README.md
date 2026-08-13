@@ -63,13 +63,13 @@ Accepted K96 native source checkpoint:
 It is read-only, contains 26,332 tensors in 17 shards, and has O_DIRECT content
 manifest SHA256
 `62e40f7cecc2d1018faa8c386b39268f9d13cb3833c9f82f365e99bfa5f574ed`.
-The validated K96 GGUF candidate is:
+The former K96 GGUF candidate was:
 
 ```text
 /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4.gguf
 ```
 
-It is read-only, `64,340,873,568` bytes, and has O_DIRECT SHA256
+It was `64,340,873,568` bytes and had O_DIRECT SHA256
 `697309d18ada765bdce2a72b52cb1497ed5e374cd5c77edfa7fc0085aa68ff31`.
 Its metadata reports `deepseek4`, 43 blocks, 96 routed experts, six active
 experts, 1,328 tensors, and `MOSTLY_MXFP4_MOE`. Payload provenance passed
@@ -78,16 +78,17 @@ an archived diagnostic candidate, not a deployment artifact. Dual-5090 64K and
 32K-prefill stability passed, but both Native K96 and GGUF selected `',` instead
 of ` Paris` for the raw France prompt. This identifies K96 quality loss rather
 than conversion failure. The frozen plan will not be rescored; K132 remains the
-sole deployed model.
+sole deployed model. The file was deleted on 2026-08-13 to prevent accidental
+reuse after routed-payload defects were discovered in the parent K132 GGUF line.
 
-The independent K96 Profile A release is:
+The former independent K96 Profile A release was:
 
 ```text
 /data/linux-fast/models/DeepSeek-V4-Flash-0731/
 DeepSeek-V4-Flash-0731-HERETIC-v2-REAP96-noMTP-MXFP4exp-IQ4XSbb.gguf
 ```
 
-It is read-only, `59,256,121,472` bytes, and has O_DIRECT SHA256
+It was `59,256,121,472` bytes and had O_DIRECT SHA256
 `845a0b91d17fddd6990068b995c8af031945af55f5bff94acc5a1c08389c63c3`.
 All 129 routed-expert tensors remain byte-identical MXFP4. Shared Expert and
 Core Backbone weights use llama.cpp's default IQ4_XS mixed policy: 655 tensors
@@ -95,7 +96,7 @@ are IQ4_XS, five early shared-expert down tensors are Q5_K, and
 `output.weight` is Q6_K. Dual-5090 64K/API, Chinese, JSON, Python, and
 32,767-token prefill passed. Its France-prompt behavior still matches the known
 K96 quality limitation, so it is an independent release rather than the K132
-deployment replacement.
+deployment replacement. This file was also deleted on 2026-08-13.
 
 ## Checkout
 
@@ -152,12 +153,15 @@ expert MXFP4 repacking, and aligned direct I/O. The conversion is a packed-forma
 repack, not floating-point requantization. The first full output is quarantined:
 the direct-output writer serialized lazy ordinary BF16/F32 tensors as zeroes.
 Fork commit `1e17097` materializes lazy arrays before writing and is covered by
-payload-level direct-I/O tests. The corrected canonical artifact is
-`DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf`:
+payload-level direct-I/O tests. The prior artifact ending in
+`REAP132-noMTP-MXFP4.gguf` was later proven to contain three local routed-payload
+mutations and was deleted. The accepted quantization input is now
+`DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf`:
 `85,049,305,696` bytes and O_DIRECT SHA256
-`f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b`.
-It passed 90 routed-expert, 9 nonexpert, and 52 sampled FP8-backbone-to-Q8_0
-payload-provenance comparisons.
+`752a0146f54d5c5bc34491d53f9e1acbb63540b1e3c38bd352185b508418cfdd`.
+It passed full byte-exact provenance for all 129 routed tensors, covering
+17,028 projection-expert comparisons and 75,884,396,544 bytes, plus non-routed
+and FP8-backbone acceptance checks.
 
 Full conversion must run only after the clean-boot gate passes:
 
@@ -173,7 +177,7 @@ Then use both direct-I/O paths:
 ```bash
 uv run python vendor/llama.cpp/convert_hf_to_gguf.py \
   /data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP \
-  --outfile /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf \
+  --outfile /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-provenance-rebuild.gguf \
   --outtype auto \
   --no-mtp \
   --direct-io-input \
@@ -200,7 +204,7 @@ allocation. The equivalent explicit runtime profile is:
 
 ```bash
 llama-server \
-  -m /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf \
+  -m /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf \
   --load-mode dio \
   -dev CUDA0,CUDA1 \
   -sm layer \

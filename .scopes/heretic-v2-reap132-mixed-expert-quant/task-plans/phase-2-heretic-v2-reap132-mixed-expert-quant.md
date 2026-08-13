@@ -24,16 +24,24 @@ verifier passes, and dry-run reports the contracted type split.
 
 Tasks:
 
-- [ ] T021 [Backend] Implement combined ranking and plan generator
+- [x] T021 [Backend] Implement combined ranking and plan generator
   - DoD: The generator validates inputs, computes all 43 scores and stable tie-breaks, assigns top 17 IQ3_XXS and remaining 26 Q2_K_S, and emits logical/file SHA256.
-- [ ] T022 [Backend] Generate routed-only tensor-ftype file
+- [x] T022 [Backend] Generate routed-only tensor-ftype file
   - DoD: The file expands 43 assignments to anchored gate/up/down expert regexes and contains no Shared Expert, Core Backbone, router, or structural override.
-- [ ] T023 [QA] Implement independent plan verifier
+- [x] T023 [QA] Implement independent plan verifier
   - DoD: A separately structured verifier checks source hashes, formula, sorting, 17/26 counts, 51/78 recipe expansion, mutually exclusive routed-only matching, and deterministic hashes.
-- [ ] T024 [QA] Run imatrix-backed DIO dry-run
+- [x] T024 [QA] Run imatrix-backed DIO dry-run
   - DoD: `llama-quantize --dry-run --direct-io-input --allow-requantize --imatrix ... --tensor-ftype-file ... IQ4_XS` exits zero and records exact output size plus the IQ3_XXS/Q2_K_S/IQ4_XS effective-recipe and concrete-type inventories.
-- [ ] T025 [Docs] Freeze plan and output identity
+- [x] T025 [Docs] Freeze plan and output identity
   - DoD: The accepted plan, imatrix, corpus, llama.cpp commit, dry-run log, and output filename are recorded; later phases do not rerank layers.
+  - Evidence: current plan file SHA256 `9f87f4530325924b56ca9059323bf73558036e36a8f006063d73f90d536c3ef7`,
+    logical SHA256 `49b9c651ae0cfe17cad427e8c7af46e1df38a98e089f7a71c4fec88667d488d2`,
+    and tensor-ftype SHA256 `db05988dd60a8262f353e70360a1a85a7ebb585bec9539fb7f70fe73f7c0269e`.
+    Two generations were byte-identical and the independent verifier passed.
+    The `efb81ab` CPU-NVMe DIO dry-run passed with output size `55,348,319,104` bytes:
+    51 IQ3_XXS, 73 Q2_K, five Q2_K_S Q4_K promotions, 43 attention-KV Q5_K
+    promotions, 129 Shared Expert IQ4_XS tensors, and 62 compressor APE lookup
+    tensors unchanged.
 
 Checkpoint: Phase 3 requires T021-T025 PASS and an immutable plan SHA.
 

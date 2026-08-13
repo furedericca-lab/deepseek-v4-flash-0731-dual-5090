@@ -31,20 +31,37 @@ def fixture(tmp_path: Path):
         "chunks": 200, "coverage_pass": True, "layers": layers,
         "path": "/tmp/imatrix.gguf", "sha256": "a" * 64, "size": 1,
     }]}))
-    plan, types = BUILDER.build(structural, audit)
+    golden = tmp_path / "golden.gguf"
+    golden.write_bytes(b"golden")
+    provenance = tmp_path / "provenance.json"
+    provenance.write_text(json.dumps({
+        "status": "PASS",
+        "gguf": str(golden.resolve()),
+        "coverage": {"routed_tensors": 129, "expert_comparisons": 17028, "all_rows_and_blocks": True},
+    }))
+    commit = "a" * 40
+    golden_sha256 = "b" * 64
+    plan, types = BUILDER.build(structural, audit, golden.resolve(), golden_sha256, provenance.resolve(), commit)
     plan_path = tmp_path / "plan.json"
     type_path = tmp_path / "types.txt"
     plan_path.write_text(json.dumps(plan, indent=2, sort_keys=True) + "\n")
     type_path.write_text(types)
-    return structural, audit, plan_path, type_path
+    return structural, audit, plan_path, type_path, golden, golden_sha256, provenance, commit
 
 
 def test_independent_verifier_passes_and_detects_drift(tmp_path):
-    structural, audit, plan, types = fixture(tmp_path)
-    assert VERIFIER.verify(plan, structural, audit, types)["status"] == "PASS"
+    structural, audit, plan, types, golden, golden_sha256, provenance, commit = fixture(tmp_path)
+    assert VERIFIER.verify(plan, structural, audit, types, golden.resolve(), golden_sha256, provenance.resolve(), commit)["status"] == "PASS"
     doc = json.loads(plan.read_text())
     doc["layers"][0]["P_l"] += 0.01
     plan.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n")
-    report = VERIFIER.verify(plan, structural, audit, types)
+    report = VERIFIER.verify(plan, structural, audit, types, golden.resolve(), golden_sha256, provenance.resolve(), commit)
     assert report["status"] == "FAIL"
     assert "layer 0 formula" in report["failures"]
+
+
+def test_independent_verifier_detects_commit_drift(tmp_path):
+    structural, audit, plan, types, golden, golden_sha256, provenance, _commit = fixture(tmp_path)
+    report = VERIFIER.verify(plan, structural, audit, types, golden.resolve(), golden_sha256, provenance.resolve(), "b" * 40)
+    assert report["status"] == "FAIL"
+    assert "llama.cpp commit" in report["failures"]

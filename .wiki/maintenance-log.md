@@ -120,3 +120,10 @@ Append-only history for wiki updates caused by scope work, implementation closeo
 - Pages: implementation/k132-fixed-ratio-mixed-expert-quantization.md
 - Verification: repo-task-driven scaffold/check; wiki-note rebuild/lint/doctor
 - Residual risk: Phase 1 imatrix coverage has not run; no layer assignment or quantized artifact exists yet.
+
+## 2026-08-13T06:06:37Z [heretic-v2-reap132-mixed-expert-quant]
+
+- Summary: Recorded corrected-Golden provenance, host crash diagnosis, verified double-read O_DIRECT reader, CPU-NVMe production completion, staging candidate acceptance evidence, and remaining final-path/runtime gates.
+- Pages: implementation/k132-fixed-ratio-mixed-expert-quantization.md, reflections/k132-mixed-quant-host-io-lessons.md
+- Verification: verify_reap132_mixed_quant_gguf.py; verify_io_paths.py --direct-only; wiki-note rebuild/lint/doctor
+- Residual risk: Candidate remains on root-NVMe staging path at mode 0600; final direct-I/O copy/hash equality/read-only gate and dual-5090 runtime acceptance are pending.

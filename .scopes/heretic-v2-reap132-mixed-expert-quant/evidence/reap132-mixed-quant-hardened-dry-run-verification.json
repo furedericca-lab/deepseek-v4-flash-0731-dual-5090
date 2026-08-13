@@ -1,0 +1,25 @@
+{
+  "attention_kv_q5_k": 43,
+  "compressor_ape_unchanged": 62,
+  "concrete_types": {
+    "iq3_xxs": 51,
+    "iq4_xs": 555,
+    "q2_K": 73,
+    "q4_K": 5,
+    "q5_K": 43,
+    "q6_K": 1,
+    "unchanged": 600
+  },
+  "failures": [],
+  "llama_cpp_commit": "21a236be2cc32ce0ca07985f632e43da2d85be9d",
+  "output_size": 55348319104,
+  "routed_concrete_types": {
+    "iq3_xxs": 51,
+    "q2_K": 73,
+    "q4_K": 5
+  },
+  "schema": "heretic-reap132-mixed-quant-dry-run-v1",
+  "shared_expert_iq4_xs": 129,
+  "status": "PASS",
+  "tensor_count": 1328
+}

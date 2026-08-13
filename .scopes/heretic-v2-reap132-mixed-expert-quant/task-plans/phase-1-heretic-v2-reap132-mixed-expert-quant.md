@@ -9,7 +9,7 @@ description: Build K132 structural and activation evidence without quantizing a 
 - Immutable K132 Golden and archived K96 score report.
 - Scope contracts, research notes, and technical documentation.
 - Pinned production llama.cpp `llama-imatrix` at
-  `c861db3592ed7a03045d23861249eb43d1b8a039`, based on `2abf1748`.
+  `efb81abc6a261dcceb014e853beb0ffc5e4a49a0`, based on `2abf1748`.
 
 ## Canonical architecture / Key constraints
 
@@ -43,18 +43,24 @@ Tasks:
     corruption rejection. Two production generations were byte-identical; the
     205,333-token corpus SHA256 is `aa7a2c...b65688` and its immutable manifest
     SHA256 is `17e5892...e6cb3`.
-- [ ] T003 [Infra] Pass clean-boot imatrix preflight
+- [x] T003 [Infra] Pass clean-boot imatrix preflight
   - DoD: Kernel taint/signature, Xid, RAM/swap, GPU, process, Golden size/mode/hash identity, and DIO CLI gates are captured with explicit PASS.
-- [ ] T004 [Infra] Collect checkpointed K132 imatrix
+- [x] T004 [Infra] Collect checkpointed K132 imatrix
   - DoD: `llama-imatrix --load-mode dio` completes the contracted chunks and publishes GGUF imatrix checkpoints without a kernel/Xid event.
-- [ ] T005 [Backend] Implement imatrix coverage and layer aggregation
+- [x] T005 [Backend] Implement imatrix coverage and layer aggregation
   - DoD: A script verifies finite values, 129 routed entries, 132 expert counts per entry, reports zero-count experts, derives raw `I_l`, and writes deterministic evidence.
-- [ ] T006 [QA] Verify Phase 1 determinism and coverage
+- [x] T006 [QA] Verify Phase 1 determinism and coverage
   - DoD: Independent tests and reruns reproduce structural and imatrix-derived
     reports. Acceptance begins at 200 chunks and requires zero missing experts,
     zero projection-count mismatches, adjacent-stage Spearman >= 0.95,
     activation Top17 churn <= 2, and final P Top17 churn <= 2. Failure at 400
     chunks blocks Phase 1 rather than filling or relaxing evidence.
+  - Evidence: accepted 200-chunk imatrix SHA256 is
+    `f528ab31b7167cfbbdcb65995b77d6c7ffa3115fac70f64874b340bf607897f2`.
+    It has zero routed missing/extra/malformed entries, zero zero-count experts,
+    zero gate/up/down count mismatches, and finite `output_hc_fn.weight`
+    evidence. The 100-to-200 comparison has Spearman `1.0` and zero activation
+    or final Top17 churn. Post-run kernel/Xid signatures were empty.
 
 Checkpoint: Phase 2 starts only after T001-T006 pass and Phase 1 evidence is
 recorded in `4phases-checklist.md`.

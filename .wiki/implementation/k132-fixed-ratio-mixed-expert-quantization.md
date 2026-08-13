@@ -18,7 +18,7 @@ tags:
   - iq3-xxs
   - q2-k
 last_checked: 2026-08-13
-updated: 2026-08-12T23:37:18Z
+updated: 2026-08-13T14:10:00+08:00
 ---
 
 # K132 fixed-ratio mixed expert quantization
@@ -27,10 +27,12 @@ Active fixed-ratio K132 heterogeneous routed-expert quantization experiment.
 
 ## Immutable baseline
 
-The sole model input is the read-only canonical K132 MXFP4 GGUF with size
-`85,049,305,696` bytes and SHA256
-`f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b`.
-It remains the deployed and rollback artifact.
+The sole quantization input is the corrected read-only K132 MXFP4 GGUF ending
+in `full-routed-rebuild.gguf`, size `85,049,305,696` bytes and O_DIRECT SHA256
+`752a0146f54d5c5bc34491d53f9e1acbb63540b1e3c38bd352185b508418cfdd`.
+All 129 complete routed tensors were rebuilt from accepted native K132 and the
+independent verifier compared 75,884,396,544 bytes with zero failures. The old
+K132 GGUF and a mutated converter intermediate were rejected and deleted.
 
 ## Fixed experiment
 
@@ -82,7 +84,27 @@ existing exceptions and llama.cpp remains responsible for their concrete types.
 
 ## Current gate
 
-Phase 1 must implement and verify structural extraction, freeze calibration
-corpus identity, collect cumulative 100/200/300/400-chunk K132 imatrix through
-`--load-mode dio`, and pass finite
-per-expert coverage before the 17-layer list is generated.
+Phase 1 and Phase 2 are complete. A clean-boot production run using byte-identical
+Golden and imatrix copies on the CPU-attached root NVMe completed all 1,328
+tensors and produced the exact dry-run size `55,348,319,104` bytes. The
+independent verifier passed the full tensor/type contract, including 51
+IQ3_XXS, 73 Q2_K, five Q2_K_S Q4_K promotions, and 600 byte-identical unchanged
+tensors with zero unstable reads. The root-NVMe candidate has O_DIRECT SHA256
+`67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3`.
+
+Phase 3 remains open only for direct-I/O copy to the final `/data/linux-fast`
+path, destination hash equality, read-only mode, and final acceptance record.
+Phase 4 dual-5090 startup, behavior, 32K prefill, resource, and kernel/Xid gates
+have not run. The staging candidate must not replace the deployed K132 baseline
+before those gates pass.
+
+A fresh corrected-Golden imatrix was generated from the same 200-chunk corpus
+after the old routed-payload mutations were discovered. Against the accepted
+imatrix it has raw-I Spearman `1.0`, no Rank-I or Rank-P changes, and zero
+activation/final Top17 churn. The comparison therefore retains the accepted
+imatrix and the existing frozen 17/26 assignment rather than introducing a new
+plan identity.
+
+The reusable host, artifact-provenance, double-read direct-I/O, atomic
+publication, and storage-topology lessons are recorded in
+[K132 mixed quant host and direct IO lessons](../reflections/k132-mixed-quant-host-io-lessons.md).

@@ -1,0 +1,39 @@
+{
+  "artifact": {
+    "mode": "0o444",
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf",
+    "sha256": "752a0146f54d5c5bc34491d53f9e1acbb63540b1e3c38bd352185b508418cfdd",
+    "size": 85049305696
+  },
+  "evidence": {
+    "exponent_audit": ".scopes/heretic-v2-reap132-mixed-expert-quant/evidence/reap132-corrected-golden-mxfp4-exponent-audit.json",
+    "fp8_comparisons": 104,
+    "fp8_provenance": ".scopes/heretic-v2-reap132-mixed-expert-quant/evidence/reap132-corrected-golden-fp8-provenance.json",
+    "full_provenance": ".scopes/heretic-v2-reap132-mixed-expert-quant/evidence/reap132-mxfp4-full-routed-rebuild-provenance.json",
+    "nonexpert_comparisons": 7,
+    "nonexpert_provenance": ".scopes/heretic-v2-reap132-mixed-expert-quant/evidence/reap132-corrected-golden-nonexpert-provenance.json",
+    "sampled_comparisons": 270,
+    "sampled_provenance": ".scopes/heretic-v2-reap132-mixed-expert-quant/evidence/reap132-corrected-golden-sampled-routed-provenance.json"
+  },
+  "failures": [],
+  "full_routed_coverage": {
+    "all_rows_and_blocks": true,
+    "compared_bytes": 75884396544,
+    "expert_comparisons": 17028,
+    "experts_per_layer": 132,
+    "layers": 43,
+    "routed_tensors": 129
+  },
+  "metadata": {
+    "deepseek4.block_count": 43,
+    "deepseek4.expert_count": 132,
+    "deepseek4.expert_used_count": 6,
+    "general.architecture": "deepseek4",
+    "general.file_type": 38,
+    "tensor_count": 1328
+  },
+  "no_mtp": true,
+  "routed_mxfp4_tensors": 129,
+  "schema": "reap132-corrected-mxfp4-golden-acceptance-v1",
+  "status": "PASS"
+}

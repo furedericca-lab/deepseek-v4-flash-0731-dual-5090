@@ -65,7 +65,7 @@ The deployment baseline uses llama.cpp on dual RTX 5090 with:
 - Preferred runtime directory:
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731/`
 - Final artifact destination:
-  `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf`.
+  `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf`.
 - The archived K96 IQ4_XS release used one immutable input and one output with
   Profile A default mixed precision only. Do not reopen it for `--pure`, Profile
   B, imatrix, or quantization-profile A/B experiments.
@@ -84,7 +84,8 @@ The deployment baseline uses llama.cpp on dual RTX 5090 with:
   `e6dd3c1235e0b0ea6a2efbe13f2f06cc2015e8d6c135025aa3c5d8e75bfff84d` is
   quarantined diagnostic output, not a golden or deployable model.
 - `squanchyzx-puwaer-reap132-mask.json`, the accepted REAP132 native
-  checkpoint, and the canonical REAP132 GGUF are immutable baselines. K96 is a
+  checkpoint, and the corrected full-routed-rebuild K132 GGUF are immutable
+  baselines. K96 is a
   new plan and artifact line; never edit, overwrite, or reinterpret K132 data
   to make a K96 plan fit.
 - Prefer full GPU offload. Expert CPU offload is last resort only.
@@ -238,15 +239,16 @@ The deployment baseline uses llama.cpp on dual RTX 5090 with:
   `--direct-io-output` paths with aligned 64 MiB bounded staging and start only
   on a clean boot. Direct-I/O output stages converted tensor payloads immediately
   to a same-filesystem temporary file instead of retaining every array in RAM.
-  The replacement output
-  `DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf` is
-  85,049,305,696 bytes, has SHA256
-  `f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b`, and
-  passed 90 routed-expert plus 9 nonexpert provenance comparisons, plus 52
-  sampled dequantized-FP8-to-Q8_0 backbone row comparisons across layers 0,
-  10, and 42. The earlier lazy-zero-payload output was deleted after recording
-  its SHA256 and direct-writer root cause; it had zeroed ordinary BF16/F32
-  payloads despite correct routed MXFP4 payloads.
+  The old replacement output later proved to contain three local routed MXFP4
+  mutations and was deleted. The accepted input is now
+  `DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf`,
+  85,049,305,696 bytes, O_DIRECT SHA256
+  `752a0146f54d5c5bc34491d53f9e1acbb63540b1e3c38bd352185b508418cfdd`.
+  It rebuilds all 129 routed payloads from accepted native K132 and passed
+  17,028 full byte-exact projection-expert comparisons over 75,884,396,544
+  bytes, plus accepted nonexpert and FP8-backbone checks. The old K132,
+  mutated converter intermediate, K96 MXFP4, and K96 IQ4_XS payloads were
+  deleted on 2026-08-13 with explicit user authorization.
 - The runtime baseline for the corrected candidate is `--load-mode dio -dev
   CUDA0,CUDA1 -sm layer --fit on --fit-target 3072,3072 --no-kv-offload -ctk
   f16 -ctv f16 -c 65536 -np 1 -b 512 -ub 128 -fa on`. Do not use `-ngl all`:

@@ -1,0 +1,2 @@
+PASS /home/build/work/reap132-direct-quant/reap132-mixed.gguf
+  direct:   67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3

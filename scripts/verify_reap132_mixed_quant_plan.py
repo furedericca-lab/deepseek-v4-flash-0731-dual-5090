@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 LAYERS = 43
+OUTPUT_FILENAME = "DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf"
 PATTERN = re.compile(r"^\^blk\\\.(\d+)\\\.ffn_\(gate\|up\|down\)_exps\\\.weight\$=(IQ3_XXS|Q2_K_S)$")
 
 
@@ -18,13 +19,42 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def verify(plan_path: Path, structural_path: Path, audit_path: Path, type_path: Path) -> dict:
+def verify(
+    plan_path: Path,
+    structural_path: Path,
+    audit_path: Path,
+    type_path: Path,
+    golden_path: Path,
+    golden_sha256: str,
+    golden_provenance_path: Path,
+    llama_cpp_commit: str,
+) -> dict:
     plan = json.loads(plan_path.read_text())
     structural_doc = json.loads(structural_path.read_text())
     audit = json.loads(audit_path.read_text())
     failures = []
+    golden_source = plan.get("sources", {}).get("golden", {})
+    golden_provenance = json.loads(golden_provenance_path.read_text())
+    coverage = golden_provenance.get("coverage", {})
+    expected_golden = {
+        "path": str(golden_path),
+        "sha256": golden_sha256,
+        "size": golden_path.stat().st_size,
+        "routed_provenance_path": str(golden_provenance_path),
+        "routed_provenance_sha256": sha256(golden_provenance_path),
+    }
+    if golden_source != expected_golden:
+        failures.append("Golden identity")
+    if golden_provenance.get("status") != "PASS" or golden_provenance.get("gguf") != str(golden_path):
+        failures.append("Golden routed provenance")
+    if coverage.get("routed_tensors") != 129 or coverage.get("expert_comparisons") != 17028 or not coverage.get("all_rows_and_blocks"):
+        failures.append("Golden routed coverage")
     if plan.get("schema") != "heretic-reap132-mixed-expert-quant-plan-v1":
         failures.append("schema")
+    if plan.get("llama_cpp_commit") != llama_cpp_commit:
+        failures.append("llama.cpp commit")
+    if plan.get("output_filename") != OUTPUT_FILENAME:
+        failures.append("output filename")
     if audit.get("status") != "PASS" or audit.get("accepted_chunks") != plan.get("accepted_imatrix_chunks"):
         failures.append("accepted audit")
     accepted = next((x for x in audit.get("stages", []) if x["chunks"] == audit.get("accepted_chunks")), None)
@@ -85,9 +115,22 @@ def main() -> int:
     parser.add_argument("--structural", type=Path, required=True)
     parser.add_argument("--imatrix-audit", type=Path, required=True)
     parser.add_argument("--tensor-ftype", type=Path, required=True)
+    parser.add_argument("--golden", type=Path, required=True)
+    parser.add_argument("--golden-sha256", required=True)
+    parser.add_argument("--golden-provenance", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--llama-cpp-commit", required=True)
     args = parser.parse_args()
-    report = verify(args.plan, args.structural, args.imatrix_audit, args.tensor_ftype)
+    report = verify(
+        args.plan,
+        args.structural,
+        args.imatrix_audit,
+        args.tensor_ftype,
+        args.golden.resolve(),
+        args.golden_sha256,
+        args.golden_provenance.resolve(),
+        args.llama_cpp_commit,
+    )
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     print(json.dumps(report))
     return 0 if report["status"] == "PASS" else 1

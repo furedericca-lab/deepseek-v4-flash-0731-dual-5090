@@ -1,0 +1,2709 @@
+{
+  "gguf": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf",
+  "high_block_count": 0,
+  "high_tensor_count": 0,
+  "tensor_count": 129,
+  "tensors": [
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.0.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1042,
+        "120": 13078522,
+        "121": 21506081,
+        "122": 17360,
+        "123": 3
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.0.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 1371,
+        "120": 13271693,
+        "121": 21302443,
+        "122": 27501
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.0.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1196,
+        "120": 12538533,
+        "121": 22038391,
+        "122": 24888
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.1.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1293,
+        "120": 13650297,
+        "121": 20936406,
+        "122": 14986,
+        "123": 26
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.1.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 1265,
+        "120": 13757866,
+        "121": 20829784,
+        "122": 14093
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.1.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1239,
+        "120": 13450976,
+        "121": 21135797,
+        "122": 14996
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.10.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2997,
+        "120": 16106181,
+        "121": 18481848,
+        "122": 11938,
+        "123": 43,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.10.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 4866,
+        "120": 15871968,
+        "121": 18702256,
+        "122": 23901,
+        "123": 16,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.10.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3251,
+        "120": 15314230,
+        "121": 19268484,
+        "122": 17028,
+        "123": 12,
+        "124": 3
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.11.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 3047,
+        "120": 16260090,
+        "121": 18328717,
+        "122": 11057,
+        "123": 94,
+        "124": 3
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.11.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 4403,
+        "120": 15929974,
+        "121": 18651390,
+        "122": 17234,
+        "123": 6,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.11.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3005,
+        "120": 15476836,
+        "121": 19109776,
+        "122": 13388,
+        "123": 2,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.12.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 3149,
+        "120": 16173175,
+        "121": 18417085,
+        "122": 9585,
+        "123": 14
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.12.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 5116,
+        "120": 16133495,
+        "121": 18447143,
+        "122": 17240,
+        "123": 12,
+        "124": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.12.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3400,
+        "120": 15597375,
+        "121": 18988886,
+        "122": 13336,
+        "123": 9,
+        "124": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.13.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 3470,
+        "120": 16480522,
+        "121": 18109197,
+        "122": 9741,
+        "123": 72,
+        "124": 6
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.13.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 5905,
+        "120": 16287492,
+        "121": 18292916,
+        "122": 16670,
+        "123": 21,
+        "124": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.13.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3403,
+        "120": 15628932,
+        "121": 18957236,
+        "122": 13413,
+        "123": 19,
+        "124": 5
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.14.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 3316,
+        "120": 16440299,
+        "121": 18149628,
+        "122": 9746,
+        "123": 19
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.14.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 7732,
+        "120": 16551720,
+        "121": 18025883,
+        "122": 17658,
+        "123": 13,
+        "124": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.14.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3430,
+        "120": 15491872,
+        "121": 19093039,
+        "122": 14649,
+        "123": 18
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.15.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 3327,
+        "120": 16190525,
+        "121": 18396020,
+        "122": 13032,
+        "123": 99,
+        "124": 5
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.15.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 10053,
+        "120": 16663349,
+        "121": 17908269,
+        "122": 21299,
+        "123": 31,
+        "124": 7
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.15.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3563,
+        "120": 15460370,
+        "121": 19121881,
+        "122": 17140,
+        "123": 49,
+        "124": 5
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.16.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2999,
+        "120": 15837279,
+        "121": 18748894,
+        "122": 13781,
+        "123": 48,
+        "124": 7
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.16.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 12746,
+        "120": 16941535,
+        "121": 17622236,
+        "122": 26447,
+        "123": 36,
+        "124": 8
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.16.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3597,
+        "120": 15286809,
+        "121": 19291883,
+        "122": 20656,
+        "123": 49,
+        "124": 13,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.17.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 3096,
+        "120": 15408250,
+        "121": 19165181,
+        "122": 26208,
+        "123": 242,
+        "124": 28,
+        "125": 3
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.17.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 18939,
+        "120": 17089958,
+        "121": 17466253,
+        "122": 27762,
+        "123": 78,
+        "124": 16,
+        "125": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.17.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3760,
+        "120": 14989424,
+        "121": 19577428,
+        "122": 32247,
+        "123": 118,
+        "124": 31
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.18.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2392,
+        "120": 14422130,
+        "121": 20131747,
+        "122": 46503,
+        "123": 208,
+        "124": 27,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.18.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 25732,
+        "120": 17249230,
+        "121": 17289423,
+        "122": 38505,
+        "123": 99,
+        "124": 18,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.18.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3991,
+        "120": 14539789,
+        "121": 20006141,
+        "122": 52967,
+        "123": 99,
+        "124": 21
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.19.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2963,
+        "120": 14600931,
+        "121": 19978555,
+        "122": 20322,
+        "123": 213,
+        "124": 23,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.19.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 4444,
+        "120": 13940704,
+        "121": 20589011,
+        "122": 68787,
+        "123": 38,
+        "124": 22,
+        "125": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.19.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2126,
+        "120": 13079310,
+        "121": 21484859,
+        "122": 36634,
+        "123": 52,
+        "124": 26,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.2.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1152,
+        "120": 13190482,
+        "121": 21394889,
+        "122": 16474,
+        "123": 11
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.2.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 1097,
+        "120": 13153676,
+        "121": 21431380,
+        "122": 16855
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.2.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 888,
+        "120": 12342418,
+        "121": 22239207,
+        "122": 20494,
+        "123": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.20.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1993,
+        "120": 13681383,
+        "121": 20858897,
+        "122": 60187,
+        "123": 451,
+        "124": 84,
+        "125": 13
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.20.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 18130,
+        "120": 16506594,
+        "121": 18030911,
+        "122": 47220,
+        "123": 126,
+        "124": 25,
+        "125": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.20.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3042,
+        "120": 13521416,
+        "121": 20997953,
+        "122": 80389,
+        "123": 173,
+        "124": 35
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.21.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 3722,
+        "120": 13757357,
+        "121": 20808912,
+        "122": 32788,
+        "123": 195,
+        "124": 30,
+        "125": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.21.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 10628,
+        "120": 16014970,
+        "121": 18533123,
+        "122": 44220,
+        "123": 56,
+        "124": 9,
+        "125": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.21.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2739,
+        "120": 13678535,
+        "121": 20874176,
+        "122": 47455,
+        "123": 92,
+        "124": 9,
+        "125": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.22.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1695,
+        "120": 13060073,
+        "121": 21495038,
+        "122": 45995,
+        "123": 175,
+        "124": 31,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.22.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 10498,
+        "120": 15348840,
+        "121": 19190748,
+        "122": 52865,
+        "123": 53,
+        "124": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.22.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2226,
+        "120": 12782718,
+        "121": 21748997,
+        "122": 68981,
+        "123": 82,
+        "124": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.23.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1337,
+        "120": 13612301,
+        "121": 20969929,
+        "122": 19251,
+        "123": 147,
+        "124": 39,
+        "125": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.23.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2154,
+        "120": 13568178,
+        "121": 21009061,
+        "122": 23540,
+        "123": 59,
+        "124": 13,
+        "125": 3
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.23.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1090,
+        "120": 12539222,
+        "121": 22036544,
+        "122": 26093,
+        "123": 47,
+        "124": 11,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.24.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1360,
+        "120": 13692797,
+        "121": 20892768,
+        "122": 16060,
+        "123": 23
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.24.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2330,
+        "120": 14568779,
+        "121": 20012583,
+        "122": 19310,
+        "123": 6
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.24.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1474,
+        "120": 13354639,
+        "121": 21225866,
+        "122": 21024,
+        "123": 5
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.25.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1968,
+        "120": 14170948,
+        "121": 20415457,
+        "122": 14541,
+        "123": 85,
+        "124": 6,
+        "125": 3
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.25.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2767,
+        "120": 13913563,
+        "121": 20667000,
+        "122": 19666,
+        "123": 11,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.25.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1203,
+        "120": 12558016,
+        "121": 22020595,
+        "122": 23181,
+        "123": 12,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.26.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1575,
+        "120": 14093556,
+        "121": 20491767,
+        "122": 16061,
+        "123": 47,
+        "124": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.26.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2376,
+        "120": 14132545,
+        "121": 20449993,
+        "122": 18093,
+        "123": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.26.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1215,
+        "120": 12677321,
+        "121": 21901169,
+        "122": 23297,
+        "123": 6
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.27.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1837,
+        "120": 14550784,
+        "121": 20035542,
+        "122": 14789,
+        "123": 50,
+        "124": 6
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.27.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2376,
+        "120": 13206070,
+        "121": 21373190,
+        "122": 21366,
+        "123": 4,
+        "124": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.27.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 902,
+        "120": 11903056,
+        "121": 22672061,
+        "122": 26978,
+        "123": 10,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.28.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1446,
+        "120": 13921203,
+        "121": 20663871,
+        "122": 16434,
+        "123": 46,
+        "124": 8
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.28.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2304,
+        "120": 14069657,
+        "121": 20510790,
+        "122": 20234,
+        "123": 16,
+        "124": 7
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.28.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1148,
+        "120": 12508345,
+        "121": 22068033,
+        "122": 25459,
+        "123": 14,
+        "124": 9
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.29.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1909,
+        "120": 13722979,
+        "121": 20858425,
+        "122": 19632,
+        "123": 52,
+        "124": 10,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.29.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 3352,
+        "120": 13894118,
+        "121": 20680724,
+        "122": 24790,
+        "123": 22,
+        "124": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.29.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1251,
+        "120": 12333784,
+        "121": 22239189,
+        "122": 28741,
+        "123": 32,
+        "124": 10,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.3.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2352,
+        "120": 15312203,
+        "121": 19273422,
+        "122": 14664,
+        "123": 359,
+        "124": 8
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.3.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2391,
+        "120": 14328357,
+        "121": 20248937,
+        "122": 23319,
+        "123": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.3.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2219,
+        "120": 14197976,
+        "121": 20384324,
+        "122": 18484,
+        "123": 5
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.30.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1700,
+        "120": 14093240,
+        "121": 20489143,
+        "122": 18906,
+        "123": 19
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 118,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.30.ffn_gate_exps.weight",
+      "top_exponents": {
+        "118": 2,
+        "119": 3718,
+        "120": 14036654,
+        "121": 20538124,
+        "122": 24510
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.30.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1289,
+        "120": 12490490,
+        "121": 22082963,
+        "122": 28266
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.31.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1730,
+        "120": 13466746,
+        "121": 21108255,
+        "122": 26185,
+        "123": 78,
+        "124": 12,
+        "125": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.31.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 5753,
+        "120": 13753565,
+        "121": 20809976,
+        "122": 33684,
+        "123": 26,
+        "124": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.31.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1252,
+        "120": 12049842,
+        "121": 22518206,
+        "122": 33693,
+        "123": 11,
+        "124": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.32.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1357,
+        "120": 13376380,
+        "121": 21200369,
+        "122": 24851,
+        "123": 46,
+        "124": 4,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.32.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2762,
+        "120": 13757810,
+        "121": 20815325,
+        "122": 27110,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.32.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 997,
+        "120": 12028968,
+        "121": 22540829,
+        "122": 32213,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.33.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1395,
+        "120": 13528853,
+        "121": 21050589,
+        "122": 22112,
+        "123": 53,
+        "124": 6
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.33.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 3210,
+        "120": 13957519,
+        "121": 20616938,
+        "122": 25338,
+        "123": 3
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.33.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1103,
+        "120": 12179227,
+        "121": 22392676,
+        "122": 29997,
+        "123": 5
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.34.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1338,
+        "120": 13485612,
+        "121": 21094460,
+        "122": 21576,
+        "123": 22
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 118,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.34.ffn_gate_exps.weight",
+      "top_exponents": {
+        "118": 1,
+        "119": 2709,
+        "120": 14061842,
+        "121": 20518217,
+        "122": 20239
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.34.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 908,
+        "120": 11970713,
+        "121": 22601477,
+        "122": 29910
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 126,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.35.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1615,
+        "120": 13536043,
+        "121": 21021287,
+        "122": 42411,
+        "123": 1337,
+        "124": 266,
+        "125": 48,
+        "126": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 118,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.35.ffn_gate_exps.weight",
+      "top_exponents": {
+        "118": 4,
+        "119": 8075,
+        "120": 14370561,
+        "121": 20194139,
+        "122": 30222,
+        "123": 4,
+        "124": 2,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.35.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1873,
+        "120": 12255537,
+        "121": 22308528,
+        "122": 37058,
+        "123": 9,
+        "124": 1,
+        "125": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.36.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1452,
+        "120": 13248261,
+        "121": 21329147,
+        "122": 24122,
+        "123": 26
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 118,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.36.ffn_gate_exps.weight",
+      "top_exponents": {
+        "118": 3,
+        "119": 2986,
+        "120": 13742168,
+        "121": 20833004,
+        "122": 24845,
+        "123": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.36.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 922,
+        "120": 11641286,
+        "121": 22925324,
+        "122": 35470,
+        "123": 6
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.37.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1456,
+        "120": 12769343,
+        "121": 21793822,
+        "122": 37700,
+        "123": 618,
+        "124": 60,
+        "125": 9
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 118,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.37.ffn_gate_exps.weight",
+      "top_exponents": {
+        "118": 26,
+        "119": 4237,
+        "120": 13816859,
+        "121": 20746084,
+        "122": 35772,
+        "123": 23,
+        "124": 7
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.37.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1079,
+        "120": 11707135,
+        "121": 22851447,
+        "122": 43259,
+        "123": 72,
+        "124": 16
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.38.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1168,
+        "120": 12429296,
+        "121": 22137768,
+        "122": 34687,
+        "123": 85,
+        "124": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.38.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 3286,
+        "120": 13669923,
+        "121": 20898161,
+        "122": 31633,
+        "123": 5
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.38.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1010,
+        "120": 11455412,
+        "121": 23102341,
+        "122": 44239,
+        "123": 6
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.39.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1068,
+        "120": 11546511,
+        "121": 22944787,
+        "122": 108973,
+        "123": 1565,
+        "124": 91,
+        "125": 13
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 118,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.39.ffn_gate_exps.weight",
+      "top_exponents": {
+        "118": 284,
+        "119": 83061,
+        "120": 15904967,
+        "121": 18572921,
+        "122": 41716,
+        "123": 49,
+        "124": 9,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.39.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 3998,
+        "120": 12260345,
+        "121": 22243156,
+        "122": 95343,
+        "123": 142,
+        "124": 24
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.4.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2359,
+        "120": 15419509,
+        "121": 19168936,
+        "122": 12175,
+        "123": 28,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.4.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2713,
+        "120": 14582182,
+        "121": 19989045,
+        "122": 29066,
+        "123": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.4.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2401,
+        "120": 14438920,
+        "121": 20141993,
+        "122": 19694
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.40.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 638,
+        "120": 10323982,
+        "121": 24170592,
+        "122": 106764,
+        "123": 1013,
+        "124": 19
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 118,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.40.ffn_gate_exps.weight",
+      "top_exponents": {
+        "118": 2,
+        "119": 6825,
+        "120": 13143746,
+        "121": 21390353,
+        "122": 62049,
+        "123": 32,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.40.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1197,
+        "120": 10721961,
+        "121": 23785208,
+        "122": 94579,
+        "123": 63
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.41.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 1265,
+        "120": 8385165,
+        "121": 25842898,
+        "122": 333195,
+        "123": 36173,
+        "124": 4166,
+        "125": 146
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.41.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 7058,
+        "120": 12656368,
+        "121": 21831106,
+        "122": 107879,
+        "123": 591,
+        "124": 6
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.41.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 1038,
+        "120": 10388985,
+        "121": 24071479,
+        "122": 136728,
+        "123": 4754,
+        "124": 24
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 126,
+      "exponent_min": 118,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.42.ffn_down_exps.weight",
+      "top_exponents": {
+        "118": 1,
+        "119": 697,
+        "120": 5179429,
+        "121": 28520155,
+        "122": 752171,
+        "123": 130326,
+        "124": 19474,
+        "125": 750,
+        "126": 5
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.42.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 3786,
+        "120": 8855183,
+        "121": 25505548,
+        "122": 237951,
+        "123": 537,
+        "124": 3
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.42.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 555,
+        "120": 7777659,
+        "121": 26509799,
+        "122": 304498,
+        "123": 10404,
+        "124": 93
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.5.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2714,
+        "120": 15921906,
+        "121": 18666910,
+        "122": 11348,
+        "123": 117,
+        "124": 13
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 122,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.5.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 2578,
+        "120": 15028913,
+        "121": 19554334,
+        "122": 17183
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.5.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2323,
+        "120": 14779794,
+        "121": 19806193,
+        "122": 14694,
+        "123": 4
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.6.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2346,
+        "120": 15446129,
+        "121": 19143069,
+        "122": 11453,
+        "123": 10,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.6.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 3274,
+        "120": 15480160,
+        "121": 19102368,
+        "122": 17199,
+        "123": 5,
+        "124": 2
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.6.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2700,
+        "120": 15014021,
+        "121": 19570209,
+        "122": 16067,
+        "123": 7,
+        "124": 3,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.7.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2548,
+        "120": 15685972,
+        "121": 18902785,
+        "122": 11557,
+        "123": 135,
+        "124": 11
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 123,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.7.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 3304,
+        "120": 15472804,
+        "121": 19111632,
+        "122": 15255,
+        "123": 13
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.7.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2586,
+        "120": 14904172,
+        "121": 19680585,
+        "122": 15649,
+        "123": 15,
+        "124": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.8.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2440,
+        "120": 15586656,
+        "121": 19002996,
+        "122": 10874,
+        "123": 36,
+        "124": 5,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.8.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 3727,
+        "120": 15740836,
+        "121": 18842915,
+        "122": 15507,
+        "123": 17,
+        "124": 5,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 125,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.8.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2805,
+        "120": 15113177,
+        "121": 19472620,
+        "122": 14394,
+        "123": 11,
+        "125": 1
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        2048,
+        4096,
+        132
+      ],
+      "tensor": "blk.9.ffn_down_exps.weight",
+      "top_exponents": {
+        "119": 2758,
+        "120": 15972204,
+        "121": 18616717,
+        "122": 11126,
+        "123": 188,
+        "124": 15
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.9.ffn_gate_exps.weight",
+      "top_exponents": {
+        "119": 3561,
+        "120": 15331467,
+        "121": 19248697,
+        "122": 19227,
+        "123": 44,
+        "124": 12
+      }
+    },
+    {
+      "blocks": 34603008,
+      "exponent_max": 124,
+      "exponent_min": 119,
+      "high_blocks": [],
+      "high_count": 0,
+      "shape": [
+        4096,
+        2048,
+        132
+      ],
+      "tensor": "blk.9.ffn_up_exps.weight",
+      "top_exponents": {
+        "119": 2775,
+        "120": 14985217,
+        "121": 19599788,
+        "122": 15166,
+        "123": 56,
+        "124": 6
+      }
+    }
+  ]
+}

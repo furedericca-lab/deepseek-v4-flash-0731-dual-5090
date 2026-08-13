@@ -32,7 +32,8 @@ Immutable K132 MXFP4 Golden
 ## Key Constraints and Non-Goals
 
 - Preserve all 132 experts, top-k 6, router, and hash routing.
-- The K132 Golden and canonical K132 deployment are immutable.
+- The corrected K132 Golden is immutable. The prior canonical GGUF was rejected
+  after full routed provenance exposed payload mutation and was deleted.
 - Exactly 17 layers use the IQ3_XXS recipe and 26 use the Q2_K_S recipe,
   independent of file size.
 - A fork extension supplies per-routed-region effective ftypes; Q2_K_S is not
@@ -62,10 +63,12 @@ exceptions, so all three recipe regions consume the same accepted evidence.
 - Archived structural input:
   `.scopes/archive/heretic-v2-reap96-consensus/evidence/reap96-phase2-score-report.json`.
 - Model input:
-  `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf`.
+  `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf`,
+  size `85,049,305,696`, O_DIRECT SHA256 `752a0146...cfdd`.
 - Runtime tools: `vendor/llama.cpp/build/bin/llama-imatrix` and
   `vendor/llama.cpp/build/bin/llama-quantize` at production submodule
-  `c861db3592ed7a03045d23861249eb43d1b8a039`, based on `2abf1748`.
+  `efb81abc6a261dcceb014e853beb0ffc5e4a49a0`, based on `2abf1748`, after the
+  complete imatrix and DeepSeek-V4 grouped-attention fixes.
 - Planned repository scripts own structural extraction, imatrix audit, plan
   generation, type-file generation, and candidate verification.
 - Evidence JSON and logs live under this scope's `evidence/` directory; model
@@ -88,8 +91,9 @@ entries are forbidden; unmatched tensors inherit global IQ4_XS.
    200 chunks and requires zero missing experts, zero projection-count
    mismatch, Spearman >= 0.95, and activation/final Top17 churn <= 2.
 4. Freeze the first accepted deterministic plan; block if 400 chunks fails.
-5. Run quantizer dry-run, then one DIO production quantization using the
-   accepted imatrix and tensor-ftype file.
+5. Require the independent `17,028`-comparison, `75,884,396,544`-byte full
+   routed-provenance PASS, then run the quantizer dry-run and one DIO production
+   quantization using the accepted imatrix and tensor-ftype file.
 6. Stop on any kernel fault, non-finite imatrix value, missing expert coverage,
    type mismatch, routing drift, or unstable O_DIRECT read.
 7. Verify and run the candidate without changing the K132 server entry point.
@@ -103,6 +107,9 @@ entries are forbidden; unmatched tensors inherit global IQ4_XS.
 - Partial imatrix checkpoints are diagnostic only until merged and verified.
 - Failed/rejected GGUF outputs remain non-canonical and are deleted only with
   explicit user authorization.
+- The rejected old K132, mutated full-converter intermediate, K96 MXFP4, and K96
+  IQ4_XS files were deleted on 2026-08-13. Historical reports remain as audit
+  evidence but must not be treated as live artifact paths.
 
 ## Security and Reliability
 

@@ -1,0 +1,6 @@
+0.41.604.152 I
+0.41.604.227 I system_info: n_threads = 16 (n_threads_batch = 16) / 32 | CUDA : ARCHS = 1200 | USE_GRAPHS = 1 | BLACKWELL_NATIVE_FP4 = 1 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 |
+0.41.604.231 I compute_imatrix: tokenizing the input ..
+0.41.882.297 I compute_imatrix: tokenization took 278.058 ms
+0.41.882.315 I compute_imatrix: computing over 200 chunks, n_ctx=512, batch_size=512, n_seq=1
+0.46.968.131 I compute_imatrix: 5.09 seconds per pass - ETA 16.95 minutes

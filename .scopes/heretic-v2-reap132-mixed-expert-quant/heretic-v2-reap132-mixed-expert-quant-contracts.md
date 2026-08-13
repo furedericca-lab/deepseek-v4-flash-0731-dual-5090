@@ -10,13 +10,13 @@ The sole model input is the read-only K132 Golden:
 
 ```text
 /data/linux-fast/models/DeepSeek-V4-Flash-0731/
-DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf
+DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf
 ```
 
 | Property | Required value |
 |---|---|
 | Size | `85,049,305,696` bytes |
-| SHA256 | `f436ed2f92e6d6d49b5c73c546f2d52a6fa277b9f72d9915bff08b9385bb286b` |
+| SHA256 | `752a0146f54d5c5bc34491d53f9e1acbb63540b1e3c38bd352185b508418cfdd` |
 | Architecture | `deepseek4` |
 | Blocks | 43 |
 | Routed experts | 132 per layer |
@@ -26,6 +26,15 @@ DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf
 
 The input must remain mode `0444`; this scope never rewrites, renames, or
 promotes over it.
+
+The former K132 GGUF with SHA256 `f436ed2f...286b` and the intermediate
+`full-provenance-rebuild.gguf` are rejected inputs. Full routed-payload audits
+proved local MXFP4 mutations in both files, and both were deleted on
+2026-08-13 with explicit user authorization. The corrected input above was
+rebuilt from accepted native K132 for all 129 complete routed tensors and must
+pass the independent full-routed report at
+`evidence/reap132-mxfp4-full-routed-rebuild-provenance.json` (SHA256
+`7add160372a3ebd01133e1e25d453b651596a0bb99daa20d6d612364aa087382`).
 
 ## Structural Prior Schema
 
@@ -200,7 +209,8 @@ the imatrix-required check must use the same effective ftype.
 - All 43 router tensors and three `tid2eid` tensors are byte-identical.
 - Output is read-only and has an O_DIRECT SHA256.
 - Production quantization begins only after clean boot, imatrix acceptance, and
-  frozen plan verification.
+  frozen plan verification. The frozen plan must bind the corrected Golden
+  path, size, O_DIRECT SHA256, and full-routed provenance report identity.
 - Runtime acceptance never promotes the candidate over K132 without semantic
   gates; K132 remains rollback and deployment baseline.
 

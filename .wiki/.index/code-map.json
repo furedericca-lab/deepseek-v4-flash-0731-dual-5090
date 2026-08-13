@@ -32,6 +32,14 @@
     ],
     "symbols": {}
   },
+  ".scopes/heretic-v2-reap132-mixed-expert-quant/evidence": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/reflections/k132-mixed-quant-host-io-lessons.md"
+    ],
+    "symbols": {}
+  },
   ".wiki/debugging/heretic-v2-streaming-writer-namespace-corruption.md": {
     "anchors": [],
     "definition_pages": [],
@@ -123,6 +131,14 @@
     ],
     "symbols": {}
   },
+  "scripts/verify_reap132_mixed_quant_gguf.py": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/reflections/k132-mixed-quant-host-io-lessons.md"
+    ],
+    "symbols": {}
+  },
   "scripts/verify_reap96_iq4xs_gguf.py": {
     "anchors": [],
     "definition_pages": [],
@@ -189,12 +205,30 @@
     ],
     "symbols": {}
   },
+  "vendor/llama.cpp/src/llama-mmap.cpp": {
+    "anchors": [],
+    "definition_pages": [
+      ".wiki/reflections/k132-mixed-quant-host-io-lessons.md"
+    ],
+    "pages": [
+      ".wiki/reflections/k132-mixed-quant-host-io-lessons.md"
+    ],
+    "symbols": {}
+  },
   "vendor/llama.cpp/src/llama-quant.cpp": {
     "anchors": [],
     "definition_pages": [],
     "pages": [
       ".wiki/implementation/k132-fixed-ratio-mixed-expert-quantization.md",
       ".wiki/implementation/k96-profile-a-iq4xs-non-routed-release.md"
+    ],
+    "symbols": {}
+  },
+  "vendor/llama.cpp/tests/test-llama-file.cpp": {
+    "anchors": [],
+    "definition_pages": [],
+    "pages": [
+      ".wiki/reflections/k132-mixed-quant-host-io-lessons.md"
     ],
     "symbols": {}
   },

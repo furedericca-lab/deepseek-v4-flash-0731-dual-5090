@@ -21,7 +21,7 @@ a structural-importance prior without reopening K96.
 
 - The regional extension is based on `vendor/llama.cpp` commit
   `2abf1748cc91d64f6ead12ed535a71cb05fd6d3d`; the production pin is
-  `c861db3592ed7a03045d23861249eb43d1b8a039`.
+  `efb81abc6a261dcceb014e853beb0ffc5e4a49a0`.
 - `vendor/llama.cpp/src/llama-quant.cpp` requires imatrix data for
   `GGML_TYPE_IQ3_XXS` and emits
   an explicit error for production quantization without it.
@@ -39,6 +39,18 @@ a structural-importance prior without reopening K96.
   counts for each expert ID.
 - The common CLI exposes `--load-mode dio` to `llama-imatrix` and supports the
   established dual-GPU layer split and auto-fit runtime.
+- The stock imatrix filter omitted the non-block DeepSeek-V4
+  `output_hc_fn.weight` matrix. The fork now collects it without widening the
+  filter to unrelated tensors.
+- `attn_output_a.weight` is physically 2D in GGUF but virtually reshaped into
+  eight output groups in the graph. Its 32,768-value imatrix is consumed as
+  eight independent 4,096-value groups during row quantization.
+- DeepSeek-V4 compressor APE tensors use `GET_ROWS`, not matrix multiplication,
+  and remain unchanged as positional/structural tensors. Linear compressor and
+  indexer weights still use IQ4_XS.
+- DeepSeek-V4 `attn_kv.weight` is now classified as V-like under the stock
+  IQ4_XS mixed selector, producing 43 automatic Q5_K promotions. The mapping is
+  architecture-scoped and the full selector snapshot suite passes.
 - Read-only dry-runs produced:
   - all 43 routed layers flat Q2_K + non-routed IQ4_XS: `50,949,931,392` bytes;
   - all 43 routed layers IQ3_XXS + non-routed IQ4_XS: `58,761,560,448` bytes.
