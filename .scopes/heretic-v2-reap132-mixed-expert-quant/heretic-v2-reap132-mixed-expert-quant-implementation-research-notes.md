@@ -19,13 +19,20 @@ a structural-importance prior without reopening K96.
 
 ## Source Findings
 
-- `vendor/llama.cpp` is pinned at
-  `2abf1748cc91d64f6ead12ed535a71cb05fd6d3d`.
+- The regional extension is based on `vendor/llama.cpp` commit
+  `2abf1748cc91d64f6ead12ed535a71cb05fd6d3d`; the production pin is
+  `c861db3592ed7a03045d23861249eb43d1b8a039`.
 - `vendor/llama.cpp/src/llama-quant.cpp` requires imatrix data for
   `GGML_TYPE_IQ3_XXS` and emits
   an explicit error for production quantization without it.
 - `vendor/llama.cpp/tools/quantize/quantize.cpp` parses `--tensor-type` values through
   `ggml_type_name`; `Q2_K` is valid while `Q2_K_S` is a model-level ftype.
+- Stock quantization has one global ftype. True regional Q2_K_S therefore
+  requires an independent regex effective-ftype override used by both the
+  mixed selector and imatrix-required gate.
+- IQ4_XS can consume imatrix weights natively. This scope strengthens the fork
+  gate so every quantizable effective-IQ4_XS tensor except embedding/output must
+  have a finite, width-matched entry instead of treating imatrix as optional.
 - `vendor/llama.cpp/tools/imatrix/imatrix.cpp` collects every
   `GGML_OP_MUL_MAT_ID`, supports
   merged 3D expert tensors, and accumulates separate activation values and
@@ -33,9 +40,10 @@ a structural-importance prior without reopening K96.
 - The common CLI exposes `--load-mode dio` to `llama-imatrix` and supports the
   established dual-GPU layer split and auto-fit runtime.
 - Read-only dry-runs produced:
-  - all 43 routed layers Q2_K + non-routed IQ4_XS: `50,949,931,392` bytes;
+  - all 43 routed layers flat Q2_K + non-routed IQ4_XS: `50,949,931,392` bytes;
   - all 43 routed layers IQ3_XXS + non-routed IQ4_XS: `58,761,560,448` bytes.
-  These are feasibility evidence only; output size is not the experiment gate.
+  These are feasibility evidence only; the flat-Q2 result is superseded by the
+  true Q2_K_S requirement and output size is not the experiment gate.
 
 ## Gap Analysis
 
@@ -60,7 +68,7 @@ tensor-type overrides, and final artifact provenance.
 | Preserve all 132 experts and routing | 5 | 5 | User direction and K132 Golden | None | 5 | 5 | 5 | Explicit immutable baseline | Accepted |
 | Fix allocation at 17 IQ3 / 26 Q2 | 5 | 5 | Latest user direction | All-IQ3 also fits under 60GB | 5 | 5 | 5 | Experiment ratio overrides size optimization | Accepted |
 | Use 40% structural and 60% imatrix score | 5 | 4 | User formula and source capabilities | Aggregation still requires coverage validation | 5 | 4 | 5 | Activation importance gets greater weight for the quantization experiment | Accepted with Phase 1 gate |
-| Use Q2_K tensor encoding | 5 | 5 | Pinned quantizer parser/source | User-facing Q2_K_S label differs | 5 | 5 | 5 | Concrete override must be ggml_type | Accepted |
+| Use true regional Q2_K_S recipe | 5 | 5 | User clarification and pinned selector | Stock CLI has one global ftype | 5 | 4 | 4 | Requires a focused fork extension | Accepted with fixture gate |
 | Keep non-routed default IQ4_XS mixed policy | 5 | 5 | K96 release evidence and user direction | None | 5 | 5 | 5 | Preserves automatic sensitive promotions | Accepted |
 | Remove the 60GB gate | 5 | 5 | Latest user direction | Earlier objective used 60GB | 5 | 5 | 5 | Size becomes a reported measurement | Accepted |
 
@@ -71,8 +79,9 @@ tensor-type overrides, and final artifact provenance.
    outputs until every routed expert has non-zero projection-consistent counts.
 3. Normalize `R_l` and `I_l`, compute `P_l = 0.4R_l + 0.6I_l`, and freeze the
    deterministic top-17 plan.
-4. Run a no-output dry-run with a generated tensor-type file.
-5. Produce one DIO candidate with IQ3_XXS in 17 layers, Q2_K in 26 layers, and
+4. Run a no-output dry-run with a generated tensor-ftype file.
+5. Produce one DIO candidate with the IQ3_XXS recipe in 17 layers, Q2_K_S
+   recipe in 26 layers, and
    exactly the archived K96 Profile A default IQ4_XS mixed policy for Shared
    Expert, Core Backbone, attention/indexer/embedding/output, and all other
    eligible non-routed weights. No manual non-routed type override is added.
@@ -83,11 +92,12 @@ tensor-type overrides, and final artifact provenance.
 
 - `repo-task-driven` placeholder, roundtable, sync, and inventory checks.
 - Unit tests for structural aggregation, imatrix parser, normalization, stable
-  ranking, tensor-type file generation, and plan verifier.
+  ranking, tensor-ftype file generation, and plan verifier.
 - imatrix coverage report: 129/129 routed tensors, finite values, 132 counts per
   tensor, explicit zero-count statistics.
 - deterministic plan generation twice with byte-identical JSON.
-- quantizer dry-run with exact counts: 51 IQ3_XXS expert tensors and 78 Q2_K.
+- quantizer dry-run with exact counts: 51 IQ3_XXS-recipe expert tensors and 78
+  Q2_K_S-recipe expert tensors, with concrete types matching each selector.
 - final O_DIRECT verifier, SHA256, clean kernel/Xid gate, and runtime probes.
 
 ## Risks and Assumptions

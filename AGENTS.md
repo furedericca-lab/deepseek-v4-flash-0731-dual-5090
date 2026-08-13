@@ -39,7 +39,7 @@
 ## Mission
 
 Keep the accepted REAP132 MXFP4 GGUF deployable while evaluating one independent
-fixed-ratio K132 candidate: 17 routed-expert layers use IQ3_XXS, 26 use Q2_K,
+fixed-ratio K132 candidate: 17 routed-expert layers use the IQ3_XXS recipe, 26 use the Q2_K_S recipe,
 and all eligible non-routed weights reuse the archived K96 Profile A default
 non-pure IQ4_XS mixed policy. The K132 Golden remains immutable and deployed.
 
@@ -71,7 +71,7 @@ The deployment baseline uses llama.cpp on dual RTX 5090 with:
   B, imatrix, or quantization-profile A/B experiments.
 - The active `.scopes/heretic-v2-reap132-mixed-expert-quant/` scope is the sole
   exception permitting IQ3/Q2 work from the read-only K132 Golden. It fixes the
-  ratio at 17 IQ3_XXS layers and 26 Q2_K layers, has no 60GB size gate, and may
+  ratio at 17 IQ3_XXS recipe layers and 26 Q2_K_S recipe layers, has no 60GB size gate, and may
   add only routed-expert tensor overrides. Shared Expert, Core Backbone,
   attention, indexer, embedding, and output remain under llama.cpp's default
   non-pure IQ4_XS mixed policy.

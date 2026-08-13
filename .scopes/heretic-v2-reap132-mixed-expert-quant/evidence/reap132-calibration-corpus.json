@@ -1,0 +1,42 @@
+{
+  "corpus": {
+    "mode": "0444",
+    "path": "/data/linux-fast/models/calibration/reap132-imatrix-calibration.txt",
+    "sha256": "aa7a2c175055ea390043928316aedd2c3bb86f70be2a44cd19ac06ff38b65688",
+    "size": 847920,
+    "tokenizer_token_count": 205333
+  },
+  "deterministic_rerun": {
+    "corpus_byte_identical": true,
+    "manifest_byte_identical": true
+  },
+  "manifest": {
+    "mode": "0444",
+    "path": "/data/linux-fast/models/calibration/reap132-imatrix-calibration-manifest.json",
+    "sha256": "17e589258527dab5337d3764e0932ec849e0362783688537a0ff1b9adb9e6cb3",
+    "size": 4346
+  },
+  "schema": "heretic-reap132-calibration-corpus-acceptance-v1",
+  "source": {
+    "dataset": "eaddario/imatrix-calibration",
+    "revision": "e87ed55dcba9d9c3a3e41539f3e728e981b1daa4",
+    "sha256sums_verified": true,
+    "vendored_path": "third_party/calibration/eaddario-imatrix-calibration-e87ed55"
+  },
+  "stages": [
+    100,
+    200,
+    300,
+    400
+  ],
+  "status": "PASS",
+  "tests": {
+    "command": "uv run pytest tests/test_build_reap132_calibration_corpus.py -q",
+    "result": "3 passed"
+  },
+  "tokenizer": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP/tokenizer.json",
+    "sha256": "8f9f37ca37fdc4f5fd36d5cf4d3b0e8392edb4e894fd10cc0d70b4957c8633cf",
+    "vocab_size": 129280
+  }
+}

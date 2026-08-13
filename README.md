@@ -7,8 +7,8 @@ independently published mask evidence.
 
 The active experiment is
 `.scopes/heretic-v2-reap132-mixed-expert-quant/`. It keeps all 132 routed
-experts and top-k 6, assigns exactly 17 protected layers to IQ3_XXS and 26
-ordinary layers to Q2_K, and reuses the archived K96 Profile A default
+experts and top-k 6, assigns exactly 17 protected layers to the IQ3_XXS recipe
+and 26 ordinary layers to the Q2_K_S recipe, and reuses the archived K96 Profile A default
 non-pure IQ4_XS mixed policy for all eligible non-routed weights. The ratio is
 fixed independently of output size; the canonical K132 Golden remains read-only
 and deployed.

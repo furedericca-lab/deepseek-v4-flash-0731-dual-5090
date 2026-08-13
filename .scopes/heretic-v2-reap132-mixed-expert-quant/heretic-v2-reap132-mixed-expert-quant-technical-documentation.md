@@ -18,7 +18,7 @@ Immutable K132 MXFP4 Golden
                                    deterministic 43-layer ranking
                                           |                    |
                                    top 17 layers          remaining 26
-                                      IQ3_XXS                 Q2_K
+                                  IQ3_XXS recipe        Q2_K_S recipe
                                           +---------+----------+
                                                     |
                          llama-quantize base profile IQ4_XS, non-pure
@@ -33,8 +33,10 @@ Immutable K132 MXFP4 Golden
 
 - Preserve all 132 experts, top-k 6, router, and hash routing.
 - The K132 Golden and canonical K132 deployment are immutable.
-- Exactly 17 layers use IQ3_XXS and 26 use Q2_K, independent of file size.
-- `Q2_K_S` is only a policy label; overrides use `Q2_K`.
+- Exactly 17 layers use the IQ3_XXS recipe and 26 use the Q2_K_S recipe,
+  independent of file size.
+- A fork extension supplies per-routed-region effective ftypes; Q2_K_S is not
+  reduced to a flat Q2_K tensor override.
 - No `--pure`, all-IQ3 artifact, alternate ratio, or quantization A/B.
 - No full buffered read, mmap hash, or buffered provenance scan.
 
@@ -51,7 +53,9 @@ Non-routed weights deliberately reuse the accepted K96 Profile A policy. The
 quantizer receives only routed-expert regex overrides. Shared Expert, attention,
 CSA/HCA/mHC, indexer, embedding, output, and other eligible non-routed tensors
 remain subject to llama.cpp's default non-pure IQ4_XS logic and built-in Q5/Q6
-promotions.
+promotions. This fork additionally makes imatrix coverage a hard gate for every
+quantizable effective-IQ4_XS tensor except the existing embedding/output
+exceptions, so all three recipe regions consume the same accepted evidence.
 
 ## Module Boundaries and Data Flow
 
@@ -60,7 +64,8 @@ promotions.
 - Model input:
   `/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.gguf`.
 - Runtime tools: `vendor/llama.cpp/build/bin/llama-imatrix` and
-  `vendor/llama.cpp/build/bin/llama-quantize` at submodule `2abf1748`.
+  `vendor/llama.cpp/build/bin/llama-quantize` at production submodule
+  `c861db3592ed7a03045d23861249eb43d1b8a039`, based on `2abf1748`.
 - Planned repository scripts own structural extraction, imatrix audit, plan
   generation, type-file generation, and candidate verification.
 - Evidence JSON and logs live under this scope's `evidence/` directory; model
@@ -69,27 +74,32 @@ promotions.
 ## Interfaces and Contracts
 
 The plan JSON is the sole authority for layer assignment. It maps every layer
-to `IQ3_XXS` or `Q2_K`, records `R_l`, `I_l`, `P_l`, rank, source hashes, and
-tie-break values. The generated tensor-type file expands each layer assignment
-to gate/up/down packed expert regexes. Manual non-routed entries are forbidden.
+to the `IQ3_XXS` or `Q2_K_S` recipe, records `R_l`, `I_l`, `P_l`, rank, source
+hashes, and tie-break values. The generated tensor-ftype file expands each
+layer assignment to gate/up/down packed expert regexes. Manual non-routed
+entries are forbidden; unmatched tensors inherit global IQ4_XS.
 
 ## Operational Behavior
 
 1. Require a clean kernel/Xid gate and idle model processes.
-2. Run imatrix with `--load-mode dio`, dual-GPU layer split, auto-fit, bounded
-   context/chunks, periodic GGUF checkpoints, and no PPL when appropriate.
-3. Audit imatrix coverage and freeze the deterministic plan.
-4. Run quantizer dry-run, then one DIO production quantization using the
-   accepted imatrix and tensor-type file.
-5. Stop on any kernel fault, non-finite imatrix value, missing expert coverage,
+2. Run imatrix with `--load-mode dio`, dual-GPU layer split, auto-fit, context
+   512, and cumulative 100/200/300/400-chunk GGUF checkpoints.
+3. Audit imatrix coverage and adjacent-stage stability. Acceptance starts at
+   200 chunks and requires zero missing experts, zero projection-count
+   mismatch, Spearman >= 0.95, and activation/final Top17 churn <= 2.
+4. Freeze the first accepted deterministic plan; block if 400 chunks fails.
+5. Run quantizer dry-run, then one DIO production quantization using the
+   accepted imatrix and tensor-ftype file.
+6. Stop on any kernel fault, non-finite imatrix value, missing expert coverage,
    type mismatch, routing drift, or unstable O_DIRECT read.
-6. Verify and run the candidate without changing the K132 server entry point.
+7. Verify and run the candidate without changing the K132 server entry point.
 
 ## Observability and Error Handling
 
 - Capture corpus identity, command, commit, chunk/token counts, per-expert
-  counts, zero-count experts, score normalization, dry-run type inventory, file
-  size, O_DIRECT SHA256, runtime throughput, VRAM/RAM/swap, and kernel/Xid logs.
+  counts, zero-count experts, count percentiles, routing entropy, adjacent-stage
+  Spearman/Top17 churn, score normalization, dry-run type inventory, file size,
+  O_DIRECT SHA256, runtime throughput, VRAM/RAM/swap, and kernel/Xid logs.
 - Partial imatrix checkpoints are diagnostic only until merged and verified.
 - Failed/rejected GGUF outputs remain non-canonical and are deleted only with
   explicit user authorization.

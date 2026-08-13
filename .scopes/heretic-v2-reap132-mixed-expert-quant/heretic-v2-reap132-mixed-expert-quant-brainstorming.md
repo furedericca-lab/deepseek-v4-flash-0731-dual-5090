@@ -14,7 +14,8 @@ reduce weight size without repeating K96's expert-deletion quality loss.
 ## Scope
 
 - Preserve 132 routed experts per layer, top-k 6, router rows, and `tid2eid`.
-- Quantize 17 routed-expert layers to `IQ3_XXS` and 26 to `Q2_K`.
+- Quantize 17 routed-expert layers with the `IQ3_XXS` recipe and 26 with the
+  true `Q2_K_S` recipe.
 - Use default non-pure `IQ4_XS` mixed policy for Shared Expert and Core
   Backbone weights, including llama.cpp's automatic Q5/Q6 promotions.
 - Select the 17 protected layers from K96 structural evidence plus a K132
@@ -25,8 +26,8 @@ reduce weight size without repeating K96's expert-deletion quality loss.
 - The K132 Golden is immutable and remains the deployed artifact.
 - Bulk model I/O must use aligned O_DIRECT on a clean boot.
 - `IQ3_XXS` requires an imatrix in pinned llama.cpp.
-- `Q2_K_S` is a model-level recipe name; per-tensor overrides use the actual
-  `Q2_K` GGML encoding.
+- `Q2_K_S` is an ftype recipe, so a flat `Q2_K` tensor override is not
+  equivalent. The fork needs routed-only effective-ftype overrides.
 - Output size is measured evidence, not an acceptance limit.
 
 ## Options
@@ -44,19 +45,19 @@ reduce weight size without repeating K96's expert-deletion quality loss.
 |---|---|---|---|
 | Keep 17/26 allocation fixed | Size-optimized N; all-IQ3; fixed ratio | User explicitly defines the experiment; size is no longer a gate | `Selected Design` |
 | Rank with `P_l = 0.4 R_l + 0.6 I_l` | REAP only; imatrix only; combined | Imatrix directly measures activation importance while REAP remains a structural prior | `Selected Design` |
-| Use `Q2_K` tensor overrides | `Q2_K_S` override; model-level Q2_K_S | `--tensor-type` parses `ggml_type`, not `llama_ftype` | `Source Findings` |
+| Use per-region ftype overrides | Flat Q2_K tensor override; global Q2_K_S | Preserves true Q2_K_S selection while non-routed tensors remain IQ4_XS | `Source Findings` |
 
 ## Decision
 
 The first and only production candidate in this scope uses exactly 17
-IQ3_XXS routed-expert layers and 26 Q2_K routed-expert layers. The layer list is
+IQ3_XXS-recipe routed-expert layers and 26 Q2_K_S-recipe routed-expert layers. The layer list is
 frozen only after the imatrix coverage and deterministic ranking gates pass.
 The term protected does not claim direct quantization sensitivity; imatrix is
 activation-importance evidence, not a per-layer Q2 perturbation experiment.
 
 ## Risks
 
-- Q2_K requantization from MXFP4 may cause more quality loss than expert
+- Q2_K_S requantization from MXFP4 may cause more quality loss than expert
   pruning or uniform IQ3.
 - Calibration data may underexercise experts, biasing layer importance.
 - A layer aggregate can hide sensitivity differences among gate/up/down packed

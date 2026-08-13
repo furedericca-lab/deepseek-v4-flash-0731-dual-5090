@@ -37,10 +37,11 @@ It remains the deployed and rollback artifact.
 - Preserve 43 layers, 132 routed experts per layer, top-k 6, router, and
   `tid2eid`.
 - Exactly 17 protected/high-priority layers use IQ3_XXS.
-- Exactly 26 ordinary layers use Q2_K.
+- Exactly 26 ordinary layers use the true llama.cpp Q2_K_S recipe.
 - The ratio is fixed independently of output size. There is no 60GB gate and
   no all-IQ3 comparison artifact in this scope.
-- `Q2_K_S` is only a policy description; per-tensor overrides use Q2_K.
+- The fork supplies routed-only per-region effective ftypes so Q2_K_S keeps its
+  built-in selector behavior; a flat Q2_K tensor override is not equivalent.
 
 Only the 129 routed-expert packed tensors receive manual overrides. Shared
 Expert, Core Backbone, attention, indexer, embedding, output, and other eligible
@@ -69,11 +70,19 @@ projection-count-mismatched experts block plan generation.
 P_l = 0.4 * R_l + 0.6 * I_l
 ```
 
-Ranks 1-17 become IQ3_XXS; ranks 18-43 become Q2_K. Imatrix is activation
+Ranks 1-17 become the IQ3_XXS recipe; ranks 18-43 become the Q2_K_S recipe. Imatrix is activation
 importance evidence, not a direct per-layer quantization-sensitivity test.
+
+The fork hard-requires the same accepted imatrix for IQ3_XXS, Q2_K_S, and all
+quantizable effective-IQ4_XS tensors except the existing embedding/output
+exceptions. The gate follows the effective recipe, so a Q2_K_S tensor promoted
+to Q4_K remains covered. A missing, wrong-width, or non-finite entry blocks
+production, including dry-run validation. Embedding and output retain their
+existing exceptions and llama.cpp remains responsible for their concrete types.
 
 ## Current gate
 
 Phase 1 must implement and verify structural extraction, freeze calibration
-corpus identity, collect K132 imatrix through `--load-mode dio`, and pass finite
+corpus identity, collect cumulative 100/200/300/400-chunk K132 imatrix through
+`--load-mode dio`, and pass finite
 per-expert coverage before the 17-layer list is generated.

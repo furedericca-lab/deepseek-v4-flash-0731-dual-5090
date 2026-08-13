@@ -65,6 +65,17 @@ output must provide finite values and per-expert counts for each of the 129
 packed routed-expert tensors. The collector's merged-expert format stores one
 count and one activation vector per expert.
 
+The calibration corpus is generated only from the vendored
+`eaddario/imatrix-calibration` snapshot at revision
+`e87ed55dcba9d9c3a3e41539f3e728e981b1daa4`, after validating its checked-in
+`SHA256SUMS`, and the immutable K132 tokenizer. The deterministic seed is
+`132017026`; samples are capped at 256 tokenizer tokens and balanced by token
+count as 30% code, 20% math, 20% Chinese, 15% tool/agent, 10% English technical
+prose, and 5% structured JSON/YAML/schema/table material. The cumulative stages
+are 100, 200, 300, and 400 chunks at context 512, nominally 51,200, 102,400,
+153,600, and 204,800 tokens. Corpus text, manifest, source hashes, tokenizer
+hash, exact token count, and corpus SHA256 are immutable Phase 1 evidence.
+
 For layer `l`, projection `p` in `{gate, up, down}`, compact expert `e`, and
 activation coordinate `j`, let the imatrix provide raw squared-activation sum
 `S_l,p,e,j`, activation width `W_l,p`, and routed count `C_l,p,e`. First remove
@@ -96,6 +107,20 @@ evidence, not a direct measurement of per-layer quantization sensitivity. The
 plan report records all raw aggregation fields, normalization ranks, corpus
 identity, token/chunk counts, coverage result, and input imatrix SHA256.
 
+Every stage records zero-count expert count, gate/up/down count mismatches,
+minimum/p1/p5/median routed count, and per-layer routing entropy. A stage fails
+coverage if any routed expert has zero count or any projection counts disagree.
+The earliest accepted stage is 200 chunks. For each adjacent pair from
+100-to-200 onward, compute Spearman correlation over the 43 `raw_I_l` ranks,
+activation-only Top17 symmetric churn, and final `P_l` Top17 symmetric churn.
+Ranking stability passes only when Spearman is at least `0.95`, activation Top17
+churn is at most 2 layers, and final Top17 churn is at most 2 layers. Select the
+first stage at or above 200 chunks that passes both coverage and stability. If
+the 400-chunk stage still fails, Phase 1 is blocked; no zero-count fill,
+threshold relaxation, or structural-only fallback is allowed. The report keeps
+`Rank_R`, `Rank_I`, `Rank_P`, Spearman(`R`,`I`), and the three pairwise Top17
+overlaps for research evidence.
+
 ## Quantization Plan Contract
 
 For every layer:
@@ -105,46 +130,73 @@ P_l = 0.4 * R_l + 0.6 * I_l
 ```
 
 Sort by descending `P_l`, then descending `I_l`, descending `R_l`, ascending
-mean K216 semantic rank, and ascending layer ID. Exactly ranks 1-17 use
-`IQ3_XXS`; ranks 18-43 use `Q2_K`.
+mean K216 semantic rank, and ascending layer ID. Exactly ranks 1-17 use the
+`IQ3_XXS` recipe; ranks 18-43 use the `Q2_K_S` recipe.
 
 The plan must contain:
 
 - all 43 unique layer IDs;
-- exactly 17 `IQ3_XXS` and 26 `Q2_K` assignments;
+- exactly 17 `IQ3_XXS` and 26 `Q2_K_S` recipe assignments;
 - the full ranking inputs and tie-break values;
 - source artifact identities and llama.cpp commit;
 - deterministic logical and file SHA256 values.
 
-`Q2_K_S` may appear only as a human-readable policy label. It is never passed
-to `--tensor-type`; the concrete routed tensor encoding is `Q2_K`.
+`Q2_K_S` is an effective per-region `llama_ftype`, not a `ggml_type`. The forked
+quantizer must apply it through a recipe override before llama.cpp selects the
+concrete routed tensor type. It must not be simulated with `--tensor-type=Q2_K`.
 
 ## Artifact Contract
 
 | Tensor class | Treatment |
 |---|---|
-| Routed Experts in 17 protected layers | `IQ3_XXS` |
-| Routed Experts in 26 ordinary layers | `Q2_K` |
+| Routed Experts in 17 protected layers | llama.cpp `IQ3_XXS` recipe |
+| Routed Experts in 26 ordinary layers | llama.cpp `Q2_K_S` recipe, including its built-in promotions |
 | Shared Expert | same default non-pure `IQ4_XS` mixed policy accepted in the archived K96 Profile A scope |
 | Core Backbone | same default non-pure `IQ4_XS` mixed policy accepted in the archived K96 Profile A scope |
 | Attention, indexer, embedding, output and other eligible non-routed weights | llama.cpp default IQ4_XS selection with automatic Q5/Q6 promotions where its built-in policy requires them |
 | Router and `tid2eid` | unchanged type, shape, and bytes |
 | Norm, RoPE, sink, structural tensors | unchanged when not quantizable |
 
-The routed-expert overrides are the only manual tensor-type policy. Shared
+The routed-expert recipe overrides are the only manual selection policy. Shared
 Expert, Core Backbone, and sensitive attention-related weights must not receive
 scope-specific Q5/Q6/Q8 overrides; their concrete types come from the same
 llama.cpp IQ4_XS mixed logic used by
 `.scopes/archive/heretic-v2-reap96-iq4xs-backbone/`. No `--pure` profile is
-allowed. The imatrix is required for IQ3_XXS. Output size is reported but has no
-pass/fail threshold.
+allowed. The same accepted imatrix is mandatory for all three regions. The fork
+extends the hard imatrix gate to every quantizable effective-IQ4_XS tensor
+except the existing embedding/output exceptions. Missing, wrong-width, or
+non-finite entries fail production. Output size is reported but has no pass/fail
+threshold.
+
+The hard imatrix gate is frozen as follows. It is evaluated from the effective
+recipe before inspecting recipe-selected promotions, so a `Q2_K_S` tensor
+promoted to `Q4_K` remains covered.
+
+| Effective region | Imatrix gate |
+|---|---|
+| 17 routed layers using `IQ3_XXS` | required |
+| 26 routed layers using `Q2_K_S` | required |
+| Quantizable Shared Expert, Core Backbone, attention, indexer, and other linear tensors using `IQ4_XS` | required |
+| `token_embd.weight` | existing exception; not required |
+| `output.weight` | existing exception; not required |
+
+The embedding and output concrete types remain decisions of llama.cpp's
+non-pure mixed selector; the exceptions do not promise a particular promoted
+type.
+
+The quantizer interface is `--tensor-ftype PATTERN=FTYPE` or its file form.
+First match wins. The 43 routed-layer patterns must be mutually exclusive,
+cover all 129 packed routed tensors, and match no non-routed tensor. Unmatched
+tensors inherit the global non-pure `IQ4_XS` recipe. Target-type selection and
+the imatrix-required check must use the same effective ftype.
 
 ## Validation and Compatibility Rules
 
 - Metadata remains 43 blocks, 132 experts, top-k 6, no MTP/DSpark.
 - The tensor namespace and tensor count remain identical to the Golden.
-- All 51 protected-layer packed tensors are IQ3_XXS; all 78 ordinary-layer
-  packed tensors are Q2_K.
+- All 51 protected-layer packed tensors match the pinned IQ3_XXS selector.
+- All 78 ordinary-layer packed tensors match the pinned Q2_K_S selector,
+  including any recipe-selected Q4_K promotion; a flat Q2_K override fails.
 - All 43 router tensors and three `tid2eid` tensors are byte-identical.
 - Output is read-only and has an O_DIRECT SHA256.
 - Production quantization begins only after clean boot, imatrix acceptance, and

@@ -6,7 +6,7 @@ description: Produce and verify one DIO K132 heterogeneous quantization artifact
 
 ## Input
 
-- Immutable K132 Golden, accepted imatrix, frozen plan, and tensor-type file.
+- Immutable K132 Golden, accepted imatrix, frozen plan, and tensor-ftype file.
 - Pinned DIO quantizer and clean-boot contract.
 
 ## Canonical architecture / Key constraints
@@ -29,7 +29,7 @@ Tasks:
 - [ ] T042 [Infra] Run atomic DIO production quantization
   - DoD: The one authorized quantizer invocation exits zero, publishes only the final atomic output, and post-run kernel gate remains clean.
 - [ ] T043 [Backend] Implement mixed-candidate verifier
-  - DoD: Direct-only verifier checks metadata, namespace, 51 IQ3 expert tensors, 78 Q2 expert tensors, non-routed policy inventory, and byte-identical router/`tid2eid`/structural payloads.
+  - DoD: Direct-only verifier checks metadata, namespace, 51 IQ3-recipe tensors, 78 Q2_K_S-recipe tensors against the pinned selector, non-routed IQ4_XS policy inventory, and byte-identical router/`tid2eid`/structural payloads.
 - [ ] T044 [QA] Produce direct-only content identity
   - DoD: Candidate has stable O_DIRECT SHA256, read-only mode, zero unstable reads, no MTP/DSpark, and explicit file-size evidence without a size threshold.
 - [ ] T045 [Docs] Record artifact acceptance or rejection

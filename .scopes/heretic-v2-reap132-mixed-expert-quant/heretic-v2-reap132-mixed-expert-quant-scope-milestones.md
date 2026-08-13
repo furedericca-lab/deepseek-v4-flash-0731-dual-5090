@@ -8,7 +8,7 @@ description: Scope boundaries and gates for K132 fixed-ratio mixed expert quanti
 
 - K132 structural-prior extraction from archived K96 evidence.
 - K132 DIO imatrix calibration and routed-expert coverage analysis.
-- Deterministic 17 IQ3_XXS / 26 Q2_K layer plan.
+- Deterministic 17 IQ3_XXS-recipe / 26 Q2_K_S-recipe layer plan.
 - One candidate whose Shared Expert, Core Backbone, and sensitive non-routed
   weights use the same default non-pure IQ4_XS mixed policy as the archived K96
   Profile A release.
@@ -18,7 +18,7 @@ description: Scope boundaries and gates for K132 fixed-ratio mixed expert quanti
 
 - Any expert pruning, REAP recalculation, router or `tid2eid` rewrite.
 - A 60GB pass/fail target or size-driven changes to the 17/26 ratio.
-- All-IQ3, all-Q2, Q2_K_S model-level, `--pure`, or second-profile artifacts.
+- All-IQ3, all-Q2, global Q2_K_S, `--pure`, or second-profile artifacts.
 - Promotion over canonical K132 before full semantic acceptance.
 - Changes to the archived K96 plan or K96 artifacts.
 
@@ -26,9 +26,9 @@ description: Scope boundaries and gates for K132 fixed-ratio mixed expert quanti
 
 | Boundary / Decision | Evidence Source | Evidence Strength | Conflict | Confidence | Confidence Reason | Result |
 |---|---|---:|---|---:|---|---|
-| Exactly 17 IQ3 and 26 Q2 layers | User direction | 5 | All-IQ3 dry-run is below 60GB | 5 | Fixed experiment, not size optimization | Frozen |
+| Exactly 17 IQ3 and 26 Q2_K_S recipe layers | User direction | 5 | All-IQ3 dry-run is below 60GB | 5 | Fixed experiment, not size optimization | Frozen |
 | `P=0.4R+0.6I` | User direction and imatrix source support | 4 | Corpus sensitivity remains | 4 | Coverage gate controls remaining uncertainty | Phase 1 gate |
-| Q2_K is concrete tensor encoding | Pinned llama.cpp source | 5 | Policy described as Q2_K_S-style | 5 | CLI accepts ggml_type | Frozen |
+| Q2_K_S is a true regional recipe | User clarification and pinned selector | 5 | Stock CLI has one global ftype | 4 | Add routed-only effective-ftype override | Frozen with fork gate |
 | Default non-pure IQ4_XS for non-routed | User direction and accepted K96 release | 5 | None | 5 | Existing tested policy | Frozen |
 | Size is measurement only | User direction | 5 | Earlier 60GB objective | 5 | Latest requirement supersedes old gate | Frozen |
 
@@ -42,7 +42,7 @@ quantization may begin in this milestone.
 ### M2 - Frozen 17/26 Plan
 
 Generate and independently verify a deterministic 43-layer plan and exact
-`--tensor-type-file` input. Dry-run must report the expected 51/78 expert tensor
+`--tensor-ftype-file` input. Dry-run must report the expected 51/78 expert recipe
 split and that imatrix is available.
 
 ### M3 - Production Artifact
@@ -65,7 +65,7 @@ against canonical K132; do not auto-promote.
 
 ## Exit Criteria
 
-- Exact 17/26 assignment and 129 routed-expert tensor type inventory.
+- Exact 17/26 assignment and 129 routed-expert effective-recipe/type inventory.
 - K132 routing and structural tensors remain byte-identical.
 - Output identity, direct-only provenance, runtime behavior, and residual
   semantic risk are recorded.
@@ -76,7 +76,7 @@ against canonical K132; do not auto-promote.
 - Imatrix cannot provide finite per-expert data for packed K132 expert tensors.
 - Coverage remains materially incomplete after the contracted calibration
   budget, making the 17-layer selection ungrounded.
-- Pinned quantizer does not honor the generated 51/78 tensor-type split.
+- Pinned quantizer does not honor the generated 51/78 tensor-ftype split.
 - Any BAD_PAGE, compound_head, Oops, GPF, SIGSEGV, or NVIDIA Xid occurs during
   a large task; stop and require a clean boot.
 - The candidate would overwrite or mutate the canonical K132 Golden.

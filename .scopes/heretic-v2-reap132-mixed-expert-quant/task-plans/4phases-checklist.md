@@ -8,20 +8,21 @@ description: Execution and verification hub for K132 fixed 17/26 mixed expert qu
 
 - Scope contracts and technical documentation in the parent directory.
 - Immutable K132 Golden and archived K96 score report.
-- Pinned llama.cpp submodule `2abf1748`.
+- Pinned production llama.cpp submodule
+  `c861db3592ed7a03045d23861249eb43d1b8a039`, based on `2abf1748`.
 
 ## Global Status Board
 
 | Phase | Status | Completion | Health | Blockers |
 |---|---|---:|---|---:|
-| Phase 1 - Structural prior and imatrix | In progress | 25% | Healthy | 0 |
+| Phase 1 - Structural prior and imatrix | In progress | 33% | Healthy | 0 |
 | Phase 2 - Freeze 17/26 plan | Not started | 0% | Unknown | 1 |
 | Phase 3 - DIO production artifact | Not started | 0% | Unknown | 1 |
 | Phase 4 - Runtime acceptance | Not started | 0% | Unknown | 1 |
 
 ## Locked Rules
 
-- Exactly 17 IQ3_XXS and 26 Q2_K routed-expert layers.
+- Exactly 17 IQ3_XXS-recipe and 26 Q2_K_S-recipe routed-expert layers.
 - Shared Expert, Core Backbone, and sensitive non-routed weights use the same
   default non-pure IQ4_XS mixed policy as archived K96 Profile A.
 - No size gate, `--pure`, second profile, or all-IQ3 artifact.
@@ -39,7 +40,8 @@ description: Execution and verification hub for K132 fixed 17/26 mixed expert qu
 ### Phase 1
 
 - Scope branch created from pushed `master` commit `992cd90`.
-- Source inspection confirmed IQ3 imatrix requirement, Q2_K override support,
+- Source inspection confirmed IQ3 and Q2_K_S imatrix requirements, the lack of
+  stock per-region ftypes,
   DIO imatrix loading, and packed-expert per-ID collection.
 - Read-only dry-runs recorded all-Q2 and all-IQ3 feasibility sizes; these do not
   alter the fixed ratio.
@@ -47,7 +49,10 @@ description: Execution and verification hub for K132 fixed 17/26 mixed expert qu
   produced all 43 contracted records, and reproduced byte-identically. Source
   SHA256 is `ae090c1b...47bfa`; report logical SHA256 is
   `4493d0e9...a7e64f`; focused tests passed `2/2`.
-- Pending: calibration corpus contract, imatrix run, and coverage gate.
+- Frozen: vendored-source corpus contract and cumulative 100/200/300/400-chunk
+  coverage/stability gate.
+- Pending: corpus artifact publication, clean-boot imatrix run, and coverage
+  report.
 
 ### Phase 2
 
@@ -64,7 +69,8 @@ description: Execution and verification hub for K132 fixed 17/26 mixed expert qu
 ## Final Release Gate
 
 - 43 layers, 132 experts, top-k 6, no routing drift.
-- Exactly 51 IQ3_XXS and 78 Q2_K routed-expert tensors.
+- Exactly 51 IQ3_XXS-recipe and 78 Q2_K_S-recipe routed-expert tensors, with
+  concrete types matching the pinned selectors.
 - Non-routed type selection matches default K96 Profile A-style IQ4_XS mixed
   behavior without manual overrides.
 - Direct-only hash/provenance and clean runtime gates pass.
