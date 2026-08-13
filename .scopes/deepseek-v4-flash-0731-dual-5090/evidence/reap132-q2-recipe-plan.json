@@ -1,0 +1,166 @@
+{
+  "base_ftype": "IQ4_XS",
+  "counts": {
+    "MXFP4": 15,
+    "Q2_K": 76,
+    "Q3_K": 38,
+    "routed_total": 129
+  },
+  "llama_cpp_commit": "efb81abc6a261dcceb014e853beb0ffc5e4a49a0",
+  "logical_sha256": "e97e4ccbe433adbbfa895c868820ec1aca30f136ee65940a531d2a378e43da33",
+  "non_routed_policy": "K96 Profile A default non-pure IQ4_XS mixed selector",
+  "output_filename": "DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-Q2K-Q3Kexp-IQ4XSbb.gguf",
+  "pure": false,
+  "routed_policy": [
+    {
+      "layers": [
+        0,
+        1,
+        2,
+        41,
+        42
+      ],
+      "projections": [
+        "gate",
+        "up",
+        "down"
+      ],
+      "tensor_count": 15,
+      "type": "MXFP4"
+    },
+    {
+      "layers": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "projections": [
+        "down"
+      ],
+      "tensor_count": 38,
+      "type": "Q3_K"
+    },
+    {
+      "layers": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "projections": [
+        "gate",
+        "up"
+      ],
+      "tensor_count": 76,
+      "type": "Q2_K"
+    }
+  ],
+  "schema": "heretic-reap132-puwaer-q2-routed-iq4xs-plan-v1",
+  "source_revision": "326e2f17f02dde8fadb8eab2b8aa379d658b2940",
+  "sources": {
+    "compatibility_report": {
+      "path": "/home/build/work/deepseek-v4-flash-0731-dual-5090/.scopes/deepseek-v4-flash-0731-dual-5090/evidence/reap132-puwaer-compat-imatrix.json",
+      "sha256": "9c19ce0753d429ab504e58547317c77d443b47956e4264d1e817b9dda4a07bf3"
+    },
+    "golden": {
+      "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf",
+      "routed_provenance_path": "/home/build/work/deepseek-v4-flash-0731-dual-5090/.scopes/archive/heretic-v2-reap132-mixed-expert-quant/evidence/reap132-mxfp4-full-routed-rebuild-provenance.json",
+      "routed_provenance_sha256": "7add160372a3ebd01133e1e25d453b651596a0bb99daa20d6d612364aa087382",
+      "sha256": "752a0146f54d5c5bc34491d53f9e1acbb63540b1e3c38bd352185b508418cfdd",
+      "size": 85049305696
+    },
+    "imatrix_audit": {
+      "path": "/home/build/work/deepseek-v4-flash-0731-dual-5090/.scopes/deepseek-v4-flash-0731-dual-5090/evidence/reap132-puwaer-imatrix-audit.json",
+      "sha256": "46665ae4a85dc42bc48d14c389b8cdcc6c44e760edf5f246ec145df2838ea807"
+    },
+    "production_imatrix": {
+      "chunks": 812,
+      "entries": 769,
+      "path": "/data/linux-fast/models/calibration/reap132-puwaer-812-plus-output-hc-imatrix.gguf",
+      "sha256": "ce36a35735212fd53bfde9a631ea624492b4ff8b7c768969c3827bac297074a5",
+      "size": 251943168
+    },
+    "puwaer_imatrix": {
+      "chunks": 812,
+      "entries": 768,
+      "path": "/data/linux-fast/models/external/puwaer-DeepSeek-V4-Flash-0731-reap-150b-gguf-326e2f17/imatrix.gguf",
+      "sha256": "8bca12ccf077fc9341b6f3d8ee399e5c5576a7a82c715e529008da68a5548de8",
+      "size": 251877376
+    },
+    "puwaer_recipe": {
+      "path": "/data/linux-fast/models/external/puwaer-DeepSeek-V4-Flash-0731-reap-150b-gguf-326e2f17/.recipe.q2k.txt",
+      "sha256": "96734a88a62c290b7c869db44f8072ff5cf580934063afbb51f99af43fbcfd5e",
+      "size": 389
+    }
+  },
+  "tensor_type_sha256": "466e9f2381b075b5ae8a9a9beda8e78c4078709b800988013b034335e7d844dd"
+}

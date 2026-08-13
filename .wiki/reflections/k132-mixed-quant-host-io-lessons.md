@@ -12,10 +12,10 @@ related_files:
     role: test
   - path: scripts/verify_reap132_mixed_quant_gguf.py
     role: test
-  - path: .scopes/heretic-v2-reap132-mixed-expert-quant/evidence
+  - path: .scopes/archive/heretic-v2-reap132-mixed-expert-quant/evidence
     role: doc
 source_docs:
-  - .scopes/heretic-v2-reap132-mixed-expert-quant/task-plans/phase-3-heretic-v2-reap132-mixed-expert-quant.md
+  - .scopes/archive/heretic-v2-reap132-mixed-expert-quant/task-plans/phase-3-heretic-v2-reap132-mixed-expert-quant.md
 tags:
   - reap132
   - direct-io
@@ -134,9 +134,16 @@ because there was no meaningful ranking change was the frozen 17/26 plan kept.
 
 ## Current boundary
 
-The CPU-attached root-NVMe candidate completed quantization, passed the
-1,328-tensor verifier, preserved 600 unchanged tensors byte-for-byte, and has
-O_DIRECT SHA256
-`67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3`.
-It remains staging until copied and rehashed on `/data/linux-fast`, made
-read-only, and accepted by the dual-5090 runtime matrix.
+Both low-bit routed candidates completed structural and direct-I/O gates but
+failed semantic release gates. The fixed 17/26 candidate collapsed into repeated
+symbols; the later boundary-protected Q2/Q3 recipe candidate failed the fixed
+short semantic acceptance even though structure and 64K startup passed. Neither
+was allowed to replace corrected MXFP4, and both payloads plus root staging
+copies were deleted after evidence retention.
+
+The Q2-recipe verification also exposed a validator defect: unstable O_DIRECT
+reads were recorded but did not initially fail acceptance. The verifier now
+hard-fails any nonzero unstable-read count. Authoritative comparison must use
+the immutable corrected Golden, not an additional root copy that may itself
+produce transient mismatches. Two consecutive authoritative runs passed with
+zero unstable reads before runtime testing.

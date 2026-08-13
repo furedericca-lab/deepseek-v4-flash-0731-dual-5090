@@ -1,142 +1,90 @@
 ---
-description: Canonical technical architecture for deepseek-v4-flash-0731-dual-5090.
+description: Technical operations for the corrected K132 MXFP4 deployment.
 ---
 
-# deepseek-v4-flash-0731-dual-5090 Technical Documentation
+# Corrected K132 MXFP4 Deployment
 
-## Canonical Architecture
-
-```text
-Hermes / clients
-        │
-        ▼
-llama-server :8000  (OpenAI-compatible)
-        │
-        ├─ model weights: DeepSeek-V4-Flash-0731 REAP-150B Q2_K
-        │     split across CUDA0 + CUDA1 by layer (-sm layer -ts 1,1)
-        │
-        ├─ KV cache: system RAM, F16 (--no-kv-offload -ctk f16 -ctv f16)
-        │
-        └─ context slot: single parallel slot (-np 1), start -c 65536
-```
-
-### Runtime filesystem layout
+## Architecture
 
 ```text
-/home/build/work/deepseek-v4-flash-0731-dual-5090/   # project docs, scripts, scopes, wiki
-/data/linux-fast/models/DeepSeek-V4-Flash-0731/      # preferred runtime model store (NVMe ext4)
-/data/linux-fast/models/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8/ # REAP base
-/opt/llama.cpp/ or ./vendor/llama.cpp/               # source build location (to be chosen in phase 2)
+accepted native K132 noMTP
+        -> deterministic full routed MXFP4 rebuild
+        -> 100% routed byte provenance
+        -> read-only corrected GGUF
+        -> llama.cpp efb81ab, O_DIRECT
+        -> dual RTX 5090 layer split, 64K, one slot
 ```
 
-### Preferred model path
+The GGUF is stored on ext4 NVMe under `/data/linux-fast/models`; bulk reads,
+hashing, and provenance use aligned O_DIRECT. Git stores only code and evidence,
+never model payloads.
+
+## Runtime
+
+Use `scripts/llama-server-first-boot.sh`. The server uses layer auto-fit with a
+3 GiB target margin on each GPU, full GPU weights, F16 KV in system RAM, 64K
+context, one slot, batch 512, ubatch 128, flash attention, and localhost port
+8000. `-ngl all` is prohibited for this artifact.
+
+Accepted observations include approximately 28 GiB per GPU for the corrected
+MXFP4 run, healthy API startup, coherent raw/chat/Chinese/JSON/Python behavior,
+and a clean 32,767-token prefill/decode run. Exact performance varies by build
+and boot; acceptance is behavioral and fault-based, not a fixed throughput SLA.
+
+## Host Gate
+
+Before any large model task:
+
+```bash
+cat /proc/sys/kernel/tainted
+journalctl -k -b --no-pager | \
+  rg -i 'BAD_PAGE|compound_head|corrupted mapping in tail page|Oops|general protection|NVRM: Xid|Xid \\('
+nvidia-smi
+free -h
+```
+
+Stop after any model-related kernel fault or unexplained native SIGSEGV and
+reboot before collecting acceptance evidence. Docker and unrelated large scans
+remain stopped during model validation.
+
+## Candidate Policy
+
+The rejected mixed candidate demonstrated that successful loading, finite
+weights, correct tensor types, and long-prefill completion are insufficient.
+Promotion requires fixed greedy behavior probes including Chinese, JSON,
+Python, and long-prefill decode. Repeated-symbol output is a hard failure.
+
+The fixed 17/26 plan is historical evidence. Its activation score was strongly
+correlated with layer depth and concentrated Q2_K_S in layers 0-19. Do not
+silently reinterpret or rerank that archived experiment.
+
+Phase 4 instead uses a projection-aware, boundary-protected recipe:
 
 ```text
-/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf
+corrected K132 MXFP4
+  -> routed layers 0-2,41-42: MXFP4
+  -> routed layers 3-40 gate/up: Q2_K
+  -> routed layers 3-40 down: Q3_K
+  -> non-routed: K96 Profile A IQ4_XS non-pure mixed
+  -> puwaer 812-chunk imatrix for all compatible quantized tensors
 ```
 
-Why runtime artifacts stay on NVMe:
+The recipe is applied to our corrected weights; no payload bytes are copied
+from the external quantized GGUF. The external `.prev` imatrix proves ranking
+convergence but is never merged with the final cumulative imatrix.
 
-- the former Toshiba copies were deleted after their hashes disagreed with
-  Hugging Face metadata
-- 62GB GGUF benefits from native ext4 + NVMe mmap/read performance
-- project docs stay on system disk; model bulk stays on data disks
+## Recovery
 
-## Key Constraints and Non-Goals
-
-Constraints:
-
-- 2×5090 = 64 GiB VRAM total
-- Q2_K weights ≈ 58.11 GiB → only ~5.9 GiB GPU headroom for compute buffers
-- host currently has ~46 GiB RAM; community V4 KV estimates suggest this is not an automatic 64K blocker, but host runtime/pinned/page-cache behavior remains unmeasured
-- single concurrent slot for first deployment
-- full GPU offload preferred; expert CPU offload is last resort
-
-Non-goals:
-
-- do not optimize for multi-user throughput first
-- do not chase maximum advertised context before stability
-- do not use Windows shared memory assumptions on this Linux host
+If a future candidate fails, stop the server, restore this scope's corrected
+MXFP4 path in the launcher, verify the current boot is clean, and rerun health
+plus short behavior probes. Do not patch a failed GGUF in place.
 
 ## Major Decisions and Trade-offs
 
-1. **Weights on GPU, KV on RAM**
-   - Trade VRAM headroom for compute stability.
-2. **Layer split 1:1**
-   - Simple balanced dual-GPU pipeline for equal 5090s.
-3. **Conservative first batch**
-   - `-b 1024 -ub 256` before raising defaults.
-4. **Context climb, not jump**
-   - 64K first, then 96/128/192 only after evidence.
-5. **Model on NVMe ext4**
-   - Prefer load reliability over leaving the file on the download disk.
-
-## Module Boundaries and Data Flow
-
-| Component | Owns | Does not own |
-|---|---|---|
-| project repo | launch docs, scripts, scopes, wiki | 62GB GGUF binary content in git |
-| `/data/linux-fast/models/...` | runtime model file | project source control |
-| llama-server | inference, OpenAI API | agent orchestration |
-| Hermes / clients | prompts, tools, sessions | model placement/offload policy |
-
-## Interfaces and Contracts
-
-- Local OpenAI-compatible base URL target:
-  `http://127.0.0.1:8000/v1`
-- First-boot launch command is the contract for runtime behavior.
-- Model identity:
-  - repo `puwaer/DeepSeek-V4-Flash-0731-reap-150b-gguf`
-  - quant `Q2_K`
-  - sha256 `2e8ab70acda6d9ce4813a8b580d402c30d837d7bd8bf6119d6e84de38aa42d48`
-
-### REAP-132 reproduction provenance
-
-- Exact plan: `squanchyzx-puwaer-reap132-mask.json`
-- Base repo: `squanchyzx/DeepSeek-V4-Flash-0731-HERETIC-Abliterated-FP8`
-- Base commit: `e7efd043c5e072da4d40f0f98ade554c5713bad9` (v2)
-- Pruned commit: `868fa38e2f2964699ad065dc8d9382c136cc60b8`
-- Logical SHA256:
-  `082e51d268052f8b26be63d7fe6edc7881c385644e12f6ee5dc763719d0f7b17`
-- The plan contains 43 layers with 132 survivor IDs each and three byte-exact
-  `[129280, 6]` `int64` `tid2eid` tables.
-- Exact-plan compression requires a local checkpoint root containing
-  `.checkpoint-source.json`. The manifest repo/revision must match the plan,
-  and local `config.json` plus `model.safetensors.index.json` must match the
-  SHA256 values recorded in the manifest before model loading begins.
-- `--source-revision` is only an optional compatibility assertion; it is not
-  accepted as provenance by itself.
-- This plan maps puwaer's published survivor set onto squanchyzx v2. It does
-  not represent a fresh saliency calibration on the abliterated hidden states.
-
-## Security and Reliability
-
-- Default bind: `127.0.0.1` until explicit LAN exposure is approved.
-- Do not commit secrets, API keys, or private chat logs.
-- Verify model checksum before first production serve.
-- Record OOM recovery order so operators do not immediately switch quants.
-- Keep `.wiki/` as durable internal knowledge; it may remain local/ignored.
-
-## Test Strategy
-
-Planning validation:
-
-- repo-task-driven placeholder/sync checks
-- wiki rebuild/lint/doctor
-
-Runtime validation (implementation phases):
-
-1. device enumeration
-2. model checksum
-3. server boot
-4. `/v1/models` or health endpoint
-5. one short completion
-6. memory snapshot from `nvidia-smi`
-7. optional longer-context probe
-
-REAP plan validation:
-
-- `uv run pytest vendor/moe-expert-compress/tests -q`
-- `uv run python scripts/extract_puwaer_plan.py`
-- independently decompress and validate all `tid2eid` hashes, shapes, ranges,
-  and per-row distinctness
+- The corrected full-routed MXFP4 GGUF is immutable and remains deployment and
+  rollback baseline.
+- The Q2/Q3 routed recipe was preferred over the rejected 17/26 plan because
+  it protects boundary layers and down projections, but it remained an
+  experiment with no size gate.
+- A candidate must pass semantic behavior after structure and startup; the
+  rejected Q2 candidate proves that successful loading is insufficient.

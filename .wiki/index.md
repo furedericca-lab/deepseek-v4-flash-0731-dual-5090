@@ -3,8 +3,10 @@ title: Project Wiki Index
 type: wiki-index
 status: current
 generated_by: /home/build/.codex/skills/wiki-note/scripts/wiki_note.py
-updated: 2026-08-13T06:06:45Z
+updated: 2026-08-13T09:02:22Z
 ---
+
+
 
 
 
@@ -97,7 +99,7 @@ updated: 2026-08-13T06:06:45Z
 # Project Wiki Index
 
 <!-- BEGIN AUTO -->
-- Last rebuilt: 2026-08-13T06:06:45Z
+- Last rebuilt: 2026-08-13T09:02:22Z
 - Page count: 12
 
 ## By Type
@@ -119,7 +121,7 @@ updated: 2026-08-13T06:06:45Z
 
 - [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | status: archived | updated: 2026-08-12T13:45:00+08:00
 - [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | status: archived | updated: 2026-08-13T02:31:22+08:00
-- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | status: current | updated: 2026-08-13T14:10:00+08:00
+- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | status: historical | updated: 2026-08-13T14:10:00+08:00
 - [K96 Profile A IQ4_XS non-routed release](implementation/k96-profile-a-iq4xs-non-routed-release.md) | status: archived | updated: 2026-08-13T03:50:00+08:00
 - [Model placement and disk strategy](implementation/model-placement-and-disk-strategy.md) | status: current | updated: 2026-08-11T07:17:23Z
 - [REAP-132 plan and checkpoint provenance](implementation/reap132-plan-checkpoint-provenance.md) | status: current | updated: 2026-08-11T07:17:07Z
@@ -152,7 +154,7 @@ updated: 2026-08-13T06:06:45Z
 
 ### heretic-v2-reap132-mixed-expert-quant
 
-- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | type: implementation | status: current
+- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | type: implementation | status: historical
 - [K132 mixed quant host and direct IO lessons](reflections/k132-mixed-quant-host-io-lessons.md) | type: reflection | status: current
 
 ### heretic-v2-reap96-consensus
@@ -161,12 +163,12 @@ updated: 2026-08-13T06:06:45Z
 - [Derive K96 only as a REAP132 subset](decisions/reap96-k132-subset-consensus.md) | type: decision | status: accepted
 - [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | type: implementation | status: archived
 - [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | type: implementation | status: archived
-- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | type: implementation | status: current
+- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | type: implementation | status: historical
 - [K96 Profile A IQ4_XS non-routed release](implementation/k96-profile-a-iq4xs-non-routed-release.md) | type: implementation | status: archived
 
 ### heretic-v2-reap96-iq4xs-backbone
 
-- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | type: implementation | status: current
+- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | type: implementation | status: historical
 - [K96 Profile A IQ4_XS non-routed release](implementation/k96-profile-a-iq4xs-non-routed-release.md) | type: implementation | status: archived
 
 ## Recently Updated
@@ -194,7 +196,7 @@ updated: 2026-08-13T06:06:45Z
 - [Derive K96 only as a REAP132 subset](decisions/reap96-k132-subset-consensus.md) | files: `squanchyzx-puwaer-reap132-mask.json`, `.scopes/archive/heretic-v2-reap96-consensus` | anchors: 0 | status: accepted
 - [HERETIC v2 REAP132 build and validation](implementation/heretic-v2-reap132-build-validation.md) | files: `.scopes/archive/heretic-v2-reap132-build-validation`, `squanchyzx-puwaer-reap132-mask.json`, `scripts/checkpoint_content_manifest.py` ... | anchors: 0 | status: archived
 - [HERETIC v2 REAP96 consensus candidate](implementation/heretic-v2-reap96-consensus.md) | files: `.scopes/archive/heretic-v2-reap96-consensus`, `squanchyzx-puwaer-reap132-mask.json`, `README.md` ... | anchors: 0 | status: archived
-- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | files: `.scopes/heretic-v2-reap132-mixed-expert-quant`, `vendor/llama.cpp/src/llama-quant.cpp`, `vendor/llama.cpp/tools/imatrix/imatrix.cpp` | anchors: 0 | status: current
+- [K132 fixed-ratio mixed expert quantization](implementation/k132-fixed-ratio-mixed-expert-quantization.md) | files: `.scopes/archive/heretic-v2-reap132-mixed-expert-quant`, `vendor/llama.cpp/src/llama-quant.cpp`, `vendor/llama.cpp/tools/imatrix/imatrix.cpp` | anchors: 0 | status: historical
 - [K96 Profile A IQ4_XS non-routed release](implementation/k96-profile-a-iq4xs-non-routed-release.md) | files: `vendor/llama.cpp/src/llama-quant.cpp`, `scripts/finalize_reap96_iq4xs_experts.py`, `scripts/verify_reap96_iq4xs_gguf.py` ... | anchors: 0 | status: archived
 - [Model placement and disk strategy](implementation/model-placement-and-disk-strategy.md) | files: `/data/linux-fast/models/DeepSeek-V4-Flash-0731`, `scripts/write_checkpoint_source_manifest.py` | anchors: 0 | status: current
 - [REAP-132 plan and checkpoint provenance](implementation/reap132-plan-checkpoint-provenance.md) | files: `squanchyzx-puwaer-reap132-mask.json`, `scripts/extract_puwaer_reap132_mask.py`, `scripts/write_checkpoint_source_manifest.py` ... | anchors: 0 | status: current

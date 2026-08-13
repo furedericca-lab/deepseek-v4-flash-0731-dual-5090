@@ -7,6 +7,13 @@ updated: 2026-08-10T18:16:02Z
 
 # Maintenance Log
 
+## 2026-08-13T16:45:00+08:00 [deepseek-v4-flash-0731-dual-5090]
+
+- Summary: Completed the puwaer boundary-protected Q2/Q3 candidate, hardened unstable-read verification, rejected it at the fixed short semantic gate, preserved corrected MXFP4 deployment, and deleted both failed candidate payloads plus root staging copies.
+- Pages: implementation/k132-fixed-ratio-mixed-expert-quantization.md, reflections/k132-mixed-quant-host-io-lessons.md
+- Verification: 1,328-tensor dry-run; two consecutive authoritative O_DIRECT payload PASS runs; destination SHA256 equality; dual-5090 64K health/API and controlled semantic A/B; no 32K run after T087 failure.
+- Residual risk: Low-bit routed expert quantization remains semantically unaccepted; corrected K132 MXFP4 is the sole deployment artifact.
+
 Append-only history for wiki updates caused by scope work, implementation closeout, or knowledge refresh.
 
 ## 2026-08-10T18:26:53Z [deepseek-v4-flash-0731-dual-5090]

@@ -43,7 +43,7 @@ Tasks:
 - [x] T025 [Docs] Record actual VRAM/RAM behavior and any required fallback
   - DoD: checklist/wiki updated with measured numbers and whether 64K held or 32K fallback was required.
 
-Checkpoint: Phase 2 artifacts are merged, verified, and recorded in 3phases-checklist.md before next phase starts.
+Checkpoint: Phase 2 artifacts are merged, verified, and recorded in 4phases-checklist.md before next phase starts.
 
 ## Dependencies & Execution Order
 - Phase 1 model placement blocks phase 2 launch.

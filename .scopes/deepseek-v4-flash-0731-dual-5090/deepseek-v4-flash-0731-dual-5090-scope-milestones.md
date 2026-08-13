@@ -1,91 +1,61 @@
 ---
-description: Scope boundaries and milestones for deepseek-v4-flash-0731-dual-5090.
+description: Milestones for the accepted corrected K132 MXFP4 deployment.
 ---
 
-# deepseek-v4-flash-0731-dual-5090 Scope and Milestones
+# Deployment Milestones
 
-## In Scope
+## Goals
 
-- Document and execute the dual-5090 deployment plan for
-  `DeepSeek-V4-Flash-0731-reap-150b-Q2_K.gguf`
-- Relocate the model from Toshiba NTFS download path to a suitable runtime disk
-- Build or install llama.cpp CUDA runtime
-- Define launch flags, OOM recovery ladder, and context growth policy
-- Expose OpenAI-compatible local API for Hermes/agent use
-- Keep durable knowledge in `.wiki/` and auditable progress in `.scopes/`
+- Keep the corrected K132 MXFP4 GGUF as the sole deployed artifact.
+- Serve it through the pinned llama.cpp fork on dual RTX 5090 at 64K context.
+- Preserve direct-I/O, clean-boot, provenance, behavior, and rollback evidence.
+- Reject and remove candidates that pass structure but fail semantic behavior.
+- Evaluate one Q2-recipe repair candidate without replacing the accepted MXFP4
+  baseline before full acceptance.
 
-## Out of Scope
+## Non-Goals
 
-- Publishing the endpoint to the public internet
-- Requantizing the model or switching to IQ1_M / 200B variants
-- Benchmarking Q2_K quality against the base model
-- Multi-tenant high concurrency (`-np > 1`)
-- Windows Shared GPU Memory workflows
-
-## Decision Log
-
-| Boundary / Decision | Evidence Source | Evidence Strength | Conflict | Confidence | Confidence Reason | Result |
-|---|---|---:|---|---:|---|---|
-| Prefer `/data/linux-fast` runtime model store | local mount/disk inventory | 5 | current file on Toshiba | 5 | NVMe ext4 free and fast | Accepted |
-| Keep Toshiba path as source/download only | FUSE NTFS mount type | 5 | convenience of current location | 5 | FUSE/NTFS is weak for 62GB mmap load | Accepted |
-| Full GPU weights + RAM F16 KV | Master brief + HF + llama.cpp flags | 5 | host RAM only 46 GiB | 4 | Architecture preferred; capacity residual | Accepted |
-| First context target 64K with 32K fallback | Master brief + free -h | 4 | RAM capacity | 3 | Target kept, fallback required | Accepted |
-| Source-build llama.cpp CUDA 13.3 | host CUDA install + build docs | 5 | none | 5 | Linux dual-GPU host already has toolkit | Accepted |
-| Do not start with expert CPU offload | HF serving notes | 4 | possible OOM workaround | 4 | full GPU is verified path | Accepted |
+- Reopening K132 pruning, routing, or the archived 17/26 experiment.
+- Deploying K96, the failed K132 mixed candidate, or external Q2 payloads.
+- Broad CUDA/kernel debugging beyond the documented stop-loss boundaries.
+- Binding beyond localhost without explicit approval.
 
 ## Milestones
 
-### M0 — Planning complete
+| Milestone | Status | Evidence |
+|---|---|---|
+| Accepted native K132 | Complete | deterministic A/B and independent verifier PASS |
+| Corrected MXFP4 construction | Complete | full 129-tensor routed rebuild and provenance PASS |
+| Dual-5090 runtime | Complete | 64K startup/API/behavior/32K prefill PASS |
+| Mixed candidate evaluation | Complete; rejected | same-runtime MXFP4 A/B isolates semantic collapse |
+| Deployment alignment | Complete | launcher and repo entry points target corrected MXFP4 |
+| Q2 routed-recipe repair | Complete; rejected | structure/direct-I/O/startup passed; short semantic gate failed and payload was deleted |
 
-- Scope docs filled with host-specific paths and residual risks
-- Wiki pages capture durable deployment knowledge
-- Exit: planning docs and wiki rebuild/lint pass
+## Phase 4 Gates
 
-### M1 — Host and model readiness
+1. Freeze and audit the external revision, Q2 recipe, final imatrix, and `.prev`
+   stability checkpoint.
+2. Generate a deterministic routed-only tensor-type plan with 15 MXFP4, 76
+   Q2_K, and 38 Q3_K tensors. Non-routed selection remains default non-pure
+   IQ4_XS mixed.
+3. Complete a DIO dry-run and independently verify all 1,328 tensor targets.
+4. On a clean boot, atomically build and O_DIRECT-verify one candidate.
+5. Run raw/chat/Chinese/JSON/Python probes first. Only a complete short-probe
+   PASS permits the 32K prefill/decode gate.
+6. The Q2 candidate failed the short semantic gate, so 32K was intentionally
+   skipped and the candidate was deleted; corrected MXFP4 remains deployed.
 
-- dual GPUs visible
-- model copied to runtime path
-- SHA256 verified
-- Exit: model path ready on NVMe ext4
+## Completion Rule
 
-### M2 — Runtime ready
+Deployment remains complete only while the launcher, README, AGENTS, Wiki, and
+this scope agree on the same artifact identity and runtime flags. A future
+candidate needs structural, direct-I/O, kernel, and semantic acceptance before
+promotion.
 
-- llama.cpp CUDA build available
-- `llama-server --list-devices` shows both 5090s
-- Exit: binary and device enumeration verified
+## Decision Log
 
-### M3 — First successful serve
-
-- launch with first-boot flags
-- health/API smoke test passes
-- GPU memory split roughly balanced
-- Exit: one successful completion request
-
-### M4 — Context hardening
-
-- prove 64K or document forced lower context
-- optional climb to 96K/128K if stable
-- Exit: production launch recipe frozen
-
-## Dependencies
-
-- dual RTX 5090 online
-- CUDA 13.x toolkit and driver
-- free space on `/data/linux-fast` for 62GB+ model
-- preferably ≥128 GiB system RAM for comfortable long-context F16 KV
-- network only if re-downloading; current local model file already exists
-
-## Exit Criteria
-
-- documented runtime model path is not on NTFS/FUSE
-- first-boot launch command is exact and reproducible
-- OOM recovery order is explicit
-- residual host-RAM risk is recorded, not hidden
-- wiki/README/AGENTS point future agents to the same plan
-
-## Escalation Triggers
-
-- Escalate only when code/runtime evidence, authoritative wiki, and scope docs materially conflict and the conflict cannot be resolved from local evidence.
-- Escalate if Master requires public bind / multi-user exposure without auth.
-- Escalate if host RAM cannot support any usable context and Master rejects lower context or RAM upgrade.
-- Escalate if full-GPU offload is impossible on this host and permanent CPU offload becomes required.
+- The puwaer Q2/Q3 candidate was one bounded Phase 4 trial and did not change
+  the deployment baseline.
+- Structural and 64K startup PASS did not override the fixed short semantic
+  FAIL. T088 was skipped by the dependency rule.
+- The candidate was rejected and deleted; no new branch or scope was created.

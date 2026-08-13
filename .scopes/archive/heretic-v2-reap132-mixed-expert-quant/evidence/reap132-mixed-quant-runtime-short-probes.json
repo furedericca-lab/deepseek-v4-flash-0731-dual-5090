@@ -1,0 +1,208 @@
+{
+  "model": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf",
+  "probes": {
+    "chat": {
+      "elapsed_seconds": 0.5888077919998977,
+      "http_status": 200,
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "length",
+            "index": 0,
+            "message": {
+              "content": "",
+              "reasoning_content": "Hmm, the user says: \"Reply with exactly: READY\". I need to output exactly READY, nothing else. No extra text, no quotes",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1786602032,
+        "id": "chatcmpl-eWXcFDJmPf5kDVQIfCTKyZVh4Xjhjg15",
+        "model": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b266-efb81ab",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 504.352,
+          "predicted_n": 32,
+          "predicted_per_second": 63.44775077723495,
+          "predicted_per_token_ms": 15.761,
+          "prompt_ms": 71.986,
+          "prompt_n": 10,
+          "prompt_per_second": 138.91590031394992,
+          "prompt_per_token_ms": 7.198600000000001
+        },
+        "usage": {
+          "completion_tokens": 32,
+          "prompt_tokens": 10,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 42
+        }
+      }
+    },
+    "chinese": {
+      "elapsed_seconds": 1.580570914999953,
+      "http_status": 200,
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "length",
+            "index": 0,
+            "message": {
+              "content": "",
+              "reasoning_content": "**解析用户请求**：  \n用户要求用一句中文解释什么是直接 I/O。  \n\n**定义直接 I/O**：  \n直接 I/O（Direct I/O）通常指在数据库<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1786602033,
+        "id": "chatcmpl-HRRiAbD5JT62g3uTGQWrg5rPBUj5FGjp",
+        "model": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b266-efb81ab",
+        "timings": {
+          "cache_n": 1,
+          "predicted_ms": 1500.517,
+          "predicted_n": 96,
+          "predicted_per_second": 63.977948933600885,
+          "predicted_per_token_ms": 15.630385416666668,
+          "prompt_ms": 63.595,
+          "prompt_n": 12,
+          "prompt_per_second": 188.69407972324868,
+          "prompt_per_token_ms": 5.2995833333333335
+        },
+        "usage": {
+          "completion_tokens": 96,
+          "prompt_tokens": 13,
+          "prompt_tokens_details": {
+            "cached_tokens": 1
+          },
+          "total_tokens": 109
+        }
+      }
+    },
+    "json": {
+      "elapsed_seconds": 1.1239744750000682,
+      "http_status": 200,
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "length",
+            "index": 0,
+            "message": {
+              "content": "",
+              "reasoning_content": "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1786602035,
+        "id": "chatcmpl-Yz4NZm4iYwml7iUHsfXTM7q26GXRtLBo",
+        "model": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b266-efb81ab",
+        "timings": {
+          "cache_n": 1,
+          "predicted_ms": 996.929,
+          "predicted_n": 64,
+          "predicted_per_second": 64.19714944594851,
+          "predicted_per_token_ms": 15.577015625,
+          "prompt_ms": 104.909,
+          "prompt_n": 43,
+          "prompt_per_second": 409.8790380234298,
+          "prompt_per_token_ms": 2.4397441860465117
+        },
+        "usage": {
+          "completion_tokens": 64,
+          "prompt_tokens": 44,
+          "prompt_tokens_details": {
+            "cached_tokens": 1
+          },
+          "total_tokens": 108
+        }
+      }
+    },
+    "python": {
+      "elapsed_seconds": 1.5836504220005736,
+      "http_status": 200,
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "length",
+            "index": 0,
+            "message": {
+              "content": "",
+              "reasoning_content": "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1786602036,
+        "id": "chatcmpl-292BOfftM0vx99IJLvBBmzQXnf5B7nFu",
+        "model": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b266-efb81ab",
+        "timings": {
+          "cache_n": 1,
+          "predicted_ms": 1498.13,
+          "predicted_n": 96,
+          "predicted_per_second": 64.07988625820188,
+          "predicted_per_token_ms": 15.605520833333335,
+          "prompt_ms": 63.836,
+          "prompt_n": 14,
+          "prompt_per_second": 219.31198696660192,
+          "prompt_per_token_ms": 4.559714285714286
+        },
+        "usage": {
+          "completion_tokens": 96,
+          "prompt_tokens": 15,
+          "prompt_tokens_details": {
+            "cached_tokens": 1
+          },
+          "total_tokens": 111
+        }
+      }
+    },
+    "raw_france": {
+      "elapsed_seconds": 0.3842551990001084,
+      "http_status": 200,
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "length",
+            "index": 0,
+            "logprobs": null,
+            "text": " Paris.\",\n    \"The capital of France is Paris.\",\n    \"The capital of"
+          }
+        ],
+        "created": 1786602031,
+        "id": "chatcmpl-EmIE135vV2FCRcsIYYujYLk6WmQVQ6jh",
+        "model": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf",
+        "object": "text_completion",
+        "system_fingerprint": "b266-efb81ab",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 263.954,
+          "predicted_n": 16,
+          "predicted_per_second": 60.61662259333065,
+          "predicted_per_token_ms": 16.497125,
+          "prompt_ms": 109.973,
+          "prompt_n": 5,
+          "prompt_per_second": 45.465705218553644,
+          "prompt_per_token_ms": 21.9946
+        },
+        "usage": {
+          "completion_tokens": 16,
+          "prompt_tokens": 5,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 21
+        }
+      }
+    }
+  },
+  "schema": "heretic-reap132-mixed-runtime-short-probes-v1"
+}

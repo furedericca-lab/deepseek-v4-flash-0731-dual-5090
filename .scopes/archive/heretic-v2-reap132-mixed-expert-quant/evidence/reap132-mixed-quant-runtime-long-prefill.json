@@ -1,0 +1,41 @@
+{
+  "elapsed_seconds": 30.18357222600025,
+  "http_status": 200,
+  "requested_decode_tokens": 8,
+  "requested_prompt_tokens": 32767,
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "logprobs": null,
+        "text": "<<<<<<<<"
+      }
+    ],
+    "created": 1786602134,
+    "id": "chatcmpl-NLo04fV09BnIM4cSTEWLYmj1wiQ768mH",
+    "model": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf",
+    "object": "text_completion",
+    "system_fingerprint": "b266-efb81ab",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 254.482,
+      "predicted_n": 8,
+      "predicted_per_second": 31.436408076013233,
+      "predicted_per_token_ms": 31.81025,
+      "prompt_ms": 29900.583,
+      "prompt_n": 32767,
+      "prompt_per_second": 1095.8649200920265,
+      "prompt_per_token_ms": 0.9125212256233405
+    },
+    "usage": {
+      "completion_tokens": 8,
+      "prompt_tokens": 32767,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 32775
+    }
+  },
+  "schema": "heretic-reap132-mixed-runtime-long-prefill-v1"
+}

@@ -1,0 +1,65 @@
+{
+  "schema": "heretic-reap132-mixed-runtime-acceptance-v1",
+  "status": "REJECTED_FOR_DEPLOYMENT",
+  "artifact": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf",
+    "size_bytes": 55348319104,
+    "odirect_sha256": "67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3",
+    "read_only": true,
+    "gguf_verifier": "PASS",
+    "unstable_reads": 0
+  },
+  "runtime": {
+    "llama_cpp_commit": "efb81abc6a261dcceb014e853beb0ffc5e4a49a0",
+    "context": 65536,
+    "load_mode": "dio",
+    "split_mode": "layer",
+    "fit_target_mib": [3072, 3072],
+    "kv": "F16 in system RAM",
+    "bind": "127.0.0.1:8000",
+    "health": "PASS",
+    "openai_api": "PASS",
+    "load_seconds": 18.83,
+    "gpu_observed_mib": [26745, 27427],
+    "server_memory_peak_bytes": 1965486080,
+    "server_swap_peak_bytes": 0
+  },
+  "behavior": {
+    "raw_france": {
+      "status": "PASS",
+      "first_text": " Paris."
+    },
+    "chat_exact_ready": {
+      "status": "FAIL",
+      "reason": "reasoning consumed the 32-token budget and no final content was emitted"
+    },
+    "chinese": {
+      "status": "FAIL",
+      "reason": "reasoning entered repeated less-than-sign output and exhausted max_tokens"
+    },
+    "json": {
+      "status": "FAIL",
+      "reason": "reasoning emitted only repeated less-than signs and no JSON content"
+    },
+    "python": {
+      "status": "FAIL",
+      "reason": "reasoning emitted only repeated less-than signs and no code content"
+    }
+  },
+  "long_prefill": {
+    "status": "INFRA_PASS_BEHAVIOR_FAIL",
+    "prompt_tokens": 32767,
+    "decode_tokens": 8,
+    "truncated": false,
+    "prompt_tokens_per_second": 1095.8649200920265,
+    "decode_tokens_per_second": 31.436408076013233,
+    "completion": "<<<<<<<<"
+  },
+  "host_gate": {
+    "kernel": "7.0.0-28-generic",
+    "model_fault_signatures": 0,
+    "nvidia_xid": 0
+  },
+  "rollback": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf",
+  "decision": "Reject mixed artifact after a same-commit, same-runtime MXFP4 A/B proved the repeated-symbol behavior is isolated to the mixed weights; restore corrected MXFP4 as the deployment artifact"
+}

@@ -1,17 +1,16 @@
 # DeepSeek-V4-Flash-0731 HERETIC REAP132 Deployment and K96 Releases
 
-This repository contains the completed deterministic no-MTP REAP132 delivery
-and a separate K96 consensus-planning line. REAP132 remains the deployed
-canonical MXFP4 GGUF while K96 is derived only from its survivor universe and
-independently published mask evidence.
+This repository contains the completed deterministic no-MTP REAP132 delivery,
+the accepted corrected MXFP4 deployment, and archived K96/mixed-quantization
+experiments. The runtime model remains the corrected full-routed-rebuild K132
+MXFP4 GGUF. Phase 4's non-deployed Q2 routed-recipe repair was rejected after
+its fixed short semantic gate failed.
 
-The active experiment is
-`.scopes/heretic-v2-reap132-mixed-expert-quant/`. It keeps all 132 routed
-experts and top-k 6, assigns exactly 17 protected layers to the IQ3_XXS recipe
-and 26 ordinary layers to the Q2_K_S recipe, and reuses the archived K96 Profile A default
-non-pure IQ4_XS mixed policy for all eligible non-routed weights. The ratio is
-fixed independently of output size; the canonical K132 Golden remains read-only
-and deployed.
+The fixed 17-layer IQ3_XXS / 26-layer Q2_K_S experiment is archived under
+`.scopes/archive/heretic-v2-reap132-mixed-expert-quant/`. It passed structural,
+direct-I/O, 64K startup, and 32K prefill infrastructure gates, but failed
+controlled semantic A/B with repeated `<` output in Chinese, JSON, Python, and
+long-prefill decode. It is not deployed.
 
 The completed independent K96 Profile A IQ4_XS-backbone release is archived
 under `.scopes/archive/heretic-v2-reap96-iq4xs-backbone/`. It consumed the
@@ -31,7 +30,8 @@ unchanged.
 | 3. GGUF and runtime | Complete | Canonical MXFP4 GGUF passed provenance, dual-5090 64K load, 32K prefill, API, and behavior probes |
 | 4. REAP96 consensus | Complete; candidate rejected | Native/GGUF provenance and runtime stability passed, but semantic acceptance failed; K132 remains deployed |
 | 5. K96 IQ4_XS non-routed weights | Complete | Profile A passed provenance and runtime gates; K96 MXFP4 Golden remains immutable and K132 remains deployed |
-| 6. K132 mixed routed-expert quantization | In progress | Phase 1 freezes structural and activation-importance evidence before the fixed 17/26 plan |
+| 6. K132 mixed routed-expert quantization | Complete; candidate rejected | Structural/runtime infrastructure passed; same-runtime MXFP4 A/B proved mixed-weight semantic collapse |
+| 7. K132 Q2 routed-recipe repair | Complete; candidate rejected | Structure/direct-I/O/startup passed; short semantic gate failed and payload was deleted |
 
 Accepted checkpoint:
 
@@ -232,11 +232,35 @@ tok/s without a fault. Chat JSON, Chinese answer, and Python-code probes passed.
 For the exact 11-token native-smoke prompt `Write Python: def add(a,b): return
 a+b`, both native HF and the GGUF emit a newline as the first greedy token.
 
+The rejected mixed artifact was `55,348,319,104` bytes with O_DIRECT SHA256
+`67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3`.
+Under the same llama.cpp `efb81ab` binary and identical runtime flags, corrected
+MXFP4 produced coherent Chinese, valid JSON, and valid Python, while mixed
+weights produced repeated `<` or empty final content. The failed payload was
+deleted after its verifier, hash, runtime, and A/B evidence were retained.
+
+The active repair does not rerank or reuse that 17/26 plan. It applies the
+published puwaer Q2 routed recipe to the corrected HERETIC-v2 weights:
+
+```text
+routed layers 0-2 and 41-42 -> MXFP4
+routed layers 3-40 gate/up  -> Q2_K
+routed layers 3-40 down     -> Q3_K
+eligible non-routed weights -> K96 Profile A IQ4_XS non-pure mixed
+```
+
+It used the pinned puwaer 812-chunk imatrix values after local packed-expert
+coverage and stability audit. The candidate passed direct-only structure and
+dual-5090 startup but failed the fixed short semantic gate. The 32K gate was not
+run, the candidate was deleted, and corrected MXFP4 remains deployed.
+
 ## Project Sources
 
 - Archived K96 rejected-candidate scope:
   `.scopes/archive/heretic-v2-reap96-consensus/`
 - Deployment scope: `.scopes/deepseek-v4-flash-0731-dual-5090/`
+- Archived rejected K132 mixed-quant scope:
+  `.scopes/archive/heretic-v2-reap132-mixed-expert-quant/`
 - Archived REAP132 delivery scope:
   `.scopes/archive/heretic-v2-reap132-build-validation/`
 - Durable implementation records:

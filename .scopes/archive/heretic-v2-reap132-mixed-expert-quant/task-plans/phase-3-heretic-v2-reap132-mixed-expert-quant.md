@@ -31,12 +31,12 @@ Tasks:
   - DoD: The one authorized quantizer invocation exits zero, publishes only the final atomic output, and post-run kernel gate remains clean.
 - [x] T043 [Backend] Implement mixed-candidate verifier
   - DoD: Direct-only verifier checks metadata, namespace, 51 IQ3-recipe tensors, 78 Q2_K_S-recipe tensors against the pinned selector, non-routed IQ4_XS policy inventory, and byte-identical router/`tid2eid`/structural payloads.
-- [ ] T044 [QA] Produce direct-only content identity
+- [x] T044 [QA] Produce direct-only content identity
   - DoD: Candidate has stable O_DIRECT SHA256, read-only mode, zero unstable reads, no MTP/DSpark, and explicit file-size evidence without a size threshold.
   - Current evidence: root-NVMe staging hash, size, namespace, noMTP/DSpark,
     and zero-unstable-read gates pass. Final-path hash equality and mode `0444`
     remain pending.
-- [ ] T045 [Docs] Record artifact acceptance or rejection
+- [x] T045 [Docs] Record artifact acceptance or rejection
   - DoD: Reports distinguish intended lossy routed quantization from forbidden routing/metadata drift and identify K132 as rollback baseline.
 
 Checkpoint: Phase 4 starts only with an accepted T045 artifact and clean boot.
@@ -83,10 +83,11 @@ size `55,348,319,104`. The independent verifier passed: 51 IQ3_XXS, 73 Q2_K,
 five Q2_K_S Q4_K promotions, 600 unchanged tensors, `63,307,072` unchanged
 bytes compared, zero unstable reads, and zero failures. Its O_DIRECT SHA256 is
 `67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3`.
-The post-run kernel/Xid signature count is zero. T041-T043 pass; T044 has passed
-its root-NVMe hash and verifier sub-gates. T044-T045 remain open until the
-candidate is copied with direct I/O to the frozen final path, rehash-equal, made
-read-only, and recorded as Phase 3 accepted.
+The post-run kernel/Xid signature count is zero. The candidate was then copied
+with direct I/O to the frozen final path, atomically published, independently
+verified again, and made read-only. Its destination O_DIRECT SHA256 equals the
+root-NVMe source SHA exactly. T041-T045 pass; the root-NVMe Golden, imatrix, and
+candidate work copies were deleted after acceptance, releasing about 140 GB.
 
 ## Dependencies & Execution Order
 

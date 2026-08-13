@@ -1,0 +1,52 @@
+{
+  "schema": "heretic-reap132-mixed-vs-mxfp4-runtime-ab-v1",
+  "status": "MIXED_REJECTED",
+  "date": "2026-08-13",
+  "controlled_variables": {
+    "llama_cpp_commit": "efb81abc6a261dcceb014e853beb0ffc5e4a49a0",
+    "load_mode": "dio",
+    "devices": ["CUDA0", "CUDA1"],
+    "split_mode": "layer",
+    "fit_target_mib": [3072, 3072],
+    "context": 65536,
+    "kv": "F16 in system RAM",
+    "batch": 512,
+    "ubatch": 128,
+    "flash_attention": true,
+    "reasoning_format": "deepseek",
+    "temperature": 0,
+    "seed": 1
+  },
+  "mixed": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf",
+    "sha256": "67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3",
+    "raw_france": "PASS: begins with Paris",
+    "chat_exact": "FAIL: reasoning consumed budget, empty final content",
+    "chinese": "FAIL: repeated less-than signs",
+    "json": "FAIL: repeated less-than signs, no JSON",
+    "python": "FAIL: repeated less-than signs, no code",
+    "long_prefill_decode": "FAIL: <<<<<<<<"
+  },
+  "mxfp4": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-MXFP4.full-routed-rebuild.gguf",
+    "sha256": "752a0146f54d5c5bc34491d53f9e1acbb63540b1e3c38bd352185b508418cfdd",
+    "raw_france": "PASS: begins with Paris",
+    "chat_exact": "LIMITED: coherent reasoning consumed the intentionally short 32-token budget",
+    "chinese": "PASS: coherent direct-I/O explanation, no repeated-symbol collapse",
+    "json": "PASS: {\"name\":\"test\",\"value\":42}",
+    "python": "PASS: valid add(a, b) implementation",
+    "kernel_or_xid_faults": 0
+  },
+  "implementation_audit": {
+    "regional_ftype_recipe_selection": "PASS",
+    "packed_expert_imatrix_order": "PASS",
+    "mxfp4_cpu_dequantization_path": "PASS",
+    "cuda_mul_mat_id_132_experts_top6": "PASS for Q2_K and IQ3_XXS at compact and DeepSeek production widths",
+    "layer_allocation_observation": "The accepted activation ranking has Spearman 0.9651 with layer index and assigns layers 0-19 continuously to Q2_K_S; this is a quality-risk observation, not a basis for silently changing the frozen plan."
+  },
+  "decision": {
+    "mixed_artifact": "REJECTED_FOR_DEPLOYMENT",
+    "deployment_artifact": "corrected K132 MXFP4",
+    "reason": "The controlled same-runtime A/B isolates reproducible semantic collapse to the mixed weights. Structural and infrastructure PASS do not satisfy the semantic release gate."
+  }
+}

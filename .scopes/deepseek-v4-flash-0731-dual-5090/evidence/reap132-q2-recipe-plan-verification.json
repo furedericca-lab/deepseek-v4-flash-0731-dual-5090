@@ -1,0 +1,7 @@
+{
+  "failures": [],
+  "plan_sha256": "39b95a65fcfed5c542744716f9ad6009e952391d9f97efb64c3757f4e2b7b843",
+  "schema": "heretic-reap132-puwaer-q2-routed-plan-verification-v1",
+  "status": "PASS",
+  "tensor_type_sha256": "466e9f2381b075b5ae8a9a9beda8e78c4078709b800988013b034335e7d844dd"
+}

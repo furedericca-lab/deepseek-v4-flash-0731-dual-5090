@@ -1,0 +1,44 @@
+{
+  "schema": "heretic-reap132-puwaer-q2-routed-runtime-acceptance-v1",
+  "status": "REJECTED_FOR_DEPLOYMENT",
+  "artifact": {
+    "path": "/data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-Q2K-Q3Kexp-IQ4XSbb.gguf",
+    "size_bytes": 58609652672,
+    "odirect_sha256": "f36fa7e01ba8435f7fdc7cff130d3ef5e329053e1ddf6619eefcc6e4a7d29e6c",
+    "mode": "0444",
+    "structure": "PASS",
+    "authoritative_payload_verification": "PASS on runs 2 and 3; zero unstable reads and zero mismatches",
+    "routed_types": {"mxfp4": 15, "q2_K": 76, "q3_K": 38}
+  },
+  "runtime": {
+    "llama_cpp_commit": "efb81abc6a261dcceb014e853beb0ffc5e4a49a0",
+    "load_mode": "dio",
+    "devices": ["CUDA0", "CUDA1"],
+    "split_mode": "layer",
+    "fit_target_mib": [3072, 3072],
+    "context": 65536,
+    "kv": "F16 in system RAM",
+    "batch": 512,
+    "ubatch": 128,
+    "flash_attention": true,
+    "reasoning_format": "deepseek",
+    "temperature": 0,
+    "seed": 42,
+    "health": "PASS",
+    "v1_models": "PASS",
+    "gpu_memory_mib": [29251, 27931],
+    "swap_used": 0,
+    "kernel_model_fault_signatures": 0,
+    "nvidia_xid": 0
+  },
+  "behavior": {
+    "raw_france": "FAIL under canonical semantic gate: output continued unrelated PHP training text; same control also continued corpus text, so not a candidate-only defect",
+    "chat_exact": "PASS for READY content; reasoning_content was coherent",
+    "chinese": "FAIL: final content empty at 128-token budget; expanded diagnostic still emitted think content before answer",
+    "json": "PASS: {\"name\":\"test\",\"count\":3}",
+    "python": "PASS: valid add(a, b) implementation",
+    "controlled_ab": "Corrected MXFP4 under the same binary/runtime and canonical probe family produced coherent Chinese, valid JSON, and valid Python; the Q2 candidate did not meet the fixed short semantic gate",
+    "long_prefill": "NOT RUN: T087 failed, and contract forbids proceeding to T088"
+  },
+  "decision": "Reject candidate; keep corrected K132 MXFP4 as sole deployment and rollback artifact"
+}

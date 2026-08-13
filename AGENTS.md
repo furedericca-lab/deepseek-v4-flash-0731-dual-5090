@@ -2,9 +2,9 @@
 
 ## Source of truth
 
-1. Active K132 fixed-ratio mixed expert quantization scope under
-   `.scopes/heretic-v2-reap132-mixed-expert-quant/`
-2. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
+1. Deployment scope under `.scopes/deepseek-v4-flash-0731-dual-5090/`
+2. Archived rejected K132 fixed-ratio mixed quantization scope under
+   `.scopes/archive/heretic-v2-reap132-mixed-expert-quant/`
 3. Archived K96 Profile A IQ4_XS release under
    `.scopes/archive/heretic-v2-reap96-iq4xs-backbone/`
 4. Archived K96 consensus record under
@@ -38,10 +38,11 @@
 
 ## Mission
 
-Keep the accepted REAP132 MXFP4 GGUF deployable while evaluating one independent
-fixed-ratio K132 candidate: 17 routed-expert layers use the IQ3_XXS recipe, 26 use the Q2_K_S recipe,
-and all eligible non-routed weights reuse the archived K96 Profile A default
-non-pure IQ4_XS mixed policy. The K132 Golden remains immutable and deployed.
+Keep the corrected REAP132 MXFP4 GGUF immutable and deployed while Phase 4 of
+the deployment scope evaluates one replacement candidate. The candidate uses
+puwaer's published boundary-protected Q2 routed recipe and final 812-chunk
+imatrix values, while eligible non-routed weights retain the archived K96
+Profile A default non-pure IQ4_XS mixed policy.
 
 The deployment baseline uses llama.cpp on dual RTX 5090 with:
 
@@ -69,17 +70,19 @@ The deployment baseline uses llama.cpp on dual RTX 5090 with:
 - The archived K96 IQ4_XS release used one immutable input and one output with
   Profile A default mixed precision only. Do not reopen it for `--pure`, Profile
   B, imatrix, or quantization-profile A/B experiments.
-- The active `.scopes/heretic-v2-reap132-mixed-expert-quant/` scope is the sole
-  exception permitting IQ3/Q2 work from the read-only K132 Golden. It fixes the
-  ratio at 17 IQ3_XXS recipe layers and 26 Q2_K_S recipe layers, has no 60GB size gate, and may
-  add only routed-expert tensor overrides. Shared Expert, Core Backbone,
-  attention, indexer, embedding, and output remain under llama.cpp's default
-  non-pure IQ4_XS mixed policy.
-- Do not download, test, or publish puwaer, IQ3, Q2, or other alternative
-  quantizations in the REAP132 deployment scope. MXFP4 remains the only
-  deployment format. The K96 consensus scope may inspect only the specific
-  small external plan/mask/manifest evidence listed in its contracts; it must
-  not download external model-weight or GGUF payloads.
+- The archived `.scopes/archive/heretic-v2-reap132-mixed-expert-quant/` scope is
+  a completed rejection record, not authority for more IQ3/Q2 work. Its fixed
+  17/26 candidate passed structure and infrastructure but failed Chinese, JSON,
+  Python, and long-prefill semantic gates with repeated `<` output. Do not
+  deploy, regenerate, rerank, or reopen it without a new explicit scope.
+- Phase 4 of `.scopes/deepseek-v4-flash-0731-dual-5090/` is the sole active
+  exception permitting a Q2 candidate. It may use only puwaer
+  `.recipe.iq3xxs.txt`, `imatrix.gguf.prev`, and `imatrix.gguf` from pinned
+  revision `326e2f17...b2940`; do not download puwaer model GGUF payloads.
+  Routed layers 0-2/41-42 remain MXFP4, layers 3-40 gate/up use Q2_K, and
+  layers 3-40 down use Q3_K. Non-routed tensors stay under K96 Profile A
+  IQ4_XS non-pure mixed policy. Other IQ3/Q2/profile experiments remain out of
+  scope.
 - The existing 80 GiB GGUF with SHA256
   `e6dd3c1235e0b0ea6a2efbe13f2f06cc2015e8d6c135025aa3c5d8e75bfff84d` is
   quarantined diagnostic output, not a golden or deployable model.
@@ -261,6 +264,13 @@ The deployment baseline uses llama.cpp on dual RTX 5090 with:
   a newline as its first greedy token in both native HF and the corrected GGUF;
   this rules out a first-step conversion mismatch for that prompt. The canonical
   GGUF is read-only and is the sole deployment artifact.
+- The fixed 17/26 mixed artifact with O_DIRECT SHA256 `67e6990f...77ab3` was
+  rejected after a same-commit, same-runtime A/B. Corrected MXFP4 produced
+  coherent Chinese, valid JSON, and valid Python while mixed weights produced
+  empty final content or repeated `<`. Regional ftype selection, packed-expert
+  imatrix ordering, MXFP4 CPU dequantization, and CUDA 132-expert/top-6 Q2/IQ3
+  operations were audited without finding an implementation fault. The failed
+  payload was deleted after evidence retention.
 - Current relevant PCIe topology: both RTX 5090 GPUs are CPU-attached at PCIe
   5.0 x8; WD SN540 is CPU-attached at PCIe 3.0 x4; the MAP1602/aigo 2 TB NVMe
   backing `/data/linux-fast` is PCIe 4.0 x4 behind the first X670 chipset, whose

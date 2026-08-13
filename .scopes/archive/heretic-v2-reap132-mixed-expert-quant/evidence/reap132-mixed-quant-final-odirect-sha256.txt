@@ -1,0 +1,2 @@
+PASS /data/linux-fast/models/DeepSeek-V4-Flash-0731/DeepSeek-V4-Flash-0731-HERETIC-v2-REAP132-noMTP-IQ3XXS-Q2KSexp-IQ4XSbb.gguf
+  direct:   67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3

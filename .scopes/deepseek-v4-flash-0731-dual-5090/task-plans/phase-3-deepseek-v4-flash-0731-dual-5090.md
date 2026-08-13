@@ -42,7 +42,7 @@ Tasks:
 - [ ] T045 [Docs] Closeout evidence package
   - DoD: checklist contains final commands, VRAM/RAM notes, wiki alignment class, and residual risks.
 
-Checkpoint: Phase 3 artifacts are merged, verified, and recorded in 3phases-checklist.md before archive/closeout.
+Checkpoint: Phase 3 artifacts are merged, verified, and recorded in 4phases-checklist.md before Phase 4 candidate work.
 
 ## Dependencies & Execution Order
 - Phase 1 blocks all others.

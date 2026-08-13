@@ -17,8 +17,8 @@ description: Execution and verification hub for K132 fixed 17/26 mixed expert qu
 |---|---|---:|---|---:|
 | Phase 1 - Structural prior and imatrix | Complete | 100% | PASS | 0 |
 | Phase 2 - Freeze 17/26 plan | Complete | 100% | PASS | 0 |
-| Phase 3 - DIO production artifact | In progress | 70% | PASS so far | 0 |
-| Phase 4 - Runtime acceptance | Not started | 0% | Unknown | 1 |
+| Phase 3 - DIO production artifact | Complete | 100% | PASS | 0 |
+| Phase 4 - Runtime acceptance | Complete | 100% | Semantic FAIL; candidate rejected | 0 |
 
 ## Locked Rules
 
@@ -95,12 +95,22 @@ description: Execution and verification hub for K132 fixed 17/26 mixed expert qu
   empty. Independent verification passed the full inventory and compared all
   600 unchanged tensors (`63,307,072` bytes) byte-for-byte with zero unstable
   reads. Root-NVMe O_DIRECT SHA256 is `67e6990f...77ab3`.
-- Pending: direct-I/O copy to the frozen final filename on `/data/linux-fast`,
+- PASS: direct-I/O copy to the frozen final filename on `/data/linux-fast`,
   destination size/hash equality, mode `0444`, and the Phase 3 acceptance record.
 
 ### Phase 4
 
-- Blocked by verified Phase 3 candidate.
+- PASS: dual-5090 DIO 64K startup/API, 32,767-token prefill, resource, and
+  kernel/Xid stability gates completed under `efb81ab`.
+- LIMITATION: raw France is correct, but chat/Chinese/JSON/Python and long-prefill
+  decode exhibit repeated `<` collapse or fail to emit final content.
+- CONTROLLED A/B: corrected MXFP4 under the same `efb81ab` binary, DIO,
+  dual-GPU/64K flags, prompts, seed, and greedy sampling produced coherent
+  Chinese, valid JSON, and valid Python without repeated-symbol collapse.
+- IMPLEMENTATION AUDIT: regional recipe selection, packed-expert imatrix order,
+  MXFP4 CPU dequantization, and CUDA `MUL_MAT_ID` for 132 experts/top-6 passed.
+- DECISION: the mixed candidate fails the semantic release gate and is rejected.
+  Corrected K132 MXFP4 is restored as the sole deployment artifact.
 
 ## Final Release Gate
 
@@ -110,4 +120,19 @@ description: Execution and verification hub for K132 fixed 17/26 mixed expert qu
 - Non-routed type selection matches default K96 Profile A-style IQ4_XS mixed
   behavior without manual overrides.
 - Direct-only hash/provenance and clean runtime gates pass.
-- Semantic result and deployment decision are explicit; K132 remains rollback.
+- Semantic result and rejection decision are explicit; corrected K132 MXFP4
+  remains deployed.
+
+## Archive Record
+
+- Archived on 2026-08-13 under
+  `.scopes/archive/heretic-v2-reap132-mixed-expert-quant/`.
+- The experiment is complete with a rejection result: structural, direct-I/O,
+  startup, and long-prefill infrastructure gates passed, but controlled
+  same-runtime semantic A/B failed.
+- The 17/26 plan, its ranking, and its regional `Q2_K_S` implementation remain
+  historical evidence and are not inputs to the replacement candidate.
+- Replacement quantization work is owned by Phase 4 of
+  `.scopes/deepseek-v4-flash-0731-dual-5090/`.
+- Archived documents are read-only except for factual errata and path
+  maintenance.

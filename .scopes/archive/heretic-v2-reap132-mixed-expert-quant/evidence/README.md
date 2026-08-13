@@ -105,5 +105,22 @@ with explicit user authorization. Their reports remain historical evidence only.
   O_DIRECT SHA256 `67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3`.
 - The post-production boot has zero OOM, BAD_PAGE, compound-head, page-list,
   Oops, GPF, hard-lockup, I/O/AER/hardware-error, or NVIDIA Xid signatures.
-- This remains a staging candidate pending direct-I/O copy/hash equality on the
-  final `/data/linux-fast` path, mode `0444`, and dual-5090 runtime acceptance.
+- The direct-I/O copy to the final `/data/linux-fast` path matched this hash,
+  passed the final verifier, and was made mode `0444` before runtime testing.
+
+## Phase 4 Runtime Decision
+
+- `reap132-mixed-quant-final-acceptance.json` and
+  `reap132-mixed-quant-final-odirect-sha256.txt`: final-path structural PASS and
+  immutable identity.
+- `reap132-mixed-quant-runtime-acceptance.json`, short probes, long-prefill
+  response, and runtime log: infrastructure PASS but semantic FAIL. Chat,
+  Chinese, JSON, Python, and 32K-prefill decode showed empty final content or
+  repeated `<` output.
+- `reap132-mixed-vs-mxfp4-runtime-ab.json`: controlled same-commit/runtime A/B.
+  Corrected MXFP4 produced coherent Chinese, valid JSON, and valid Python under
+  the same flags and requests, isolating the collapse to the mixed weights.
+- Regional ftype selection, packed-expert imatrix order, MXFP4 CPU
+  dequantization, and CUDA `MUL_MAT_ID` with 132 experts/top-6 were audited; no
+  implementation defect was found. The mixed artifact is rejected for
+  deployment and corrected K132 MXFP4 is the sole runtime target.

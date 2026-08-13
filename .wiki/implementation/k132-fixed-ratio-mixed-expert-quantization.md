@@ -1,17 +1,17 @@
 ---
 title: K132 fixed-ratio mixed expert quantization
 type: implementation
-status: current
+status: historical
 scope: heretic-v2-reap132-mixed-expert-quant
 related_scopes:
   - heretic-v2-reap96-consensus
   - heretic-v2-reap96-iq4xs-backbone
 related_files:
-  - .scopes/heretic-v2-reap132-mixed-expert-quant
+  - .scopes/archive/heretic-v2-reap132-mixed-expert-quant
   - vendor/llama.cpp/src/llama-quant.cpp
   - vendor/llama.cpp/tools/imatrix/imatrix.cpp
 source_docs:
-  - .scopes/heretic-v2-reap132-mixed-expert-quant/heretic-v2-reap132-mixed-expert-quant-technical-documentation.md
+  - .scopes/archive/heretic-v2-reap132-mixed-expert-quant/heretic-v2-reap132-mixed-expert-quant-technical-documentation.md
 tags:
   - reap132
   - imatrix
@@ -23,7 +23,9 @@ updated: 2026-08-13T14:10:00+08:00
 
 # K132 fixed-ratio mixed expert quantization
 
-Active fixed-ratio K132 heterogeneous routed-expert quantization experiment.
+Historical record of the rejected fixed-ratio K132 heterogeneous routed-expert
+quantization experiment. Active replacement work is Phase 4 of the deployment
+scope.
 
 ## Immutable baseline
 
@@ -92,11 +94,12 @@ IQ3_XXS, 73 Q2_K, five Q2_K_S Q4_K promotions, and 600 byte-identical unchanged
 tensors with zero unstable reads. The root-NVMe candidate has O_DIRECT SHA256
 `67e6990f35db44711c881aee2b55ca789144bec2c0063df2e78957555ea77ab3`.
 
-Phase 3 remains open only for direct-I/O copy to the final `/data/linux-fast`
-path, destination hash equality, read-only mode, and final acceptance record.
-Phase 4 dual-5090 startup, behavior, 32K prefill, resource, and kernel/Xid gates
-have not run. The staging candidate must not replace the deployed K132 baseline
-before those gates pass.
+The fixed-ratio candidate was copied, rehashed, and tested, then rejected after
+its same-runtime semantic A/B failed. The payload and root staging copy were
+deleted. Phase 4 of the deployment scope later evaluated puwaer's
+boundary-protected Q2 recipe; that second candidate also passed structure and
+startup but failed its fixed short semantic gate and was deleted without a 32K
+run. Corrected MXFP4 remains the sole deployment artifact.
 
 A fresh corrected-Golden imatrix was generated from the same 200-chunk corpus
 after the old routed-payload mutations were discovered. Against the accepted

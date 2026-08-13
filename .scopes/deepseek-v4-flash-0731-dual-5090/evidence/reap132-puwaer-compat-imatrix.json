@@ -1,0 +1,25 @@
+{
+  "external": {
+    "entries_copied": 768,
+    "path": "/data/linux-fast/models/external/puwaer-DeepSeek-V4-Flash-0731-reap-150b-gguf-326e2f17/imatrix.gguf",
+    "sha256": "8bca12ccf077fc9341b6f3d8ee399e5c5576a7a82c715e529008da68a5548de8",
+    "size": 251877376
+  },
+  "output": {
+    "chunks": 812,
+    "entries": 769,
+    "mode": "0444",
+    "path": "/data/linux-fast/models/calibration/reap132-puwaer-812-plus-output-hc-imatrix.gguf",
+    "sha256": "ce36a35735212fd53bfde9a631ea624492b4ff8b7c768969c3827bac297074a5",
+    "size": 251943168
+  },
+  "overlapping_entries_replaced": 0,
+  "schema": "heretic-reap132-puwaer-q2-compat-imatrix-v1",
+  "status": "PASS",
+  "supplemental": {
+    "entry_copied": "output_hc_fn.weight",
+    "path": "/data/linux-fast/models/calibration/reap132-imatrix-200-corrected-golden.gguf",
+    "sha256": "affa578a69630cfbc51ec17576bdf4f45852ff650795a9d4b5b4801a676075b7",
+    "size": 251942912
+  }
+}
