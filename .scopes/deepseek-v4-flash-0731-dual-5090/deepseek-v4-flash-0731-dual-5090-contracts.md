@@ -64,7 +64,7 @@ only and must not be merged with or supplied alongside the final imatrix.
 -dev CUDA0,CUDA1
 -sm layer
 --fit on
---fit-target 3072,3072
+--fit-target 2048,2048
 --no-kv-offload
 -ctk f16 -ctv f16
 -c 65536 -np 1

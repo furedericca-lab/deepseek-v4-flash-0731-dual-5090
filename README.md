@@ -197,8 +197,11 @@ the localhost-only runtime with this initial profile:
 scripts/llama-server-first-boot.sh
 ```
 
-The script uses direct I/O, automatic two-GPU layer fitting with a 3 GiB margin
-per GPU, F16 CPU KV, 64K context, `-b 512`, and `-ub 128`. Do not use `-ngl all`
+The script uses direct I/O, automatic two-GPU layer fitting with a 2 GiB margin
+per GPU, F16 CPU KV, 64K context, `-b 512`, `-ub 128`, temperature 0.6, and
+top-p 0.95. It listens on all
+host interfaces so the LAN address `172.30.0.214:8000` and localhost can reach
+it. Do not use `-ngl all`
 for this 80 GiB model: it disables fitting and attempts an impossible per-GPU
 allocation. The equivalent explicit runtime profile is:
 
@@ -209,7 +212,7 @@ llama-server \
   -dev CUDA0,CUDA1 \
   -sm layer \
   --fit on \
-  --fit-target 3072,3072 \
+  --fit-target 2048,2048 \
   --no-kv-offload \
   -ctk f16 \
   -ctv f16 \

@@ -21,7 +21,7 @@ exec "$server" \
   -dev CUDA0,CUDA1 \
   -sm layer \
   --fit on \
-  --fit-target 3072,3072 \
+  --fit-target 2048,2048 \
   --no-kv-offload \
   -ctk f16 \
   -ctv f16 \
@@ -31,6 +31,8 @@ exec "$server" \
   -ub 128 \
   -fa on \
   --reasoning-format deepseek \
-  --host 127.0.0.1 \
+  --temp 0.6 \
+  --top-p 0.95 \
+  --host 0.0.0.0 \
   --port 8000 \
   "$@"

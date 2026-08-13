@@ -253,7 +253,7 @@ The deployment baseline uses llama.cpp on dual RTX 5090 with:
   mutated converter intermediate, K96 MXFP4, and K96 IQ4_XS payloads were
   deleted on 2026-08-13 with explicit user authorization.
 - The runtime baseline for the corrected candidate is `--load-mode dio -dev
-  CUDA0,CUDA1 -sm layer --fit on --fit-target 3072,3072 --no-kv-offload -ctk
+  CUDA0,CUDA1 -sm layer --fit on --fit-target 2048,2048 --no-kv-offload -ctk
   f16 -ctv f16 -c 65536 -np 1 -b 512 -ub 128 -fa on`. Do not use `-ngl all`:
   it disables auto-fit and requests an impossible roughly-40-GiB allocation per
   GPU. The corrected candidate passed 64K dual-5090 startup, API health, and a

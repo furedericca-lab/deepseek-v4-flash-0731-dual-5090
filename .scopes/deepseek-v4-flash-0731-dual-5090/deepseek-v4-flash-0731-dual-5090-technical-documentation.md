@@ -22,9 +22,10 @@ never model payloads.
 ## Runtime
 
 Use `scripts/llama-server-first-boot.sh`. The server uses layer auto-fit with a
-3 GiB target margin on each GPU, full GPU weights, F16 KV in system RAM, 64K
-context, one slot, batch 512, ubatch 128, flash attention, and localhost port
-8000. `-ngl all` is prohibited for this artifact.
+2 GiB target margin on each GPU, full GPU weights, F16 KV in system RAM, 64K
+context, one slot, batch 512, ubatch 128, flash attention, and port 8000 on
+all host interfaces. The approved LAN entry point is `172.30.0.214:8000`.
+`-ngl all` is prohibited for this artifact.
 
 Accepted observations include approximately 28 GiB per GPU for the corrected
 MXFP4 run, healthy API startup, coherent raw/chat/Chinese/JSON/Python behavior,
